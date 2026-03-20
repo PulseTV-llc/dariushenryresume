@@ -39,8 +39,8 @@ function checkRateLimit(ip: string): boolean {
     return true;
   }
 
-  if (limit.count >= 10) {
-    // Max 10 messages per minute
+  if (limit.count >= 20) {
+    // Max 20 messages per minute (increased for testing)
     return false;
   }
 
@@ -53,13 +53,13 @@ export async function POST(request: NextRequest) {
     // Get IP for rate limiting
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
-    // Check rate limit
-    if (!checkRateLimit(ip)) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please wait a moment before sending another message.' },
-        { status: 429 }
-      );
-    }
+    // TEMPORARILY DISABLED for testing - re-enable after OpenAI billing is confirmed
+    // if (!checkRateLimit(ip)) {
+    //   return NextResponse.json(
+    //     { error: 'Too many requests. Please wait a moment before sending another message.' },
+    //     { status: 429 }
+    //   );
+    // }
 
     // Parse request body with size limit
     const body = await request.json();
@@ -131,31 +131,44 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: response });
 
   } catch (error: any) {
-    // Log error for debugging (only visible in server logs, not exposed to client)
-    console.error('[ChatBot Error]:', {
+    // Log detailed error for debugging (only visible in server logs, not exposed to client)
+    console.error('[ChatBot Error Details]:', {
       message: error?.message,
       status: error?.status,
+      code: error?.code,
+      type: error?.type,
+      fullError: error,
       timestamp: new Date().toISOString(),
     });
 
-    // Handle OpenAI-specific errors without exposing system details
+    // Handle OpenAI-specific errors
     if (error?.status === 401) {
+      console.error('[ChatBot] 401 Unauthorized - API key is invalid');
       return NextResponse.json(
-        { error: 'Service configuration error. Please contact support.' },
+        { error: 'API key authentication failed. Please check your OpenAI API key configuration.' },
         { status: 503 }
       );
     }
 
     if (error?.status === 429) {
+      console.error('[ChatBot] 429 Rate Limit - OpenAI rate limit exceeded or billing issue');
       return NextResponse.json(
-        { error: 'Service busy. Please try again in a moment.' },
+        { error: 'OpenAI rate limit reached. Please check your OpenAI account billing and usage limits at platform.openai.com' },
         { status: 429 }
       );
     }
 
-    // Generic error response (don't leak system info)
+    if (error?.status === 403) {
+      console.error('[ChatBot] 403 Forbidden - Possible billing or permission issue');
+      return NextResponse.json(
+        { error: 'OpenAI API access denied. Please verify billing is set up at platform.openai.com/settings/organization/billing' },
+        { status: 503 }
+      );
+    }
+
+    // Generic error response
     return NextResponse.json(
-      { error: 'Unable to process your message. Please try again later.' },
+      { error: 'Unable to process your message. Check server logs for details.' },
       { status: 500 }
     );
   }
