@@ -3,6 +3,7 @@ import Projects from '@/components/Projects';
 import Services from '@/components/Services';
 import Skills from '@/components/Skills';
 import Contact from '@/components/Contact';
+import ChatBot from '@/components/ChatBot';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Services />
       <Skills />
       <Contact />
+      <ChatBot />
     </main>
   );
 }
