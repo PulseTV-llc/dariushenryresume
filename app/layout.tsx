@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <head>
+      <body className={inter.className}>
         {/* JSON-LD Structured Data for SEO */}
         <script
           type="application/ld+json"
@@ -67,8 +67,6 @@ export default function RootLayout({
             __html: JSON.stringify(breadcrumbSchema),
           }}
         />
-      </head>
-      <body className={inter.className}>
         {children}
         <Analytics />
       </body>
