@@ -53,13 +53,13 @@ export async function POST(request: NextRequest) {
     // Get IP for rate limiting
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
-    // TEMPORARILY DISABLED for testing - re-enable after OpenAI billing is confirmed
-    // if (!checkRateLimit(ip)) {
-    //   return NextResponse.json(
-    //     { error: 'Too many requests. Please wait a moment before sending another message.' },
-    //     { status: 429 }
-    //   );
-    // }
+    // Check rate limit (20 messages per minute per IP)
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please wait a moment before sending another message.' },
+        { status: 429 }
+      );
+    }
 
     // Parse request body with size limit
     const body = await request.json();
