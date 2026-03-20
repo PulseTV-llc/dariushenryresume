@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Loader2, Sparkles } from "lucide-react";
+import { MessageCircle, X, Send, Sparkles } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -176,11 +176,15 @@ export default function ChatBot() {
                 </div>
               )}
 
-              {/* Loading Indicator */}
+              {/* Typing Indicator */}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-2">
-                    <Loader2 className="w-5 h-5 text-purple-500 animate-spin" />
+                  <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
                   </div>
                 </div>
               )}
