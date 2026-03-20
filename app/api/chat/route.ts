@@ -51,7 +51,7 @@ function checkRateLimit(ip: string): boolean {
 export async function POST(request: NextRequest) {
   try {
     // Get IP for rate limiting
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
     // Check rate limit
     if (!checkRateLimit(ip)) {
@@ -61,10 +61,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse request body
+    // Parse request body with size limit
     const body = await request.json();
     const { messages } = body;
 
+    // Validate messages format
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
         { error: 'Invalid request format' },
@@ -72,11 +73,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Limit conversation history to prevent abuse (max 20 messages)
+    if (messages.length > 20) {
+      return NextResponse.json(
+        { error: 'Conversation too long. Please start a new chat.' },
+        { status: 400 }
+      );
+    }
+
+    // Validate each message
+    for (const msg of messages) {
+      if (!msg.role || !msg.content || typeof msg.content !== 'string') {
+        return NextResponse.json(
+          { error: 'Invalid message format' },
+          { status: 400 }
+        );
+      }
+
+      // Limit individual message length (5000 chars)
+      if (msg.content.length > 5000) {
+        return NextResponse.json(
+          { error: 'Message too long. Please keep messages under 5000 characters.' },
+          { status: 400 }
+        );
+      }
+
+      // Only allow user and assistant roles
+      if (!['user', 'assistant'].includes(msg.role)) {
+        return NextResponse.json(
+          { error: 'Invalid message role' },
+          { status: 400 }
+        );
+      }
+    }
+
     // Check if OpenAI API key is configured
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
-        { error: 'OpenAI API key not configured. Please add OPENAI_API_KEY to your environment variables.' },
-        { status: 500 }
+        { error: 'Service temporarily unavailable. Please try again later.' },
+        { status: 503 }
       );
     }
 
@@ -96,25 +131,31 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: response });
 
   } catch (error: any) {
-    console.error('Chat API Error:', error);
+    // Log error for debugging (only visible in server logs, not exposed to client)
+    console.error('[ChatBot Error]:', {
+      message: error?.message,
+      status: error?.status,
+      timestamp: new Date().toISOString(),
+    });
 
-    // Handle OpenAI-specific errors
+    // Handle OpenAI-specific errors without exposing system details
     if (error?.status === 401) {
       return NextResponse.json(
-        { error: 'OpenAI API key is invalid. Please check your configuration.' },
-        { status: 500 }
+        { error: 'Service configuration error. Please contact support.' },
+        { status: 503 }
       );
     }
 
     if (error?.status === 429) {
       return NextResponse.json(
-        { error: 'OpenAI rate limit exceeded. Please try again in a moment.' },
+        { error: 'Service busy. Please try again in a moment.' },
         { status: 429 }
       );
     }
 
+    // Generic error response (don't leak system info)
     return NextResponse.json(
-      { error: 'An error occurred. Please try again later.' },
+      { error: 'Unable to process your message. Please try again later.' },
       { status: 500 }
     );
   }
