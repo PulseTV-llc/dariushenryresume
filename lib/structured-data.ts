@@ -322,23 +322,5 @@ export const breadcrumbSchema = {
       name: 'Home',
       item: 'https://dariushenryresume.vercel.app',
     },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: 'Portfolio',
-      item: 'https://dariushenryresume.vercel.app#projects',
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: 'Services',
-      item: 'https://dariushenryresume.vercel.app#services',
-    },
-    {
-      '@type': 'ListItem',
-      position: 4,
-      name: 'Contact',
-      item: 'https://dariushenryresume.vercel.app#contact',
-    },
   ],
 };
