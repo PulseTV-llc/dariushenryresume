@@ -183,17 +183,18 @@ export default function Services() {
                   </div>
 
                   {/* CTA Button */}
-                  <motion.button
+                  <motion.a
+                    href="#contact"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`w-full mt-6 py-3 px-6 rounded-xl font-semibold transition-all ${
+                    className={`w-full mt-6 py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center ${
                       service.popular
                         ? `bg-gradient-to-r ${service.color} text-white`
                         : 'bg-white/5 hover:bg-white/10 border border-white/10'
                     }`}
                   >
                     Get Started
-                  </motion.button>
+                  </motion.a>
                 </div>
               </motion.div>
             );
