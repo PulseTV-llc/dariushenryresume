@@ -344,9 +344,9 @@ I'm currently accepting new projects for Q2 2026 onwards. Limited spots availabl
 - Retainer-based or custom payment schedule
 
 ### Contact Information
-Email: dariushenry@hotmail.com (primary)
-LinkedIn: Available on portfolio
-GitHub: Active open-source contributor
+Email: darius.henry@gmail.com (primary)
+LinkedIn: https://www.linkedin.com/in/darius-henry-292b21373/
+GitHub: https://github.com/PulseTV-llc
 
 ## Technology Recommendations
 
