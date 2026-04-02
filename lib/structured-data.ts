@@ -13,12 +13,12 @@ export const organizationSchema = {
   },
   contactPoint: {
     '@type': 'ContactPoint',
-    email: 'dariushenry@hotmail.com',
+    email: 'darius.henry@gmail.com',
     contactType: 'Customer Service',
     availableLanguage: ['English'],
   },
   sameAs: [
-    'https://linkedin.com/in/dariushenry',
+    'https://www.linkedin.com/in/darius-henry-292b21373/',
     'https://github.com/PulseTV-llc',
   ],
 };
@@ -31,9 +31,9 @@ export const personSchema = {
   image: 'https://dariushenryresume.vercel.app/profile.jpg',
   jobTitle: 'Full-Stack Developer & SaaS Architect',
   description: 'Expert full-stack developer with 27+ production applications across web, mobile, and AI platforms. Specialized in React, Next.js, TypeScript, Node.js, Python, and React Native.',
-  email: 'dariushenry@hotmail.com',
+  email: 'darius.henry@gmail.com',
   sameAs: [
-    'https://linkedin.com/in/dariushenry',
+    'https://www.linkedin.com/in/darius-henry-292b21373/',
     'https://github.com/PulseTV-llc',
   ],
   knowsAbout: [
@@ -86,7 +86,7 @@ export const professionalServiceSchema = {
     opens: '09:00',
     closes: '18:00',
   },
-  priceRange: '$5,000 - $150,000+',
+  priceRange: '$3,000 - $90,000+',
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '5.0',
@@ -107,11 +107,11 @@ export const serviceSchemas = [
     offers: {
       '@type': 'Offer',
       priceCurrency: 'USD',
-      price: '5000-15000',
+      price: '3000-9000',
       priceSpecification: {
         '@type': 'PriceSpecification',
-        minPrice: '5000',
-        maxPrice: '15000',
+        minPrice: '3000',
+        maxPrice: '9000',
         priceCurrency: 'USD',
       },
       availability: 'https://schema.org/InStock',
@@ -136,11 +136,11 @@ export const serviceSchemas = [
     offers: {
       '@type': 'Offer',
       priceCurrency: 'USD',
-      price: '15000-50000',
+      price: '9000-30000',
       priceSpecification: {
         '@type': 'PriceSpecification',
-        minPrice: '15000',
-        maxPrice: '50000',
+        minPrice: '9000',
+        maxPrice: '30000',
         priceCurrency: 'USD',
       },
       availability: 'https://schema.org/InStock',
@@ -165,11 +165,11 @@ export const serviceSchemas = [
     offers: {
       '@type': 'Offer',
       priceCurrency: 'USD',
-      price: '50000-150000',
+      price: '30000-90000',
       priceSpecification: {
         '@type': 'PriceSpecification',
-        minPrice: '50000',
-        maxPrice: '150000',
+        minPrice: '30000',
+        maxPrice: '90000',
         priceCurrency: 'USD',
       },
       availability: 'https://schema.org/InStock',
@@ -250,7 +250,7 @@ export const faqSchema = {
       name: 'How much does custom software development cost?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Custom software development costs range from $5,000-$15,000 for starter projects (websites, landing pages), $15,000-$50,000 for professional applications (e-commerce, booking systems), $50,000-$150,000+ for enterprise SaaS platforms, and custom quotes for complex enterprise solutions. Pricing depends on project complexity, features, timeline, and technology requirements.',
+        text: 'Custom software development costs range from $3,000-$9,000 for starter projects (websites, landing pages), $9,000-$30,000 for professional applications (e-commerce, booking systems), $30,000-$90,000+ for enterprise SaaS platforms, and custom quotes for complex enterprise solutions. Pricing depends on project complexity, features, timeline, and technology requirements.',
       },
     },
     {

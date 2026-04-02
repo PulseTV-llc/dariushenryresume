@@ -2,13 +2,13 @@ import { Metadata } from 'next';
 
 export const siteConfig = {
   name: 'Darius Henry - Full-Stack Developer & SaaS Builder',
-  description: 'Expert full-stack developer specializing in SaaS platforms, AI integration, and mobile apps. 27+ production applications including Zonely, Speakix, and TapeCoach. React, Next.js, TypeScript, Node.js, Python, React Native. Custom software development from $5K to enterprise solutions.',
+  description: 'Expert full-stack developer specializing in SaaS platforms, AI integration, and mobile apps. 27+ production applications including Zonely, Speakix, and TapeCoach. React, Next.js, TypeScript, Node.js, Python, React Native. Custom software development from $3K to enterprise solutions.',
   url: 'https://dariushenryresume.vercel.app',
   ogImage: 'https://dariushenryresume.vercel.app/og-image.jpg',
   author: {
     name: 'Darius Henry',
-    email: 'dariushenry@hotmail.com',
-    linkedin: 'https://linkedin.com/in/dariushenry',
+    email: 'darius.henry@gmail.com',
+    linkedin: 'https://www.linkedin.com/in/darius-henry-292b21373/',
     github: 'https://github.com/PulseTV-llc',
   },
   keywords: [

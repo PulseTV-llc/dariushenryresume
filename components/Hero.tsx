@@ -120,7 +120,7 @@ export default function Hero() {
           className="flex items-center justify-center gap-6"
         >
           <a
-            href="https://github.com"
+            href="https://github.com/PulseTV-llc"
             target="_blank"
             rel="noopener noreferrer"
             className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-110"
@@ -128,7 +128,7 @@ export default function Hero() {
             <Github className="w-6 h-6" />
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/darius-henry-292b21373/"
             target="_blank"
             rel="noopener noreferrer"
             className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-110"
@@ -136,7 +136,7 @@ export default function Hero() {
             <Linkedin className="w-6 h-6" />
           </a>
           <a
-            href="mailto:contact@dariushenry.dev"
+            href="mailto:darius.henry@gmail.com"
             className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-110"
           >
             <Mail className="w-6 h-6" />
