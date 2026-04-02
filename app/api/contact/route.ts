@@ -32,16 +32,16 @@ function calculatePricing(answers: any) {
 
   // Base price by project type
   const projectTypeMultipliers: Record<string, { min: number; max: number }> = {
-    website: { min: 5000, max: 15000 },
-    'mobile-app': { min: 15000, max: 40000 },
-    'web-app': { min: 15000, max: 50000 },
-    ecommerce: { min: 10000, max: 30000 },
-    saas: { min: 30000, max: 100000 },
-    api: { min: 8000, max: 25000 },
-    other: { min: 10000, max: 30000 },
+    website: { min: 3000, max: 9000 },
+    'mobile-app': { min: 9000, max: 24000 },
+    'web-app': { min: 9000, max: 30000 },
+    ecommerce: { min: 6000, max: 18000 },
+    saas: { min: 18000, max: 60000 },
+    api: { min: 5000, max: 15000 },
+    other: { min: 6000, max: 18000 },
   };
 
-  const basePrice = projectTypeMultipliers[answers.projectType] || { min: 10000, max: 30000 };
+  const basePrice = projectTypeMultipliers[answers.projectType] || { min: 6000, max: 18000 };
   minPrice = basePrice.min;
   maxPrice = basePrice.max;
 
@@ -86,19 +86,19 @@ function calculatePricing(answers: any) {
 
   // Add design costs
   if (answers.designNeeds === 'full-design') {
-    minPrice += 5000;
-    maxPrice += 15000;
+    minPrice += 3000;
+    maxPrice += 9000;
   } else if (answers.designNeeds === 'wireframes') {
-    minPrice += 2000;
-    maxPrice += 5000;
+    minPrice += 1000;
+    maxPrice += 3000;
   }
 
   // Determine recommended tier
-  if (maxPrice >= 50000) {
+  if (maxPrice >= 30000) {
     recommendedTier = 'Enterprise SaaS';
-  } else if (maxPrice >= 30000) {
+  } else if (maxPrice >= 18000) {
     recommendedTier = 'Professional';
-  } else if (maxPrice >= 15000) {
+  } else if (maxPrice >= 9000) {
     recommendedTier = 'Professional';
   } else {
     recommendedTier = 'Starter';

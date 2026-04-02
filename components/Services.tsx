@@ -7,7 +7,7 @@ const services = [
   {
     tier: "Starter",
     icon: Zap,
-    price: "$5K - $15K",
+    price: "$3K - $9K",
     timeline: "2-4 weeks",
     description: "Perfect for launching your digital presence with professional quality",
     color: "from-blue-500 to-cyan-500",
@@ -26,7 +26,7 @@ const services = [
   {
     tier: "Professional",
     icon: Rocket,
-    price: "$15K - $50K",
+    price: "$9K - $30K",
     timeline: "1-3 months",
     description: "Custom applications built to solve real business problems",
     color: "from-purple-500 to-pink-500",
@@ -48,7 +48,7 @@ const services = [
   {
     tier: "Enterprise SaaS",
     icon: Crown,
-    price: "$50K - $150K+",
+    price: "$30K - $90K+",
     timeline: "3-6 months",
     description: "Production-grade SaaS platforms like Zonely, Speakix, and TapeCoach",
     color: "from-orange-500 to-red-500",
