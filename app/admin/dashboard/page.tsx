@@ -24,8 +24,22 @@ interface Inquiry {
   id: string;
   name: string;
   email: string;
-  subject: string;
-  message: string;
+  projectType?: string;
+  currentSituation?: string;
+  timeline?: string;
+  budget?: string;
+  features?: string[];
+  designNeeds?: string;
+  techPreferences?: string;
+  description: string;
+  subject?: string; // Legacy field
+  message?: string; // Legacy field
+  estimatedPrice?: {
+    min: number;
+    max: number;
+  };
+  estimatedTimeline?: string;
+  recommendedTier?: string;
   status: string;
   read: boolean;
   createdAt: string;
@@ -119,6 +133,31 @@ export default function AdminDashboard() {
     });
   };
 
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const formatFeature = (feature: string) => {
+    const featureMap: Record<string, string> = {
+      auth: 'User Authentication',
+      database: 'Database',
+      admin: 'Admin Panel',
+      payments: 'Payment Processing',
+      ai: 'AI/ML Features',
+      realtime: 'Real-time Updates',
+      analytics: 'Analytics',
+      api: 'API Integration',
+      search: 'Search',
+      notifications: 'Notifications',
+    };
+    return featureMap[feature] || feature;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -189,8 +228,24 @@ export default function AdminDashboard() {
                       <p className="text-sm text-gray-400">{inquiry.email}</p>
                     </div>
                   </div>
-                  <p className="text-white font-medium mb-2">{inquiry.subject}</p>
-                  <p className="text-sm text-gray-400 line-clamp-2 mb-3">{inquiry.message}</p>
+                  {inquiry.projectType && (
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-blue-400 text-xs font-medium capitalize">
+                        {inquiry.projectType.replace('-', ' ')}
+                      </span>
+                      {inquiry.estimatedPrice && (
+                        <span className="px-2 py-1 bg-green-500/10 border border-green-500/20 rounded text-green-400 text-xs font-medium">
+                          {formatPrice(inquiry.estimatedPrice.min)} - {formatPrice(inquiry.estimatedPrice.max)}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {inquiry.subject && (
+                    <p className="text-white font-medium mb-2">{inquiry.subject}</p>
+                  )}
+                  <p className="text-sm text-gray-400 line-clamp-2 mb-3">
+                    {inquiry.description || inquiry.message}
+                  </p>
                   <div className="flex items-center gap-4 text-xs text-gray-500">
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
@@ -210,11 +265,15 @@ export default function AdminDashboard() {
           {/* Inquiry Detail */}
           <div className="lg:sticky lg:top-24 h-fit">
             {selectedInquiry ? (
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-6">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-start justify-between pb-6 border-b border-white/10">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-white mb-2">{selectedInquiry.subject}</h2>
+                    <h2 className="text-2xl font-bold text-white mb-2">
+                      {selectedInquiry.projectType
+                        ? `${selectedInquiry.projectType.replace('-', ' ')} Project`
+                        : selectedInquiry.subject || 'Inquiry Details'}
+                    </h2>
                     <div className="flex items-center gap-2 text-sm text-gray-400">
                       <Calendar className="w-4 h-4" />
                       {formatDate(selectedInquiry.createdAt)}
@@ -222,7 +281,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                {/* From */}
+                {/* Contact Info */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <User className="w-5 h-5 text-gray-400" />
@@ -245,14 +304,105 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                {/* Message */}
+                {/* Pricing Estimate */}
+                {selectedInquiry.estimatedPrice && (
+                  <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg p-4">
+                    <p className="text-sm text-gray-400 mb-2">Estimated Investment</p>
+                    <p className="text-2xl font-bold text-green-400 mb-2">
+                      {formatPrice(selectedInquiry.estimatedPrice.min)} -{' '}
+                      {formatPrice(selectedInquiry.estimatedPrice.max)}
+                    </p>
+                    {selectedInquiry.estimatedTimeline && (
+                      <p className="text-sm text-gray-400">
+                        Timeline: {selectedInquiry.estimatedTimeline}
+                      </p>
+                    )}
+                    {selectedInquiry.recommendedTier && (
+                      <p className="text-sm text-gray-400 mt-1">
+                        Recommended: {selectedInquiry.recommendedTier} Tier
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Project Details */}
+                {selectedInquiry.projectType && (
+                  <div className="space-y-3">
+                    <h3 className="text-lg font-semibold text-white">Project Details</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {selectedInquiry.currentSituation && (
+                        <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-1">Situation</p>
+                          <p className="text-white font-medium capitalize text-sm">
+                            {selectedInquiry.currentSituation.replace('-', ' ')}
+                          </p>
+                        </div>
+                      )}
+                      {selectedInquiry.timeline && (
+                        <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-1">Timeline</p>
+                          <p className="text-white font-medium capitalize text-sm">
+                            {selectedInquiry.timeline}
+                          </p>
+                        </div>
+                      )}
+                      {selectedInquiry.budget && (
+                        <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-1">Budget</p>
+                          <p className="text-white font-medium text-sm">{selectedInquiry.budget}</p>
+                        </div>
+                      )}
+                      {selectedInquiry.designNeeds && (
+                        <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-1">Design</p>
+                          <p className="text-white font-medium capitalize text-sm">
+                            {selectedInquiry.designNeeds.replace('-', ' ')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Features */}
+                {selectedInquiry.features && selectedInquiry.features.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-3">Required Features</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedInquiry.features.map((feature, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm"
+                        >
+                          {formatFeature(feature)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Tech Preferences */}
+                {selectedInquiry.techPreferences && selectedInquiry.techPreferences !== 'no-preference' && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">Tech Stack</h3>
+                    <p className="text-gray-300 capitalize">
+                      {selectedInquiry.techPreferences.replace('-', ' ')}
+                    </p>
+                  </div>
+                )}
+
+                {/* Description/Message */}
                 <div>
                   <div className="flex items-center gap-2 mb-3">
                     <MessageSquare className="w-5 h-5 text-gray-400" />
-                    <p className="text-sm text-gray-400">Message</p>
+                    <p className="text-sm text-gray-400">
+                      {selectedInquiry.projectType ? 'Project Vision' : 'Message'}
+                    </p>
                   </div>
                   <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                    <p className="text-white whitespace-pre-wrap">{selectedInquiry.message}</p>
+                    <p className="text-white whitespace-pre-wrap">
+                      {selectedInquiry.description || selectedInquiry.message}
+                    </p>
                   </div>
                 </div>
 
