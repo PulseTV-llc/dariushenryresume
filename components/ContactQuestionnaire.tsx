@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
 import PricingEstimate from './PricingEstimate';
 
 interface QuestionnaireData {
@@ -183,6 +183,12 @@ export default function ContactQuestionnaire() {
     setIsSubmitting(true);
     setSubmitError('');
 
+    console.log('[ContactQuestionnaire] Submitting form...', {
+      name: answers.name,
+      email: answers.email,
+      projectType: answers.projectType,
+    });
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -194,13 +200,60 @@ export default function ContactQuestionnaire() {
 
       const data = await response.json();
 
+      console.log('[ContactQuestionnaire] Response received:', {
+        status: response.status,
+        ok: response.ok,
+        hasError: !!data.error,
+        requestId: data.requestId,
+      });
+
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit');
+        // Log detailed error info for debugging
+        console.error('[ContactQuestionnaire] Submission failed:', {
+          status: response.status,
+          error: data.error,
+          requestId: data.requestId,
+          details: data.details,
+          hint: data.hint,
+        });
+
+        // Build user-friendly error message
+        let errorMessage = data.error || 'Failed to submit your inquiry.';
+
+        // Add request ID for support
+        if (data.requestId) {
+          errorMessage += ` (Request ID: ${data.requestId})`;
+        }
+
+        // Add development details if available
+        if (data.details) {
+          console.error('[ContactQuestionnaire] Error details:', data.details);
+          if (data.hint) {
+            console.error('[ContactQuestionnaire] Hint:', data.hint);
+          }
+        }
+
+        // Special handling for server configuration errors
+        if (response.status === 503 || errorMessage.includes('configuration')) {
+          errorMessage += '\n\nPlease contact the site administrator. This appears to be a server configuration issue.';
+        }
+
+        throw new Error(errorMessage);
       }
 
+      console.log('[ContactQuestionnaire] ✅ Submission successful');
       setShowEstimate(true);
     } catch (error: any) {
-      setSubmitError(error.message || 'Failed to submit. Please try again.');
+      console.error('[ContactQuestionnaire] Error caught:', error);
+
+      let displayError = error.message || 'Failed to submit. Please try again.';
+
+      // Handle network errors specifically
+      if (error.message === 'Failed to fetch' || error.name === 'NetworkError') {
+        displayError = 'Network error. Please check your internet connection and try again.';
+      }
+
+      setSubmitError(displayError);
     } finally {
       setIsSubmitting(false);
     }
@@ -351,8 +404,18 @@ export default function ContactQuestionnaire() {
 
       {/* Error Message */}
       {submitError && (
-        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400">
-          {submitError}
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-red-400 whitespace-pre-wrap">{submitError}</p>
+              {submitError.includes('Request ID:') && (
+                <p className="text-xs text-red-300 mt-2">
+                  Please include this Request ID when contacting support.
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       )}
 

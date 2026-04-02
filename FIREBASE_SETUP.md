@@ -195,14 +195,210 @@ portfolio-site/
 - Add more admin features as needed
 - Monitor Firebase usage in the Firebase Console
 
-## Support
+## Troubleshooting
 
-If you encounter issues:
-1. Check the browser console for errors
-2. Check Vercel deployment logs
-3. Check Firebase Console for errors
-4. Verify all environment variables are set correctly
+### Health Check Endpoint
+
+Before submitting an inquiry, verify your Firebase setup:
+
+```bash
+# Local development
+http://localhost:3000/api/health
+
+# Production
+https://your-domain.vercel.app/api/health
+```
+
+**Expected Healthy Response:**
+```json
+{
+  "status": "healthy",
+  "checks": {
+    "firebaseAdmin": true,
+    "allEnvVarsPresent": true,
+    "firestoreConnection": {
+      "canConnect": true,
+      "canRead": true,
+      "canWrite": true
+    }
+  }
+}
+```
+
+### Common Errors
+
+#### ❌ "Server configuration error. Please contact the administrator."
+
+**Cause:** Firebase Admin SDK is not initialized
+
+**Solution:**
+1. Check that all 3 environment variables are set:
+   - `FIREBASE_PROJECT_ID`
+   - `FIREBASE_CLIENT_EMAIL`
+   - `FIREBASE_PRIVATE_KEY`
+2. Visit `/api/health` to see which variables are missing
+3. Check server logs (Vercel logs or `npm run dev` output)
+4. Look for this message in logs:
+   ```
+   ❌ Firebase Admin SDK - Missing environment variables: [list]
+   ```
+
+**Fix:**
+```bash
+# Go to Firebase Console → Project Settings → Service Accounts
+# Click "Generate new private key"
+# Add the values to .env.local and Vercel
+```
 
 ---
 
-**Need Help?** Check the [Firebase Documentation](https://firebase.google.com/docs) or contact support.
+#### ❌ "Permission denied"
+
+**Cause:** Firestore security rules are blocking writes
+
+**Solution:**
+1. Check if Firestore rules are deployed:
+   ```bash
+   firebase deploy --only firestore:rules
+   ```
+2. Verify rules in Firebase Console → Firestore Database → Rules
+3. Ensure the rules allow server writes:
+   ```
+   match /inquiries/{inquiryId} {
+     allow write: if false; // Only server can write
+   }
+   ```
+
+---
+
+#### ❌ "Unable to submit your inquiry. Please try again later."
+
+**Cause:** Generic error - check logs for details
+
+**Solution:**
+1. Open browser console (F12) and look for detailed error messages
+2. Check the Request ID in the error message
+3. Search Vercel logs for that Request ID:
+   ```
+   [REQ-1234567890] ❌ Firestore write failed: ...
+   ```
+4. Common causes:
+   - Firebase Admin not initialized
+   - Network timeout
+   - Invalid data format
+   - Firestore quota exceeded
+
+---
+
+#### ❌ Private key error
+
+**Cause:** `FIREBASE_PRIVATE_KEY` is not properly formatted
+
+**Solution:**
+
+The private key must:
+- Include `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`
+- Use `\n` for newlines (not actual line breaks)
+- Be wrapped in quotes
+
+**Correct format in `.env.local`:**
+```env
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBg...\n-----END PRIVATE KEY-----\n"
+```
+
+**In Vercel:**
+- Paste the entire key including BEGIN/END markers
+- Vercel will automatically handle the newlines
+
+---
+
+### Debugging Steps
+
+1. **Check Server Logs:**
+   ```bash
+   # Local
+   npm run dev
+   # Watch the console output
+
+   # Vercel
+   # Go to Vercel Dashboard → Deployments → [Latest] → Functions
+   # Look for detailed error logs with Request IDs
+   ```
+
+2. **Test Health Check:**
+   ```bash
+   curl http://localhost:3000/api/health
+   # or visit in browser
+   ```
+
+3. **Test Contact Form:**
+   - Submit a test inquiry
+   - Check browser console (F12 → Console tab)
+   - Look for `[ContactQuestionnaire]` and request details
+   - Note the Request ID from any errors
+
+4. **Verify Environment Variables:**
+   ```bash
+   # Check .env.local exists and has all variables
+   cat .env.local | grep FIREBASE
+
+   # Should show:
+   # FIREBASE_PROJECT_ID=...
+   # FIREBASE_CLIENT_EMAIL=...
+   # FIREBASE_PRIVATE_KEY=...
+   ```
+
+5. **Check Firestore in Firebase Console:**
+   - Go to Firebase Console → Firestore Database
+   - Look for `inquiries` collection
+   - If empty, submissions aren't reaching Firestore
+
+---
+
+### Error Message Reference
+
+| Error Message | Status Code | Cause | Fix |
+|--------------|-------------|-------|-----|
+| Server configuration error | 503 | Firebase not initialized | Add environment variables |
+| Too many submissions | 429 | Rate limit (5/hour) | Wait 1 hour or use different IP |
+| Invalid email address | 400 | Email validation failed | Check email format |
+| Missing fields | 400 | Required fields empty | Fill all required fields |
+| Permission denied | 403 | Firestore rules | Deploy firestore.rules |
+| Network error | - | Connection issue | Check internet connection |
+
+---
+
+### Request ID Tracking
+
+Every error includes a Request ID for debugging:
+```
+Unable to submit. (Request ID: REQ-1234567890)
+```
+
+To find the error in logs:
+1. Copy the Request ID
+2. Go to Vercel → Deployments → Functions
+3. Search for the Request ID
+4. View the full error details
+
+---
+
+## Support
+
+If you encounter issues:
+
+1. **Visit Health Check:** `/api/health`
+2. **Check Browser Console:** F12 → Console tab
+3. **Check Server Logs:** Vercel dashboard or `npm run dev` output
+4. **Note Request ID:** Include it when asking for help
+5. **Verify Environment Variables:** All 3 Firebase Admin vars must be set
+
+**Still stuck?**
+- Check the [Firebase Documentation](https://firebase.google.com/docs)
+- Verify Firestore security rules are deployed
+- Ensure Firebase project has Firestore enabled
+- Check Firebase Console for quota/billing issues
+
+---
+
+**Need Help?** Include the Request ID and error message from `/api/health` when asking for support.
