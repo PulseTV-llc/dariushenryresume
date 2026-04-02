@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Inquiries collection - read/write only for authenticated admin users
+    match /inquiries/{inquiryId} {
+      // Only authenticated users can read
+      allow read: if request.auth != null;
+
+      // Only server can write (using Firebase Admin SDK)
+      allow write: if false;
+    }
+
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

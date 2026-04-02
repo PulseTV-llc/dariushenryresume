@@ -1,9 +1,66 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Linkedin, Github, ArrowUpRight, Send } from 'lucide-react';
+import { Mail, Linkedin, Github, ArrowUpRight, Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useState, FormEvent } from 'react';
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setSubmitStatus({
+        type: 'success',
+        message: data.message || 'Thank you for your message! I\'ll get back to you soon.',
+      });
+
+      // Reset form
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error: any) {
+      setSubmitStatus({
+        type: 'error',
+        message: error.message || 'Failed to send message. Please try again.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <section id="contact" className="relative py-32 px-4 sm:px-6 lg:px-8 bg-black">
       <div className="max-w-7xl mx-auto">
@@ -109,7 +166,7 @@ export default function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                   Name
@@ -118,7 +175,11 @@ export default function Contact() {
                   type="text"
                   id="name"
                   name="name"
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Your name"
                 />
               </div>
@@ -131,7 +192,11 @@ export default function Contact() {
                   type="email"
                   id="email"
                   name="email"
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="your@email.com"
                 />
               </div>
@@ -144,7 +209,11 @@ export default function Contact() {
                   type="text"
                   id="subject"
                   name="subject"
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Project inquiry"
                 />
               </div>
@@ -157,17 +226,48 @@ export default function Contact() {
                   id="message"
                   name="message"
                   rows={6}
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Tell me about your project..."
                 />
               </div>
 
+              {/* Status Messages */}
+              {submitStatus.type && (
+                <div
+                  className={`p-4 rounded-lg flex items-center gap-3 ${
+                    submitStatus.type === 'success'
+                      ? 'bg-green-500/10 border border-green-500/20'
+                      : 'bg-red-500/10 border border-red-500/20'
+                  }`}
+                >
+                  {submitStatus.type === 'success' ? (
+                    <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  ) : (
+                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                  )}
+                  <p
+                    className={`text-sm ${
+                      submitStatus.type === 'success' ? 'text-green-400' : 'text-red-400'
+                    }`}
+                  >
+                    {submitStatus.message}
+                  </p>
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full group flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-[1.02]"
+                disabled={isSubmitting}
+                className="w-full group flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
-                <span>Send Message</span>
-                <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
+                {!isSubmitting && (
+                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                )}
               </button>
             </form>
           </motion.div>
