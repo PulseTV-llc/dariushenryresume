@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
-import PricingEstimate from './PricingEstimate';
 
 interface QuestionnaireData {
   name: string;
@@ -260,7 +259,60 @@ export default function ContactQuestionnaire() {
   };
 
   if (showEstimate) {
-    return <PricingEstimate answers={answers as QuestionnaireData} />;
+    return (
+      <div className="max-w-3xl mx-auto">
+        {/* Success Animation */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', duration: 0.5 }}
+          className="text-center"
+        >
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 mb-6">
+            <CheckCircle2 className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Thank you, {answers.name}!
+          </h2>
+          <p className="text-xl text-gray-400 mb-8">
+            Your inquiry has been received
+          </p>
+        </motion.div>
+
+        {/* Message */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl p-8 mb-8 text-center"
+        >
+          <h3 className="text-2xl font-bold text-white mb-3">What's Next?</h3>
+          <p className="text-gray-300 mb-6">
+            I'll review your project details and get back to you within 24 hours at{' '}
+            <span className="text-cyan-400 font-medium">{answers.email}</span>
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="/#projects"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-[1.02]"
+            >
+              <span>View My Work</span>
+              <ArrowRight className="w-5 h-5" />
+            </a>
+            <a
+              href="/#services"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-lg font-semibold text-white hover:bg-white/10 transition-all duration-300"
+            >
+              Learn More About Services
+            </a>
+          </div>
+        </motion.div>
+
+        <p className="text-sm text-gray-500 text-center">
+          Looking forward to discussing your project in detail!
+        </p>
+      </div>
+    );
   }
 
   return (
