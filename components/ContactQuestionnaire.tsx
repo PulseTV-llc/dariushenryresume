@@ -7,14 +7,12 @@ import { ArrowRight, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
 interface QuestionnaireData {
   name: string;
   email: string;
-  projectType: string;
-  currentSituation: string;
+  problem: string;
+  situation: string;
+  selectedTier: string;
   timeline: string;
-  budget: string;
   features: string[];
-  designNeeds: string;
-  techPreferences: string;
-  description: string;
+  additionalDetails: string;
 }
 
 export default function ContactQuestionnaire() {
@@ -42,104 +40,73 @@ export default function ContactQuestionnaire() {
       required: true,
     },
     {
-      id: 'projectType',
-      question: 'What are you looking to build?',
+      id: 'problem',
+      question: 'What problem are you trying to solve?',
+      subtitle: 'Be specific - this helps me understand if I can help',
+      type: 'textarea',
+      placeholder: 'Example: I need a real estate app that helps investors find deals fast. My current agency has been working for 8 months and delivered nothing...',
+      required: true,
+    },
+    {
+      id: 'situation',
+      question: 'Which describes your situation?',
       type: 'choice',
       options: [
-        { value: 'website', label: 'New Website', icon: '🌐' },
-        { value: 'mobile-app', label: 'Mobile App', icon: '📱' },
-        { value: 'web-app', label: 'Web App', icon: '💻' },
-        { value: 'ecommerce', label: 'E-commerce Store', icon: '🛒' },
-        { value: 'saas', label: 'SaaS Platform', icon: '☁️' },
-        { value: 'api', label: 'API/Backend', icon: '⚙️' },
-        { value: 'other', label: 'Other', icon: '✨' },
+        { value: 'new-idea', label: 'Brand New Idea', icon: '🚀', description: 'Need to validate fast' },
+        { value: 'broken-app', label: 'Broken/Stuck App', icon: '🔧', description: 'Agency disappeared or delivered garbage' },
+        { value: 'add-features', label: 'Add Features', icon: '➕', description: 'Have working app, need expansion' },
+        { value: 'redesign', label: 'Redesign/Upgrade', icon: '🔄', description: 'Have old app, needs modernization' },
       ],
     },
     {
-      id: 'currentSituation',
-      question: 'Starting from scratch or redesigning existing?',
+      id: 'selectedTier',
+      question: 'Which tier best fits what you need?',
+      subtitle: "Don't worry about the exact fit - I'll help you figure it out",
       type: 'choice',
       options: [
-        { value: 'new', label: 'Brand New Project', icon: '🚀' },
-        { value: 'redesign', label: 'Redesign/Upgrade', icon: '🔄' },
-        { value: 'features', label: 'Add Features', icon: '➕' },
-        { value: 'fix', label: 'Fix/Debug', icon: '🔧' },
+        { value: '7-day-mvp', label: '7-Day MVP', icon: '⚡', description: 'Validate your idea FAST (working app in ~1 week)' },
+        { value: 'revenue-ready', label: 'Revenue-Ready App', icon: '💰', description: 'Full app that makes money NOW (~1-2 months)' },
+        { value: 'production-saas', label: 'Production SaaS', icon: '👑', description: 'Zonely/Speakix level platform (~90 days)' },
+        { value: 'fix-broken', label: 'Fix Broken App', icon: '🆘', description: 'Rescue mission for stuck/broken projects' },
       ],
     },
     {
       id: 'timeline',
-      question: 'When do you need this completed?',
+      question: 'When do you need this done?',
       type: 'choice',
       options: [
-        { value: 'asap', label: 'ASAP (< 1 month)', icon: '⚡' },
-        { value: '1-3', label: '1-3 months', icon: '📅' },
-        { value: '3-6', label: '3-6 months', icon: '🗓️' },
-        { value: '6+', label: '6+ months', icon: '📆' },
-        { value: 'flexible', label: 'Flexible', icon: '🌊' },
-      ],
-    },
-    {
-      id: 'budget',
-      question: "What's your budget for this project?",
-      type: 'choice',
-      options: [
-        { value: '<5k', label: '< $5K', icon: '💵' },
-        { value: '5-15k', label: '$5K - $15K', icon: '💰' },
-        { value: '15-30k', label: '$15K - $30K', icon: '💸' },
-        { value: '30-50k', label: '$30K - $50K', icon: '💎' },
-        { value: '50k+', label: '$50K+', icon: '🏆' },
-        { value: 'unsure', label: 'Not sure yet', icon: '🤔' },
+        { value: 'asap', label: 'ASAP (1-2 weeks)', icon: '⚡', description: 'Emergency/urgent timeline' },
+        { value: '1-month', label: '1 month', icon: '📅', description: 'Standard fast turnaround' },
+        { value: '3-months', label: '3 months', icon: '🗓️', description: 'Normal project timeline' },
+        { value: '6-months', label: '6+ months', icon: '📆', description: 'Long-term planning' },
+        { value: 'flexible', label: 'Flexible', icon: '🌊', description: 'No rush, quality focused' },
       ],
     },
     {
       id: 'features',
-      question: 'What features do you need?',
+      question: 'What features/capabilities do you need?',
       subtitle: 'Select all that apply',
       type: 'multi-choice',
       options: [
-        { value: 'auth', label: 'User Authentication', icon: '🔐' },
-        { value: 'database', label: 'Database', icon: '🗄️' },
-        { value: 'admin', label: 'Admin Panel', icon: '👨‍💼' },
-        { value: 'payments', label: 'Payment Processing', icon: '💳' },
-        { value: 'ai', label: 'AI/ML Features', icon: '🤖' },
-        { value: 'realtime', label: 'Real-time Updates', icon: '⚡' },
-        { value: 'analytics', label: 'Analytics', icon: '📊' },
-        { value: 'api', label: 'API Integration', icon: '🔌' },
-        { value: 'search', label: 'Search Functionality', icon: '🔍' },
-        { value: 'notifications', label: 'Notifications', icon: '🔔' },
+        { value: 'auth', label: 'User Authentication', icon: '🔐', description: 'Login/signup system' },
+        { value: 'database', label: 'Database', icon: '🗄️', description: 'Store and manage data' },
+        { value: 'admin', label: 'Admin Panel', icon: '👨‍💼', description: 'Manage users/content' },
+        { value: 'payments', label: 'Payment Processing', icon: '💳', description: 'Stripe/PayPal integration' },
+        { value: 'ai', label: 'AI/ML Features', icon: '🤖', description: 'OpenAI, machine learning' },
+        { value: 'realtime', label: 'Real-time Updates', icon: '⚡', description: 'Live data sync' },
+        { value: 'analytics', label: 'Analytics', icon: '📊', description: 'Track user behavior' },
+        { value: 'api', label: 'API Integration', icon: '🔌', description: 'Connect external services' },
+        { value: 'search', label: 'Search', icon: '🔍', description: 'Find and filter content' },
+        { value: 'notifications', label: 'Notifications', icon: '🔔', description: 'Push/email alerts' },
       ],
     },
     {
-      id: 'designNeeds',
-      question: 'Do you need design services?',
-      type: 'choice',
-      options: [
-        { value: 'full-design', label: 'Yes - Full UI/UX Design', icon: '🎨' },
-        { value: 'wireframes', label: 'Just Wireframes', icon: '📐' },
-        { value: 'have-designs', label: 'I Have Designs Ready', icon: '✅' },
-        { value: 'unsure', label: 'Not Sure', icon: '🤷' },
-      ],
-    },
-    {
-      id: 'techPreferences',
-      question: 'Any tech stack preferences?',
-      subtitle: 'Optional - skip if you have no preference',
-      type: 'choice',
-      options: [
-        { value: 'react', label: 'React/Next.js', icon: '⚛️' },
-        { value: 'mobile', label: 'Mobile (iOS/Android)', icon: '📱' },
-        { value: 'wordpress', label: 'WordPress', icon: '📝' },
-        { value: 'no-preference', label: 'No Preference', icon: '👍' },
-        { value: 'other', label: 'Other (Tell us below)', icon: '💡' },
-      ],
-    },
-    {
-      id: 'description',
-      question: 'Tell us about your vision',
-      subtitle: 'Share any additional details, goals, or requirements',
+      id: 'additionalDetails',
+      question: 'Anything else I should know?',
+      subtitle: 'Design needs, tech preferences, budget expectations, etc. (optional)',
       type: 'textarea',
-      placeholder: 'Describe your project, target audience, business goals, etc.',
-      required: true,
+      placeholder: 'Any additional context that would help...',
+      required: false,
     },
   ];
 
@@ -185,7 +152,8 @@ export default function ContactQuestionnaire() {
     console.log('[ContactQuestionnaire] Submitting form...', {
       name: answers.name,
       email: answers.email,
-      projectType: answers.projectType,
+      problem: answers.problem,
+      selectedTier: answers.selectedTier,
     });
 
     try {
@@ -274,8 +242,8 @@ export default function ContactQuestionnaire() {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Thank you, {answers.name}!
           </h2>
-          <p className="text-xl text-gray-400 mb-8">
-            Your inquiry has been received
+          <p className="text-xl text-gray-300 mb-8">
+            Your project details have been received
           </p>
         </motion.div>
 
@@ -284,17 +252,17 @@ export default function ContactQuestionnaire() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl p-8 mb-8 text-center"
+          className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-8 mb-8 text-center"
         >
-          <h3 className="text-2xl font-bold text-white mb-3">What's Next?</h3>
-          <p className="text-gray-300 mb-6">
-            I'll review your project details and get back to you within 24 hours at{' '}
-            <span className="text-cyan-400 font-medium">{answers.email}</span>
+          <h3 className="text-2xl font-bold text-white mb-3">🎯 What's Next?</h3>
+          <p className="text-gray-300 mb-6 text-lg">
+            I'll review your problem and get back to you within <span className="text-green-400 font-bold">24 hours</span> at{' '}
+            <span className="text-green-400 font-medium">{answers.email}</span> with a custom solution plan.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="/#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-[1.02]"
+              href="/#proof"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 hover:scale-[1.02]"
             >
               <span>View My Work</span>
               <ArrowRight className="w-5 h-5" />
@@ -308,8 +276,8 @@ export default function ContactQuestionnaire() {
           </div>
         </motion.div>
 
-        <p className="text-sm text-gray-500 text-center">
-          Looking forward to discussing your project in detail!
+        <p className="text-sm text-gray-400 text-center">
+          Looking forward to solving your problem! 💪
         </p>
       </div>
     );
@@ -392,14 +360,17 @@ export default function ContactQuestionnaire() {
                     }}
                     className={`p-6 rounded-xl border-2 transition-all duration-300 text-left ${
                       answers[currentQuestion.id as keyof QuestionnaireData] === option.value
-                        ? 'bg-cyan-500/10 border-cyan-500'
+                        ? 'bg-green-500/10 border-green-500'
                         : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
                     }`}
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 mb-2">
                       <span className="text-3xl">{option.icon}</span>
                       <span className="text-white font-medium text-lg">{option.label}</span>
                     </div>
+                    {option.description && (
+                      <p className="text-sm text-gray-400 ml-12">{option.description}</p>
+                    )}
                   </button>
                 ))}
               </div>
@@ -491,9 +462,9 @@ export default function ContactQuestionnaire() {
                 (Array.isArray(answers[currentQuestion.id as keyof QuestionnaireData]) &&
                   (answers[currentQuestion.id as keyof QuestionnaireData] as string[]).length === 0)))
           }
-          className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
-          <span>{isSubmitting ? 'Submitting...' : isLastStep ? 'Get Estimate' : 'Continue'}</span>
+          <span>{isSubmitting ? 'Submitting...' : isLastStep ? 'Get Solution Plan' : 'Continue'}</span>
           {!isSubmitting && <ArrowRight className="w-5 h-5" />}
         </button>
       </div>

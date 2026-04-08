@@ -27,16 +27,23 @@ interface Inquiry {
   id: string;
   name: string;
   email: string;
+  // New conversion-focused fields
+  problem?: string;
+  situation?: string;
+  selectedTier?: string;
+  timeline?: string;
+  features?: string[];
+  additionalDetails?: string;
+  // Legacy fields (for backward compatibility)
   projectType?: string;
   currentSituation?: string;
-  timeline?: string;
   budget?: string;
-  features?: string[];
   designNeeds?: string;
   techPreferences?: string;
-  description: string;
-  subject?: string; // Legacy field
-  message?: string; // Legacy field
+  description?: string;
+  subject?: string;
+  message?: string;
+  // Auto-calculated (admin only)
   estimatedPrice?: {
     min: number;
     max: number;
@@ -231,10 +238,10 @@ export default function AdminDashboard() {
                       <p className="text-sm text-gray-400">{inquiry.email}</p>
                     </div>
                   </div>
-                  {inquiry.projectType && (
+                  {(inquiry.selectedTier || inquiry.projectType) && (
                     <div className="flex items-center gap-2 mb-2">
                       <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-blue-400 text-xs font-medium capitalize">
-                        {inquiry.projectType.replace('-', ' ')}
+                        {(inquiry.selectedTier || inquiry.projectType || '').replace('-', ' ')}
                       </span>
                       {inquiry.estimatedPrice && (
                         <span className="px-2 py-1 bg-green-500/10 border border-green-500/20 rounded text-green-400 text-xs font-medium">
@@ -247,7 +254,7 @@ export default function AdminDashboard() {
                     <p className="text-white font-medium mb-2">{inquiry.subject}</p>
                   )}
                   <p className="text-sm text-gray-400 line-clamp-2 mb-3">
-                    {inquiry.description || inquiry.message}
+                    {inquiry.problem || inquiry.description || inquiry.message}
                   </p>
                   <div className="flex items-center gap-4 text-xs text-gray-500">
                     <div className="flex items-center gap-1">
@@ -273,7 +280,9 @@ export default function AdminDashboard() {
                 <div className="flex items-start justify-between pb-6 border-b border-white/10">
                   <div className="flex-1">
                     <h2 className="text-2xl font-bold text-white mb-2">
-                      {selectedInquiry.projectType
+                      {selectedInquiry.selectedTier
+                        ? `${selectedInquiry.selectedTier.replace('-', ' ')} Inquiry`
+                        : selectedInquiry.projectType
                         ? `${selectedInquiry.projectType.replace('-', ' ')} Project`
                         : selectedInquiry.subject || 'Inquiry Details'}
                     </h2>
@@ -329,15 +338,23 @@ export default function AdminDashboard() {
                 )}
 
                 {/* Project Details */}
-                {selectedInquiry.projectType && (
+                {(selectedInquiry.selectedTier || selectedInquiry.situation || selectedInquiry.projectType) && (
                   <div className="space-y-3">
                     <h3 className="text-lg font-semibold text-white">Project Details</h3>
                     <div className="grid grid-cols-2 gap-3">
-                      {selectedInquiry.currentSituation && (
+                      {(selectedInquiry.situation || selectedInquiry.currentSituation) && (
                         <div className="bg-white/5 border border-white/10 rounded-lg p-3">
                           <p className="text-xs text-gray-400 mb-1">Situation</p>
                           <p className="text-white font-medium capitalize text-sm">
-                            {selectedInquiry.currentSituation.replace('-', ' ')}
+                            {(selectedInquiry.situation || selectedInquiry.currentSituation || '').replace('-', ' ')}
+                          </p>
+                        </div>
+                      )}
+                      {selectedInquiry.selectedTier && (
+                        <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+                          <p className="text-xs text-gray-400 mb-1">Selected Tier</p>
+                          <p className="text-white font-medium capitalize text-sm">
+                            {selectedInquiry.selectedTier.replace('-', ' ')}
                           </p>
                         </div>
                       )}
@@ -345,22 +362,14 @@ export default function AdminDashboard() {
                         <div className="bg-white/5 border border-white/10 rounded-lg p-3">
                           <p className="text-xs text-gray-400 mb-1">Timeline</p>
                           <p className="text-white font-medium capitalize text-sm">
-                            {selectedInquiry.timeline}
+                            {selectedInquiry.timeline.replace('-', ' ')}
                           </p>
                         </div>
                       )}
                       {selectedInquiry.budget && (
                         <div className="bg-white/5 border border-white/10 rounded-lg p-3">
-                          <p className="text-xs text-gray-400 mb-1">Budget</p>
+                          <p className="text-xs text-gray-400 mb-1">Budget (Legacy)</p>
                           <p className="text-white font-medium text-sm">{selectedInquiry.budget}</p>
-                        </div>
-                      )}
-                      {selectedInquiry.designNeeds && (
-                        <div className="bg-white/5 border border-white/10 rounded-lg p-3">
-                          <p className="text-xs text-gray-400 mb-1">Design</p>
-                          <p className="text-white font-medium capitalize text-sm">
-                            {selectedInquiry.designNeeds.replace('-', ' ')}
-                          </p>
                         </div>
                       )}
                     </div>
@@ -384,30 +393,52 @@ export default function AdminDashboard() {
                   </div>
                 )}
 
-                {/* Tech Preferences */}
-                {selectedInquiry.techPreferences && selectedInquiry.techPreferences !== 'no-preference' && (
+                {/* Problem Statement */}
+                {selectedInquiry.problem && (
                   <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">Tech Stack</h3>
-                    <p className="text-gray-300 capitalize">
-                      {selectedInquiry.techPreferences.replace('-', ' ')}
-                    </p>
+                    <div className="flex items-center gap-2 mb-3">
+                      <MessageSquare className="w-5 h-5 text-gray-400" />
+                      <p className="text-sm text-gray-400">Problem Statement</p>
+                    </div>
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                      <p className="text-white whitespace-pre-wrap">
+                        {selectedInquiry.problem}
+                      </p>
+                    </div>
                   </div>
                 )}
 
-                {/* Description/Message */}
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <MessageSquare className="w-5 h-5 text-gray-400" />
-                    <p className="text-sm text-gray-400">
-                      {selectedInquiry.projectType ? 'Project Vision' : 'Message'}
-                    </p>
+                {/* Additional Details */}
+                {selectedInquiry.additionalDetails && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <MessageSquare className="w-5 h-5 text-gray-400" />
+                      <p className="text-sm text-gray-400">Additional Details</p>
+                    </div>
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-4">
+                      <p className="text-white whitespace-pre-wrap">
+                        {selectedInquiry.additionalDetails}
+                      </p>
+                    </div>
                   </div>
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                    <p className="text-white whitespace-pre-wrap">
-                      {selectedInquiry.description || selectedInquiry.message}
-                    </p>
+                )}
+
+                {/* Legacy Description/Message */}
+                {(selectedInquiry.description || selectedInquiry.message) && !selectedInquiry.problem && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <MessageSquare className="w-5 h-5 text-gray-400" />
+                      <p className="text-sm text-gray-400">
+                        {selectedInquiry.projectType ? 'Project Vision' : 'Message'}
+                      </p>
+                    </div>
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-4">
+                      <p className="text-white whitespace-pre-wrap">
+                        {selectedInquiry.description || selectedInquiry.message}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Status */}
                 <div>
