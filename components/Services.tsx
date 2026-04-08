@@ -7,8 +7,6 @@ const services = [
   {
     tier: "7-Day MVP",
     icon: Zap,
-    price: "$3K - $9K",
-    timeline: "5-7 days",
     description: "You need to validate your idea FAST without wasting months on development",
     color: "from-blue-500 to-cyan-500",
     problem: "Got an idea but need proof it works before investing big money?",
@@ -27,8 +25,6 @@ const services = [
   {
     tier: "Revenue-Ready App",
     icon: Rocket,
-    price: "$9K - $30K",
-    timeline: "4-8 weeks",
     description: "You need an app that makes money NOW, not 6 months from now",
     color: "from-purple-500 to-pink-500",
     popular: true,
@@ -50,8 +46,6 @@ const services = [
   {
     tier: "Production SaaS",
     icon: Crown,
-    price: "$30K - $90K+",
-    timeline: "2-3 months",
     description: "You need a Zonely/Speakix level platform that crushes competitors",
     color: "from-orange-500 to-red-500",
     problem: "Want a SaaS that actually competes with the big players?",
@@ -74,8 +68,6 @@ const services = [
   {
     tier: "Fix Your Broken App",
     icon: Sparkles,
-    price: "Let's Talk",
-    timeline: "2-6 weeks",
     description: "Your agency disappeared or delivered garbage. I'll fix it FAST.",
     color: "from-emerald-500 to-teal-500",
     problem: "Stuck with a broken app that doesn't work? Agency ghosted you?",
@@ -159,21 +151,17 @@ export default function Services() {
                     <Icon className="w-6 h-6 text-white" />
                   </div>
 
-                  {/* Tier & Price */}
-                  <h3 className="text-2xl font-bold mb-2">{service.tier}</h3>
-                  <div className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-1">
-                    {service.price}
-                  </div>
-                  <div className="text-sm text-gray-500 mb-3">⚡ {service.timeline}</div>
+                  {/* Tier Name */}
+                  <h3 className="text-2xl font-bold mb-4">{service.tier}</h3>
 
                   {/* Problem statement */}
                   {service.problem && (
-                    <p className="text-red-400 text-sm font-semibold mb-2 italic">
+                    <p className="text-red-400 text-sm font-semibold mb-3 italic">
                       {service.problem}
                     </p>
                   )}
 
-                  <p className="text-gray-300 text-sm mb-6 min-h-[40px] font-medium">
+                  <p className="text-gray-300 text-sm mb-6 font-medium">
                     {service.description}
                   </p>
 
@@ -204,7 +192,7 @@ export default function Services() {
                         : 'bg-white/5 hover:bg-white/10 border border-white/10'
                     }`}
                   >
-                    Get Started
+                    Get Custom Quote →
                   </motion.a>
                 </div>
               </motion.div>

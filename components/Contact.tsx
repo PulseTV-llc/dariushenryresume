@@ -77,42 +77,24 @@ export default function Contact() {
               />
             </div>
 
-            {/* Timeline & Budget Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="timeline" className="block text-sm font-medium text-gray-300 mb-2">
-                  When do you need this?
-                </label>
-                <select
-                  id="timeline"
-                  name="timeline"
-                  required
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 transition-all outline-none"
-                >
-                  <option value="" className="bg-gray-900">Select timeline...</option>
-                  <option value="asap" className="bg-gray-900">⚡ ASAP (1-2 weeks)</option>
-                  <option value="1month" className="bg-gray-900">1 month</option>
-                  <option value="3months" className="bg-gray-900">3 months</option>
-                  <option value="6months" className="bg-gray-900">6 months</option>
-                  <option value="flexible" className="bg-gray-900">Flexible</option>
-                </select>
-              </div>
-              <div>
-                <label htmlFor="budget" className="block text-sm font-medium text-gray-300 mb-2">
-                  Budget Range
-                </label>
-                <select
-                  id="budget"
-                  name="budget"
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 transition-all outline-none"
-                >
-                  <option value="" className="bg-gray-900">Select budget...</option>
-                  <option value="3-9k" className="bg-gray-900">$3K - $9K (7-Day MVP)</option>
-                  <option value="9-30k" className="bg-gray-900">$9K - $30K (Revenue-Ready)</option>
-                  <option value="30k+" className="bg-gray-900">$30K+ (Production SaaS)</option>
-                  <option value="unsure" className="bg-gray-900">Not sure yet</option>
-                </select>
-              </div>
+            {/* Timeline */}
+            <div>
+              <label htmlFor="timeline" className="block text-sm font-medium text-gray-300 mb-2">
+                When do you need this?
+              </label>
+              <select
+                id="timeline"
+                name="timeline"
+                required
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 transition-all outline-none"
+              >
+                <option value="" className="bg-gray-900">Select timeline...</option>
+                <option value="asap" className="bg-gray-900">⚡ ASAP (1-2 weeks)</option>
+                <option value="1month" className="bg-gray-900">1 month</option>
+                <option value="3months" className="bg-gray-900">3 months</option>
+                <option value="6months" className="bg-gray-900">6 months</option>
+                <option value="flexible" className="bg-gray-900">Flexible</option>
+              </select>
             </div>
 
             {/* Submit Button */}
