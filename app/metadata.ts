@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 
 export const siteConfig = {
-  name: 'Darius Henry - Full-Stack Developer & SaaS Builder',
-  description: 'Expert full-stack developer specializing in SaaS platforms, AI integration, and mobile apps. 27+ production applications including Zonely, Speakix, and TapeCoach. React, Next.js, TypeScript, Node.js, Python, React Native. Custom software development from $3K to enterprise solutions.',
-  url: 'https://dariushenryresume.vercel.app',
-  ogImage: 'https://dariushenryresume.vercel.app/og-image.jpg',
+  name: 'I BUILD REVENUE-READY iOS APPS IN 7 DAYS | Darius Henry',
+  description: 'Fix Your Broken App or Get Your MVP Live Fast. iOS, React Native, SaaS Developer. 27+ Apps Shipped (Zonely, Speakix, TapeCoach). Emergency App Rescue, 7-Day MVPs, Revenue-Ready Apps, Production SaaS. Real Estate Tech, EdTech, Entertainment. Taking 2 new clients this month.',
+  url: 'https://iamdariushenry.com',
+  ogImage: 'https://iamdariushenry.com/og-image.jpg',
   author: {
     name: 'Darius Henry',
     email: 'darius.henry@gmail.com',
@@ -12,13 +12,31 @@ export const siteConfig = {
     github: 'https://github.com/PulseTV-llc',
   },
   keywords: [
+    // URGENT/CONVERSION KEYWORDS (NEW - PRIORITY)
+    'fix broken app',
+    'broken app rescue',
+    'emergency app repair',
+    'agency delivered broken app',
+    'stuck app development',
+    'app not working',
+    '7 day MVP',
+    '7-day MVP developer',
+    'fast MVP development',
+    'quick app development',
+    'revenue ready app',
+    'revenue-ready iOS app',
+    'build app fast',
+    'rapid app development',
+
     // Core developer keywords
+    'iOS developer',
+    'iOS app developer',
     'full-stack developer',
     'full stack developer',
     'software developer',
-    'software engineer',
-    'web developer',
     'mobile developer',
+    'React Native developer',
+    'Swift developer',
 
     // Technology keywords
     'React developer',
@@ -26,7 +44,6 @@ export const siteConfig = {
     'TypeScript developer',
     'Node.js developer',
     'Python developer',
-    'React Native developer',
     'JavaScript developer',
 
     // Specialty keywords
@@ -38,54 +55,60 @@ export const siteConfig = {
     'OpenAI developer',
     'ChatGPT integration',
 
-    // Service keywords
-    'custom software development',
-    'web application development',
+    // Service keywords (UPDATED - no pricing)
+    'custom app development',
     'mobile app development',
-    'enterprise software development',
     'startup developer',
     'MVP development',
-    'API development',
-    'database developer',
+    'MVP builder',
+    'prototype developer',
 
     // Platform keywords
-    'Vercel deployment',
     'AWS developer',
     'Firebase developer',
     'cloud developer',
+    'Vercel expert',
 
     // Industry keywords
     'real estate tech developer',
+    'real estate app developer',
     'edtech developer',
+    'education app developer',
     'entertainment tech developer',
-    'e-commerce developer',
-    'fintech developer',
-    'healthtech developer',
+    'SaaS for real estate',
 
     // Project-specific
+    'Zonely',
     'Zonely developer',
+    'Speakix',
     'Speakix developer',
+    'TapeCoach',
     'TapeCoach developer',
     'PulseTV developer',
 
     // Solution keywords
-    'subscription platform developer',
-    'Stripe integration developer',
-    'payment gateway integration',
-    'authentication developer',
+    'subscription platform',
+    'Stripe integration',
+    'payment integration',
     'multi-tenant SaaS',
+    'SaaS architecture',
 
     // Hiring keywords
-    'hire full-stack developer',
-    'freelance developer',
+    'hire iOS developer',
+    'hire app developer',
+    'freelance iOS developer',
     'contract developer',
     'remote developer',
-    'consultant developer',
+    'independent developer',
 
-    // Location-based (add if applicable)
-    'USA developer',
-    'US-based developer',
-    'English-speaking developer',
+    // Problem-solving keywords (NEW)
+    'app development rescue',
+    'fix my app',
+    'complete unfinished app',
+    'app development help',
+    'startup app developer',
+    'validate app idea',
+    'fast app launch',
   ],
 };
 

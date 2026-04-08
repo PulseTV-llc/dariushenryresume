@@ -1,11 +1,11 @@
 {
-  "name": "Darius Henry - Full-Stack Developer Portfolio",
+  "name": "Darius Henry - iOS & SaaS Developer",
   "short_name": "Darius Henry",
-  "description": "Full-stack developer specializing in SaaS platforms, AI integration, and mobile apps",
+  "description": "Revenue-ready iOS apps in 7 days. Fix broken apps, build MVPs fast, create production SaaS.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#000000",
+  "theme_color": "#00ff00",
   "icons": [
     {
       "src": "/favicon-16x16.png",
@@ -13,8 +13,23 @@
       "type": "image/png"
     },
     {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
       "src": "/apple-touch-icon.png",
       "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
