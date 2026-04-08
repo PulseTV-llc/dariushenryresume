@@ -158,11 +158,17 @@ export async function POST(request: NextRequest) {
     const {
       name,
       email,
+      // New conversion-focused fields
+      problem,
+      situation,
+      selectedTier,
+      timeline,
+      features,
+      additionalDetails,
+      // Legacy fields (backward compatibility)
       projectType,
       currentSituation,
-      timeline,
       budget,
-      features,
       designNeeds,
       techPreferences,
       description,
@@ -171,36 +177,71 @@ export async function POST(request: NextRequest) {
     console.log(`[${requestId}] Parsed request:`, {
       name: name || 'missing',
       email: email || 'missing',
-      projectType: projectType || 'missing',
-      hasDescription: !!description,
+      problem: problem || 'missing',
+      selectedTier: selectedTier || 'missing',
+      // Legacy check
+      projectType: projectType || 'not provided',
+      isNewFormat: !!problem,
     });
 
-    // Validate required fields
-    if (!name || !email || !projectType || !description) {
-      const missingFields = [];
-      if (!name) missingFields.push('name');
-      if (!email) missingFields.push('email');
-      if (!projectType) missingFields.push('projectType');
-      if (!description) missingFields.push('description');
+    // Validate required fields (support both old and new formats)
+    const isNewFormat = !!problem;
 
-      console.warn(`[${requestId}] Validation failed - missing fields:`, missingFields);
-      return NextResponse.json(
-        { error: `Please complete all required fields: ${missingFields.join(', ')}`, requestId },
-        { status: 400 }
-      );
-    }
+    if (isNewFormat) {
+      // New format validation
+      if (!name || !email || !problem) {
+        const missingFields = [];
+        if (!name) missingFields.push('name');
+        if (!email) missingFields.push('email');
+        if (!problem) missingFields.push('problem');
 
-    // Validate field lengths
-    if (name.length > 100 || email.length > 100 || description.length > 3000) {
-      console.warn(`[${requestId}] Validation failed - field too long:`, {
-        nameLength: name.length,
-        emailLength: email.length,
-        descriptionLength: description.length,
-      });
-      return NextResponse.json(
-        { error: 'One or more fields exceed maximum length.', requestId },
-        { status: 400 }
-      );
+        console.warn(`[${requestId}] Validation failed - missing fields:`, missingFields);
+        return NextResponse.json(
+          { error: `Please complete all required fields: ${missingFields.join(', ')}`, requestId },
+          { status: 400 }
+        );
+      }
+
+      // Validate field lengths for new format
+      if (name.length > 100 || email.length > 100 || problem.length > 3000) {
+        console.warn(`[${requestId}] Validation failed - field too long:`, {
+          nameLength: name.length,
+          emailLength: email.length,
+          problemLength: problem.length,
+        });
+        return NextResponse.json(
+          { error: 'One or more fields exceed maximum length.', requestId },
+          { status: 400 }
+        );
+      }
+    } else {
+      // Legacy format validation
+      if (!name || !email || !projectType || !description) {
+        const missingFields = [];
+        if (!name) missingFields.push('name');
+        if (!email) missingFields.push('email');
+        if (!projectType) missingFields.push('projectType');
+        if (!description) missingFields.push('description');
+
+        console.warn(`[${requestId}] Validation failed - missing fields:`, missingFields);
+        return NextResponse.json(
+          { error: `Please complete all required fields: ${missingFields.join(', ')}`, requestId },
+          { status: 400 }
+        );
+      }
+
+      // Validate field lengths for legacy format
+      if (name.length > 100 || email.length > 100 || description.length > 3000) {
+        console.warn(`[${requestId}] Validation failed - field too long:`, {
+          nameLength: name.length,
+          emailLength: email.length,
+          descriptionLength: description.length,
+        });
+        return NextResponse.json(
+          { error: 'One or more fields exceed maximum length.', requestId },
+          { status: 400 }
+        );
+      }
     }
 
     // Basic email validation
@@ -223,28 +264,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Save to Firestore
-    const inquiry = {
+    const inquiry: any = {
       // Basic info
       name: name.trim(),
       email: email.trim().toLowerCase(),
-
-      // Project details
-      projectType,
-      currentSituation,
-      timeline,
-      budget,
-      features: features || [],
-      designNeeds,
-      techPreferences,
-      description: description.trim(),
-
-      // Pricing estimate
-      estimatedPrice: {
-        min: estimate.min,
-        max: estimate.max,
-      },
-      estimatedTimeline: estimate.timeline,
-      recommendedTier: estimate.tier,
 
       // Metadata
       ip,
@@ -253,6 +276,35 @@ export async function POST(request: NextRequest) {
       read: false,
     };
 
+    // Add new conversion-focused fields OR legacy fields
+    if (isNewFormat) {
+      // New format fields
+      inquiry.problem = problem.trim();
+      inquiry.situation = situation;
+      inquiry.selectedTier = selectedTier;
+      inquiry.timeline = timeline;
+      inquiry.features = features || [];
+      inquiry.additionalDetails = additionalDetails ? additionalDetails.trim() : '';
+    } else {
+      // Legacy format fields
+      inquiry.projectType = projectType;
+      inquiry.currentSituation = currentSituation;
+      inquiry.timeline = timeline;
+      inquiry.budget = budget;
+      inquiry.features = features || [];
+      inquiry.designNeeds = designNeeds;
+      inquiry.techPreferences = techPreferences;
+      inquiry.description = description.trim();
+
+      // Pricing estimate (only for legacy format)
+      inquiry.estimatedPrice = {
+        min: estimate.min,
+        max: estimate.max,
+      };
+      inquiry.estimatedTimeline = estimate.timeline;
+      inquiry.recommendedTier = estimate.tier;
+    }
+
     console.log(`[${requestId}] Attempting to save to Firestore...`);
 
     try {
@@ -260,7 +312,8 @@ export async function POST(request: NextRequest) {
       console.log(`[${requestId}] ✅ Successfully saved to Firestore:`, {
         id: docRef.id,
         email: inquiry.email,
-        projectType: inquiry.projectType,
+        selectedTier: inquiry.selectedTier || inquiry.projectType || 'unknown',
+        isNewFormat,
       });
     } catch (firestoreError: any) {
       console.error(`[${requestId}] ❌ Firestore write failed:`, {
