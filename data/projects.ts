@@ -9,6 +9,10 @@ export interface Project {
   metrics?: string[];
   status: 'Production' | 'Active Development' | 'Beta';
   tier: 1 | 2 | 3;
+  // New outcome-focused fields
+  problem?: string;
+  solution?: string;
+  outcome?: string;
 }
 
 export const projects: Project[] = [
@@ -30,7 +34,10 @@ export const projects: Project[] = [
     ],
     metrics: ['Multi-platform (iOS, macOS, Web)', 'Real-time collaboration', 'AI-powered intelligence'],
     status: 'Production',
-    tier: 1
+    tier: 1,
+    problem: 'Real estate founders wasting $50K+ on agencies, waiting 6 months for buggy MVPs',
+    solution: 'Full real estate intelligence SaaS with iOS app, web portal, AI analysis, and Stripe subscriptions',
+    outcome: 'Live in production in 90 days. Multi-platform ecosystem. Revenue-ready subscriptions. Now acquiring users.'
   },
   {
     id: 'speakix',
@@ -51,7 +58,10 @@ export const projects: Project[] = [
     ],
     metrics: ['100 free AI conversations/month', '$9.99/month Premium', 'iOS 17+'],
     status: 'Active Development',
-    tier: 1
+    tier: 1,
+    problem: 'EdTech apps using fake "AI" (pre-scripted responses). Users want REAL conversation practice, not robots.',
+    solution: 'Full iOS language learning platform with REAL GPT-4 conversations, 100+ modules, gamification, subscriptions',
+    outcome: 'The "Duolingo Killer". 100 free AI conversations/month freemium model. Multi-language support. Ready for App Store.'
   },
   {
     id: 'tapecoach',
@@ -72,7 +82,10 @@ export const projects: Project[] = [
     ],
     metrics: ['3 free analyses/month', '$9.99/month Pro', 'iOS 17+'],
     status: 'Beta',
-    tier: 1
+    tier: 1,
+    problem: 'Actors losing roles because of bad self-tape quality. No automated way to get professional feedback fast.',
+    solution: 'iOS app with computer vision analysis: framing, lighting, audio levels, eyeline. AI-powered scoring & tips.',
+    outcome: 'Professional-grade audition analyzer in your pocket. 3 free analyses/month freemium. In beta with real actors.'
   },
   {
     id: 'pulsetv',
@@ -190,7 +203,10 @@ export const projects: Project[] = [
     ],
     metrics: ['iOS 17+', 'Subscription model', 'Enterprise calculations'],
     status: 'Production',
-    tier: 2
+    tier: 2,
+    problem: 'Real estate investors doing calculations on spreadsheets. Time-consuming, error-prone, no mobile access.',
+    solution: '5+ enterprise calculators in one iOS app: Budget, ROI, Mortgage, Cash Flow. Cloud sync + subscriptions.',
+    outcome: 'Live on iOS. Complete freemium system with usage limits. Professional calculations in your pocket.'
   },
   {
     id: 'nutrilens',

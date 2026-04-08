@@ -5,91 +5,95 @@ import { Check, Sparkles, Zap, Rocket, Crown } from "lucide-react";
 
 const services = [
   {
-    tier: "Starter",
+    tier: "7-Day MVP",
     icon: Zap,
     price: "$3K - $9K",
-    timeline: "2-4 weeks",
-    description: "Perfect for launching your digital presence with professional quality",
+    timeline: "5-7 days",
+    description: "You need to validate your idea FAST without wasting months on development",
     color: "from-blue-500 to-cyan-500",
+    problem: "Got an idea but need proof it works before investing big money?",
     features: [
-      "Modern responsive website",
-      "SEO optimization",
-      "Contact forms & integrations",
-      "Mobile-first design",
-      "Content management setup",
-      "2 weeks post-launch support",
-      "Performance optimization",
-      "Analytics integration"
+      "⚡ FAST DELIVERY: 7 days or less",
+      "Working iOS or web app",
+      "Basic user authentication",
+      "Core feature implementation",
+      "Database setup & hosting",
+      "Ready to show investors/users",
+      "💰 REVENUE-READY: Can take payments",
+      "🔥 LIMITED: 2 spots this month"
     ],
-    examples: "Portfolios, Business Sites, Landing Pages"
+    examples: "\"I'll build your SaaS MVP in a week so you can start getting users NOW\""
   },
   {
-    tier: "Professional",
+    tier: "Revenue-Ready App",
     icon: Rocket,
     price: "$9K - $30K",
-    timeline: "1-3 months",
-    description: "Custom applications built to solve real business problems",
+    timeline: "4-8 weeks",
+    description: "You need an app that makes money NOW, not 6 months from now",
     color: "from-purple-500 to-pink-500",
     popular: true,
+    problem: "Tired of agencies that take forever and deliver broken apps?",
     features: [
-      "Full-stack web/mobile application",
-      "Custom database architecture",
-      "User authentication & authorization",
-      "Payment gateway integration",
-      "RESTful API development",
-      "Admin dashboard & analytics",
-      "30 days post-launch support",
-      "Cloud deployment (AWS/Vercel)",
-      "Performance monitoring",
-      "Security best practices"
+      "⚡ FAST: 1-2 months, not 6-12",
+      "Full iOS/web app with payments",
+      "Stripe/PayPal integration",
+      "User accounts & authentication",
+      "Admin dashboard for management",
+      "Analytics & metrics tracking",
+      "💰 START MAKING MONEY DAY 1",
+      "Cloud hosting & deployment",
+      "30 days premium support",
+      "🔥 MOST POPULAR TIER"
     ],
-    examples: "E-commerce Platforms, Booking Systems, Internal Tools"
+    examples: "\"Like BackendSplit - calculator suite making money in 6 weeks\""
   },
   {
-    tier: "Enterprise SaaS",
+    tier: "Production SaaS",
     icon: Crown,
     price: "$30K - $90K+",
-    timeline: "3-6 months",
-    description: "Production-grade SaaS platforms like Zonely, Speakix, and TapeCoach",
+    timeline: "2-3 months",
+    description: "You need a Zonely/Speakix level platform that crushes competitors",
     color: "from-orange-500 to-red-500",
+    problem: "Want a SaaS that actually competes with the big players?",
     features: [
-      "Multi-tenant SaaS architecture",
-      "AI/ML integration (OpenAI, Custom Models)",
+      "⚡ FAST: 90 days, not 12 months",
+      "Multi-platform (iOS + Web + macOS)",
+      "AI integration (OpenAI, custom models)",
+      "Full subscription system (Stripe)",
+      "Multi-tenant architecture",
       "Real-time features & websockets",
-      "Advanced analytics & reporting",
-      "Subscription & billing management",
-      "Role-based access control",
-      "Scalable microservices architecture",
-      "CI/CD pipeline setup",
+      "Admin dashboards & analytics",
+      "💰 REVENUE-READY SUBSCRIPTIONS",
+      "Scalable cloud infrastructure",
       "90 days premium support",
-      "Load testing & optimization",
-      "Comprehensive documentation",
-      "Team training sessions"
+      "🔥 FLAGSHIP QUALITY",
+      "Reference my live apps - that's what you get"
     ],
-    examples: "Zonely (Real Estate AI), Speakix (Language Learning), TapeCoach (AI Audition Analysis)"
+    examples: "\"I built Zonely (real estate SaaS) in 90 days. Yours is next.\""
   },
   {
-    tier: "Custom Enterprise",
+    tier: "Fix Your Broken App",
     icon: Sparkles,
     price: "Let's Talk",
-    timeline: "3-12 months",
-    description: "Complex systems requiring discovery, research, and ongoing partnership",
+    timeline: "2-6 weeks",
+    description: "Your agency disappeared or delivered garbage. I'll fix it FAST.",
     color: "from-emerald-500 to-teal-500",
+    problem: "Stuck with a broken app that doesn't work? Agency ghosted you?",
     features: [
-      "Discovery & architecture planning",
-      "Custom technology stack",
-      "Third-party integrations",
-      "Migration from legacy systems",
-      "White-label solutions",
-      "Dedicated development team",
-      "Agile development methodology",
-      "Regular stakeholder reviews",
-      "Ongoing maintenance & updates",
-      "24/7 priority support options",
-      "Custom SLA agreements",
-      "Technology consulting"
+      "⚡ RESCUE MISSION: Fix fast",
+      "Audit existing codebase",
+      "Fix critical bugs & crashes",
+      "Complete unfinished features",
+      "Get your app live on App Store",
+      "Refactor terrible code",
+      "Add missing payment integration",
+      "💰 GET TO REVENUE FAST",
+      "Deploy to production",
+      "Train you on the system",
+      "🔥 EMERGENCY SERVICE AVAILABLE",
+      "Stop bleeding money on a broken app"
     ],
-    examples: "Enterprise Platforms, FinTech Solutions, HealthTech Systems"
+    examples: "\"I've rescued 5+ broken projects this year. Yours is next.\""
   }
 ];
 
@@ -119,10 +123,10 @@ export default function Services() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Services & Investment
+            HOW I CAN HELP YOU
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            From rapid prototypes to enterprise SaaS platforms - scalable solutions built with production-grade architecture
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto font-medium">
+            Stop wasting time with slow agencies. Get your app built <span className="text-green-400 font-bold">fast</span>, get it <span className="text-cyan-400 font-bold">revenue-ready</span>, get it <span className="text-purple-400 font-bold">making money</span>.
           </p>
         </motion.div>
 
@@ -160,9 +164,16 @@ export default function Services() {
                   <div className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-1">
                     {service.price}
                   </div>
-                  <div className="text-sm text-gray-400 mb-4">{service.timeline}</div>
+                  <div className="text-sm text-gray-500 mb-3">⚡ {service.timeline}</div>
 
-                  <p className="text-gray-400 text-sm mb-6 min-h-[60px]">
+                  {/* Problem statement */}
+                  {service.problem && (
+                    <p className="text-red-400 text-sm font-semibold mb-2 italic">
+                      {service.problem}
+                    </p>
+                  )}
+
+                  <p className="text-gray-300 text-sm mb-6 min-h-[40px] font-medium">
                     {service.description}
                   </p>
 
@@ -178,8 +189,8 @@ export default function Services() {
 
                   {/* Examples */}
                   <div className="pt-4 border-t border-white/10">
-                    <p className="text-xs text-gray-500 mb-1">Perfect for:</p>
-                    <p className="text-xs text-gray-400">{service.examples}</p>
+                    <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider">What You Get:</p>
+                    <p className="text-xs text-green-400 font-medium italic">{service.examples}</p>
                   </div>
 
                   {/* CTA Button */}
@@ -252,16 +263,19 @@ export default function Services() {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <p className="text-gray-400 mb-4">
-            Not sure which tier fits your needs?
+          <p className="text-gray-300 mb-2 text-lg font-medium">
+            Not sure which one you need?
+          </p>
+          <p className="text-gray-400 mb-6">
+            Tell me your problem. I'll tell you how fast I can fix it.
           </p>
           <motion.a
             href="#contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl font-semibold text-lg"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-10 py-5 rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all"
           >
-            Schedule a Free Consultation
+            Tell Me Your Problem →
           </motion.a>
         </motion.div>
       </div>

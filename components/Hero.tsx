@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, Mail, Terminal } from 'lucide-react';
+import { ArrowDown, Github, Linkedin, Mail, ChevronRight } from 'lucide-react';
 
 export default function Hero() {
   return (
@@ -36,15 +36,15 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Terminal badge */}
+        {/* Urgency badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/30 backdrop-blur-sm mb-8"
         >
-          <Terminal className="w-4 h-4 text-cyan-400" />
-          <span className="text-sm text-gray-300">Full-Stack Developer</span>
+          <span className="text-2xl">🔥</span>
+          <span className="text-sm text-red-400 font-semibold">Taking 2 new clients this month</span>
         </motion.div>
 
         {/* Main heading */}
@@ -52,10 +52,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold mb-6 tracking-tight"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight leading-tight"
         >
-          <span className="block text-white">DARIUS</span>
-          <span className="block gradient-text">HENRY</span>
+          <span className="block text-white mb-2">I BUILD</span>
+          <span className="block gradient-text">REVENUE-READY</span>
+          <span className="block text-white">iOS APPS IN 7 DAYS</span>
         </motion.h1>
 
         {/* Subtitle */}
@@ -63,11 +64,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl sm:text-2xl md:text-3xl text-gray-400 mb-12 max-w-4xl mx-auto"
+          className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto font-medium"
         >
-          Building <span className="text-cyan-400 font-semibold">production-ready SaaS</span> applications with{' '}
-          <span className="text-purple-400 font-semibold">AI integration</span> and{' '}
-          <span className="text-blue-400 font-semibold">modern architecture</span>
+          While others are still in discovery, your app is already{' '}
+          <span className="text-green-400 font-bold">making money</span>.{' '}
+          Real projects. Real results. <span className="text-cyan-400 font-bold">Fast</span>.
         </motion.p>
 
         {/* Stats */}
@@ -78,16 +79,16 @@ export default function Hero() {
           className="grid grid-cols-3 gap-8 max-w-3xl mx-auto mb-12"
         >
           <div className="text-center">
-            <div className="text-4xl md:text-5xl font-bold text-cyan-400 mb-2">27+</div>
-            <div className="text-sm md:text-base text-gray-400">Production Apps</div>
+            <div className="text-4xl md:text-5xl font-bold text-green-400 mb-2">27+</div>
+            <div className="text-sm md:text-base text-gray-400 font-medium">Apps Making Money</div>
+          </div>
+          <div className="text-center">
+            <div className="text-4xl md:text-5xl font-bold text-cyan-400 mb-2">7</div>
+            <div className="text-sm md:text-base text-gray-400 font-medium">Day Average Delivery</div>
           </div>
           <div className="text-center">
             <div className="text-4xl md:text-5xl font-bold text-purple-400 mb-2">6+</div>
-            <div className="text-sm md:text-base text-gray-400">SaaS Platforms</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-2">3+</div>
-            <div className="text-sm md:text-base text-gray-400">AI Integrations</div>
+            <div className="text-sm md:text-base text-gray-400 font-medium">SaaS Platforms Live</div>
           </div>
         </motion.div>
 
@@ -99,16 +100,17 @@ export default function Hero() {
           className="flex flex-wrap items-center justify-center gap-4 mb-16"
         >
           <a
-            href="#projects"
-            className="group px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105"
+            href="#contact"
+            className="group px-10 py-5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl font-bold text-white text-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2"
           >
-            View My Work
+            Tell Me Your Problem
+            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
           <a
-            href="#contact"
-            className="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm rounded-lg font-semibold text-white hover:bg-white/10 transition-all duration-300"
+            href="#proof"
+            className="px-8 py-5 bg-white/5 border border-white/10 backdrop-blur-sm rounded-xl font-semibold text-white hover:bg-white/10 transition-all duration-300"
           >
-            Get In Touch
+            See How I Did It (Real Projects)
           </a>
         </motion.div>
 

@@ -20,6 +20,9 @@ import {
   Calendar
 } from 'lucide-react';
 
+// Prevent static generation - this page requires runtime Firebase
+export const dynamic = 'force-dynamic';
+
 interface Inquiry {
   id: string;
   name: string;

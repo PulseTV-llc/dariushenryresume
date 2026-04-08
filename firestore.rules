@@ -7,8 +7,11 @@ service cloud.firestore {
       // Only authenticated users can read
       allow read: if request.auth != null;
 
-      // Only server can write (using Firebase Admin SDK)
-      allow write: if false;
+      // Authenticated admin users can update and delete
+      allow update, delete: if request.auth != null;
+
+      // Only server can create (using Firebase Admin SDK from contact form)
+      allow create: if false;
     }
 
     // Default deny all other collections

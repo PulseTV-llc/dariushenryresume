@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ExternalLink, Sparkles, Zap, Rocket } from 'lucide-react';
+import { Sparkles, Zap, Rocket, ChevronRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { useState } from 'react';
 
@@ -27,17 +27,13 @@ const statusIcons = {
 };
 
 export default function Projects() {
-  const [filter, setFilter] = useState<'all' | 'tier1' | 'tier2'>('all');
+  const [showAll, setShowAll] = useState(false);
 
-  const filteredProjects = projects.filter(project => {
-    if (filter === 'all') return true;
-    if (filter === 'tier1') return project.tier === 1;
-    if (filter === 'tier2') return project.tier <= 2;
-    return true;
-  });
+  // Show only tier 1 & 2 projects by default
+  const displayedProjects = showAll ? projects : projects.filter(p => p.tier <= 2);
 
   return (
-    <section id="projects" className="relative py-32 px-4 sm:px-6 lg:px-8 bg-black">
+    <section id="proof" className="relative py-32 px-4 sm:px-6 lg:px-8 bg-black">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -48,50 +44,16 @@ export default function Projects() {
           className="text-center mb-16"
         >
           <h2 className="text-5xl md:text-6xl font-bold mb-6">
-            <span className="gradient-text">Featured Projects</span>
+            <span className="gradient-text">PROOF: RECENT WINS</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-            Production-ready SaaS applications showcasing full-stack development, AI integration, and modern architecture
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Real problems I solved. Real apps making money. <span className="text-green-400 font-bold">This could be your project next.</span>
           </p>
-
-          {/* Filter buttons */}
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
-                filter === 'all'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                  : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10'
-              }`}
-            >
-              All Projects
-            </button>
-            <button
-              onClick={() => setFilter('tier1')}
-              className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
-                filter === 'tier1'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                  : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10'
-              }`}
-            >
-              Flagship
-            </button>
-            <button
-              onClick={() => setFilter('tier2')}
-              className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
-                filter === 'tier2'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                  : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10'
-              }`}
-            >
-              Major Apps
-            </button>
-          </div>
         </motion.div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {filteredProjects.map((project, index) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {displayedProjects.map((project, index) => {
             const StatusIcon = statusIcons[project.status];
             return (
               <motion.div
@@ -99,100 +61,115 @@ export default function Projects() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
                 className="group relative"
               >
-                <div className="relative h-full p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-500 hover:scale-[1.02]">
-                  {/* Tier badge */}
-                  {project.tier === 1 && (
-                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30">
-                      <span className="text-xs font-bold text-yellow-400">FLAGSHIP</span>
+                <div className="relative h-full p-8 rounded-2xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/10 backdrop-blur-sm hover:border-green-500/50 transition-all duration-300">
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg bg-gradient-to-br ${categoryColors[project.category]}`}>
+                        <StatusIcon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-white">{project.title}</h3>
+                        <p className="text-sm text-gray-500">{project.tagline}</p>
+                      </div>
+                    </div>
+                    {project.tier === 1 && (
+                      <span className="px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-xs font-bold text-yellow-400">
+                        FLAGSHIP
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Before/After Story */}
+                  {project.problem && (
+                    <div className="space-y-5 mb-6">
+                      {/* THE PROBLEM */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-2xl">🏢</span>
+                          <h4 className="text-sm font-bold text-red-400 uppercase tracking-wide">The Problem</h4>
+                        </div>
+                        <p className="text-sm text-gray-300 leading-relaxed">{project.problem}</p>
+                      </div>
+
+                      {/* WHAT I BUILT */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-2xl">⚡</span>
+                          <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wide">What I Built</h4>
+                        </div>
+                        <p className="text-sm text-gray-300 leading-relaxed">{project.solution}</p>
+                      </div>
+
+                      {/* THE OUTCOME */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-2xl">💰</span>
+                          <h4 className="text-sm font-bold text-green-400 uppercase tracking-wide">The Outcome</h4>
+                        </div>
+                        <p className="text-sm text-gray-300 leading-relaxed font-medium">{project.outcome}</p>
+                      </div>
                     </div>
                   )}
 
-                  {/* Category badge */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className={`px-4 py-1 rounded-full bg-gradient-to-r ${categoryColors[project.category]} text-white text-sm font-medium`}>
-                      {project.category}
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
-                      <StatusIcon className="w-3 h-3" />
-                      <span className="text-xs text-gray-400">{project.status}</span>
-                    </div>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                    {project.title}
-                  </h3>
-
-                  {/* Tagline */}
-                  <p className="text-lg text-cyan-400 mb-4 font-medium">
-                    {project.tagline}
-                  </p>
-
-                  {/* Description */}
-                  <p className="text-gray-400 mb-6 leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  {/* Key features */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold text-gray-300 mb-3">Key Features:</h4>
-                    <ul className="space-y-2">
-                      {project.features.slice(0, 4).map((feature, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
-                          <span className="text-cyan-400 mt-1">▸</span>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Technologies */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold text-gray-300 mb-3">Tech Stack:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.map((tech, i) => (
+                  {/* Tech Stack */}
+                  <div className="pt-5 border-t border-white/10">
+                    <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Tech Stack:</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.technologies.slice(0, 5).map((tech, i) => (
                         <span
                           key={i}
-                          className="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-gray-300"
+                          className="px-2 py-1 rounded bg-white/5 text-xs text-gray-400 font-mono"
                         >
                           {tech}
                         </span>
                       ))}
+                      {project.technologies.length > 5 && (
+                        <span className="px-2 py-1 text-xs text-gray-500">
+                          +{project.technologies.length - 5} more
+                        </span>
+                      )}
                     </div>
                   </div>
 
-                  {/* Metrics */}
-                  {project.metrics && (
-                    <div className="flex flex-wrap gap-4 pt-4 border-t border-white/10">
-                      {project.metrics.map((metric, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm">
-                          <Zap className="w-4 h-4 text-cyan-400" />
-                          <span className="text-gray-300">{metric}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Hover effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500/0 to-blue-500/0 group-hover:from-cyan-500/5 group-hover:to-blue-500/5 transition-all duration-500 pointer-events-none" />
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-green-500/0 to-emerald-500/0 group-hover:from-green-500/10 group-hover:to-emerald-500/10 transition-all duration-300 pointer-events-none" />
                 </div>
               </motion.div>
             );
           })}
         </div>
 
+        {/* View More Button */}
+        {!showAll && projects.length > displayedProjects.length && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <button
+              onClick={() => setShowAll(true)}
+              className="group inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 text-cyan-400 font-medium hover:from-cyan-500/20 hover:to-blue-500/20 hover:border-cyan-500/40 transition-all duration-300"
+            >
+              View All Projects
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </motion.div>
+        )}
+
         {/* Project count */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center mt-16"
+          className="text-center mt-8"
         >
-          <p className="text-gray-400">
-            Showing <span className="text-cyan-400 font-semibold">{filteredProjects.length}</span> of{' '}
+          <p className="text-sm text-gray-500">
+            Showing <span className="text-cyan-400 font-semibold">{displayedProjects.length}</span> of{' '}
             <span className="text-cyan-400 font-semibold">{projects.length}</span> projects
           </p>
         </motion.div>

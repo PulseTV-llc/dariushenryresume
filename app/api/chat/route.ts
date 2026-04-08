@@ -2,10 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { knowledgeBase } from '@/data/knowledge-base';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization of OpenAI client
+let openai: OpenAI | null = null;
+
+function getOpenAIClient() {
+  if (!openai && process.env.OPENAI_API_KEY) {
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openai;
+}
 
 // System prompt that defines the chatbot's behavior
 const SYSTEM_PROMPT = `You are an AI assistant for Darius Henry's portfolio website. Your role is to help visitors learn about Darius's work, expertise, and services as a full-stack developer.
@@ -107,8 +114,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check if OpenAI API key is configured
-    if (!process.env.OPENAI_API_KEY) {
+    // Check if OpenAI API key is configured and get client
+    const client = getOpenAIClient();
+    if (!client) {
       return NextResponse.json(
         { error: 'Service temporarily unavailable. Please try again later.' },
         { status: 503 }
@@ -116,7 +124,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Call OpenAI API
-    const completion = await openai.chat.completions.create({
+    const completion = await client.chat.completions.create({
       model: 'gpt-4o-mini', // Fast and cost-effective
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
