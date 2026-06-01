@@ -6,6 +6,15 @@ import { ArrowRight, Calendar, Clock } from 'lucide-react';
 
 const blogPosts = [
   {
+    slug: 'mac-studio-ai-setup',
+    title: 'Why a Mac Studio Is the Cheapest Way to Run AI for a Small Business',
+    excerpt: 'Cloud AI bills scale with every employee and every prompt. A one-time Mac Studio purchase doesn\'t. Here\'s the honest 3-year cost breakdown for running private, in-house AI for a 15-20 person team - and exactly where the Mac approach wins.',
+    date: '2026-06-01',
+    readTime: '9 min read',
+    category: 'AI & Hardware',
+    tags: ['AI', 'Mac Studio', 'Cost Efficiency', 'Local LLM', 'Small Business'],
+  },
+  {
     slug: 'how-i-built-zonely',
     title: 'How I Built a Revenue-Ready SaaS App in 90 Days (Zonely Case Study)',
     excerpt: 'Real estate founders were wasting $50K+ on agencies and waiting 6 months for buggy MVPs. Here\'s how I built Zonely - a full real estate intelligence SaaS platform - in just 90 days, and how you can do the same.',
