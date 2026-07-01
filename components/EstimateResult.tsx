@@ -149,7 +149,7 @@ export default function EstimateResult({ businessName, contactName, email, estim
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href={`mailto:darius.henry@gmail.com?subject=${encodeURIComponent(
+            href={`mailto:support@vexaos.io?subject=${encodeURIComponent(
               `Private AI Workflow consultation — ${businessName || 'New inquiry'}`
             )}&body=${encodeURIComponent(summaryText)}`}
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/40 transition-all"

@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           <a
-            href="mailto:darius.henry@gmail.com"
+            href="mailto:support@vexaos.io"
             className="group flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
           >
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
@@ -16,7 +16,7 @@ export default function Footer() {
             </div>
             <div>
               <div className="text-xs text-gray-400">Email</div>
-              <div className="text-sm text-white font-medium">darius.henry@gmail.com</div>
+              <div className="text-sm text-white font-medium">support@vexaos.io</div>
             </div>
           </a>
           <a

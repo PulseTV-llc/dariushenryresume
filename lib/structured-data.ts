@@ -47,14 +47,14 @@ export const organizationSchema = {
   contactPoint: [
     {
       '@type': 'ContactPoint',
-      email: 'darius.henry@gmail.com',
+      email: 'support@vexaos.io',
       contactType: 'sales',
       availableLanguage: ['English'],
       areaServed: ['US', 'CA', 'GB', 'AU', 'Worldwide'],
     },
     {
       '@type': 'ContactPoint',
-      email: 'darius.henry@gmail.com',
+      email: 'support@vexaos.io',
       contactType: 'customer support',
       availableLanguage: ['English'],
     },
@@ -91,7 +91,7 @@ export const personSchema = {
   worksFor: { '@id': `${SITE_URL}#organization` },
   description:
     'Filmmaker, app developer, and business systems builder. Designs and deploys private AI workflow systems on custom Windows AI nodes with NVIDIA GPUs for real estate, law, medical/dental, restaurant, construction, franchise, media, and local service businesses.',
-  email: 'darius.henry@gmail.com',
+  email: 'support@vexaos.io',
   sameAs: [
     'https://www.linkedin.com/in/darius-henry-292b21373/',
     'https://github.com/PulseTV-llc',
@@ -119,7 +119,7 @@ export const professionalServiceSchema = {
   image: `${SITE_URL}/og-image.jpg`,
   url: SITE_URL,
   telephone: '+1-000-000-0000',
-  email: 'darius.henry@gmail.com',
+  email: 'support@vexaos.io',
   priceRange: '$$$$',
   description: PROVIDER_DESCRIPTION,
   address: {

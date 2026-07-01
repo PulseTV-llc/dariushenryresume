@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Clock, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Clock, MessageSquare, ShieldCheck, Mail } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import BusinessContactForm from '@/components/business/BusinessContactForm';
@@ -54,6 +54,24 @@ export default function ContactPage() {
                   <p className="text-gray-400 text-sm leading-relaxed">{detail}</p>
                 </div>
               ))}
+
+              {/* Prefer email? */}
+              <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10">
+                <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-white/10 items-center justify-center mb-4">
+                  <Mail className="w-5 h-5 text-cyan-300" />
+                </span>
+                <h3 className="text-white font-semibold mb-1.5">Prefer email?</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Reach us directly at{' '}
+                  <a
+                    href="mailto:support@vexaos.io"
+                    className="text-cyan-300 hover:text-cyan-200 underline underline-offset-2"
+                  >
+                    support@vexaos.io
+                  </a>
+                  .
+                </p>
+              </div>
             </aside>
 
             {/* Form */}

@@ -58,11 +58,11 @@ export default function SiteFooter() {
             </h3>
             <div className="space-y-3">
               <a
-                href="mailto:darius.henry@gmail.com"
+                href="mailto:support@vexaos.io"
                 className="group flex items-center gap-3 text-gray-400 hover:text-white text-sm transition-colors"
               >
                 <Mail className="w-4 h-4 text-cyan-400" />
-                darius.henry@gmail.com
+                support@vexaos.io
               </a>
               <a
                 href="https://www.linkedin.com/in/darius-henry-292b21373/"

@@ -48,7 +48,7 @@ export default function Contact() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <a
-                href="mailto:darius.henry@gmail.com"
+                href="mailto:support@vexaos.io"
                 className="group flex flex-col items-center gap-3 p-6 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
               >
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
@@ -56,7 +56,7 @@ export default function Contact() {
                 </div>
                 <div className="text-center">
                   <div className="text-sm text-gray-400 mb-1">Email</div>
-                  <div className="text-white font-medium text-sm">darius.henry@gmail.com</div>
+                  <div className="text-white font-medium text-sm">support@vexaos.io</div>
                 </div>
               </a>
 

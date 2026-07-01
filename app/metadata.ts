@@ -25,7 +25,7 @@ export const siteConfig = {
   locale: 'en_US',
   author: {
     name: 'Darius Henry',
-    email: 'darius.henry@gmail.com',
+    email: 'support@vexaos.io',
     linkedin: 'https://www.linkedin.com/in/darius-henry-292b21373/',
     github: 'https://github.com/PulseTV-llc',
   },

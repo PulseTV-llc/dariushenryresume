@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
     }
 
     // TODO: Forward to email / CRM here.
-    //   e.g. await sendEmail({ to: 'darius.henry@gmail.com', subject: 'New AI estimate', body: ... })
+    //   e.g. await sendEmail({ to: 'support@vexaos.io', subject: 'New AI estimate', body: ... })
     //   e.g. await hubspot.contacts.create({ ... })
 
     return NextResponse.json(
