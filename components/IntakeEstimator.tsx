@@ -634,7 +634,7 @@ function SecurityStep({
       <ChoiceGrid
         label="Deployment preference"
         options={[
-          { value: 'local', label: 'On-prem Windows AI nodes' },
+          { value: 'local', label: 'On-prem Mac Studio nodes' },
           { value: 'hybrid', label: 'Hybrid local + cloud' },
           { value: 'not-sure', label: 'Not sure yet' },
         ]}

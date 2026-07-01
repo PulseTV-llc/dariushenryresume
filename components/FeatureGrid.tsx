@@ -29,7 +29,7 @@ const features = [
     icon: Server,
     title: 'Local AI Infrastructure',
     description:
-      'Deploy dedicated Windows AI nodes built around NVIDIA GPUs (RTX 4090, RTX 6000 Ada, L40S, H100) that scale as the team, document volume, and workload grow.',
+      'Deploy dedicated Mac Studio nodes (Apple Silicon with large unified memory) that scale as the team, document volume, and workload grow.',
     color: 'from-emerald-400 to-teal-500',
   },
 ];

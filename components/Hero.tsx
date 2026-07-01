@@ -15,7 +15,7 @@ const heroBullets = [
   { icon: Search, label: 'Private document search' },
   { icon: FileSearch, label: 'Custom AI business assistant' },
   { icon: Workflow, label: 'Workflow automation' },
-  { icon: Server, label: 'Windows AI node deployment (NVIDIA GPUs)' },
+  { icon: Server, label: 'Mac Studio AI node deployment' },
   { icon: ShieldCheck, label: 'Built around your actual files & processes' },
 ];
 
@@ -72,8 +72,8 @@ export default function Hero() {
               VexaOS helps companies turn their documents, policies, procedures, customer
               messages, and internal knowledge into a{' '}
               <span className="text-white">secure, searchable AI assistant</span>{' '}
-              powered by dedicated Windows AI nodes with high-performance NVIDIA GPUs —
-              RTX 4090 to H100.
+              powered by dedicated Mac Studio nodes with Apple Silicon and large
+              unified memory.
             </motion.p>
 
             <motion.div

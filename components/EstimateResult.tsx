@@ -70,7 +70,7 @@ export default function EstimateResult({ businessName, contactName, email, estim
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <Stat
             icon={<Server className="w-5 h-5 text-white" />}
-            label="Windows AI nodes"
+            label="Mac Studio nodes"
             value={typeof estimate.nodes === 'number' ? `${estimate.nodes}` : 'Custom'}
             color="from-cyan-500 to-blue-500"
           />
@@ -98,7 +98,7 @@ export default function EstimateResult({ businessName, contactName, email, estim
           <Cpu className="w-4 h-4 text-cyan-300 flex-shrink-0" />
           <div className="min-w-0">
             <span className="text-[10px] uppercase tracking-wider text-gray-500 mr-2">
-              GPU class
+              Mac Studio spec
             </span>
             <span className="text-sm text-cyan-200 font-medium">{estimate.gpuSpec}</span>
           </div>
@@ -169,7 +169,7 @@ export default function EstimateResult({ businessName, contactName, email, estim
 
       <p className="text-xs text-gray-500 text-center max-w-xl mx-auto">
         This is a planning estimate. Services and hardware are billed separately. Final
-        pricing depends on chosen GPU class, hardware configuration, document volume,
+        pricing depends on chosen Mac Studio spec, hardware configuration, document volume,
         integrations, and workflow complexity.
       </p>
 
@@ -228,8 +228,8 @@ function buildSummaryText({
     '',
     `Recommended tier: ${estimate.tier.label}`,
     `Users supported: ${estimate.tier.users}`,
-    `Windows AI nodes: ${estimate.nodes}`,
-    `GPU class: ${estimate.gpuSpec}`,
+    `Mac Studio nodes: ${estimate.nodes}`,
+    `Mac Studio spec: ${estimate.gpuSpec}`,
     `Services setup: ${estimate.setupRange}`,
     `Hardware estimate: ${estimate.hardwareRange}`,
     `Monthly support: ${estimate.monthly}`,

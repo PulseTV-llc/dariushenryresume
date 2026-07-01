@@ -18,7 +18,7 @@ import AboutSection from '@/components/AboutSection';
 export const metadata: Metadata = {
   title: 'AI Solutions & Private AI Workflow Systems | Darius Henry',
   description:
-    'AI tools and automation are still available from Darius Henry — private AI workflow systems, custom AI business assistants, and Windows GPU AI nodes. The main focus of the site is now custom connected business systems.',
+    'AI tools and automation are still available from Darius Henry — private AI workflow systems, custom AI business assistants, and Mac Studio AI nodes. The main focus of the site is now custom connected business systems.',
   alternates: { canonical: 'https://iamdariushenry.com/ai-solutions' },
 };
 

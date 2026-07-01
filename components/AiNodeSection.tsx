@@ -19,9 +19,9 @@ const benefits = [
   },
   {
     icon: TrendingUp,
-    title: 'Add nodes — and GPUs — as you grow',
+    title: 'Add nodes — and capacity — as you grow',
     description:
-      'More AI nodes can be added for capacity and redundancy. Each node can be specced from a single RTX 4090 up to NVIDIA H100 / H200 datacenter cards.',
+      'More AI nodes can be added for capacity and redundancy. Each node can be specced from an entry Mac Studio up to a maxed-out Mac Studio M3 Ultra with large unified memory.',
   },
   {
     icon: Building2,
@@ -38,7 +38,11 @@ const clusterNodes = aiSystemTiers
   .slice(0, 8)
   .map((t, i) => ({
     id: i + 1,
-    gpu: t.gpuSpec.replace('NVIDIA ', '').replace(/\s*\(.*\)$/, ''),
+    gpu: t.gpuSpec
+      .replace('Mac Studio ', '')
+      .replace(' unified memory', '')
+      .replace(/\s*·.*$/, '')
+      .trim(),
   }));
 
 export default function AiNodeSection() {
@@ -58,23 +62,22 @@ export default function AiNodeSection() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-5">
             <Cpu className="w-4 h-4 text-cyan-300" />
             <span className="text-xs uppercase tracking-wider text-gray-300">
-              Custom Windows GPU AI Node Cluster
+              Custom Mac Studio AI Node Cluster
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-5 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Why Custom Windows GPU AI Nodes
+            Why Custom Mac Studio AI Nodes
           </h2>
           <p className="text-gray-300 text-lg leading-relaxed">
-            Each AI node is a purpose-built Windows workstation running on a
-            Threadripper Pro or Xeon W class CPU, ECC memory, NVMe storage, and one or
-            more high-performance NVIDIA GPUs. Models, embeddings, and document search
-            run locally on the GPU — sized to your team, your workloads, and the
-            sensitivity of your data. Add nodes and step up GPU class as the business
-            grows.
+            Each AI node is a purpose-built Mac Studio running Apple Silicon
+            (M-series Max or Ultra) with large unified memory and fast NVMe storage.
+            Models, embeddings, and document search run locally on the Mac Studio —
+            sized to your team, your workloads, and the sensitivity of your data. Add
+            nodes and step up Mac Studio class as the business grows.
           </p>
         </motion.div>
 
-        {/* Cluster diagram — each node labeled with its GPU class */}
+        {/* Cluster diagram — each node labeled with its Mac Studio spec */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -103,9 +106,9 @@ export default function AiNodeSection() {
               ))}
             </div>
             <p className="mt-6 text-center text-xs md:text-sm text-gray-400">
-              Start with one node on an RTX 4090 for a leadership team. Step up to RTX
-              6000 Ada, L40S, and ultimately H100 / H200 datacenter GPUs as users,
-              documents, and workloads grow.
+              Start with one Mac Studio M4 Max node for a leadership team. Step up to
+              Mac Studio M3 Ultra configurations with more unified memory, and add nodes,
+              as users, documents, and workloads grow.
             </p>
           </div>
         </motion.div>

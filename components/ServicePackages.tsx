@@ -34,9 +34,9 @@ const packages = [
   },
   {
     icon: Server,
-    title: 'Custom Windows AI Node Deployment',
+    title: 'Custom Mac Studio AI Node Deployment',
     description:
-      'Plan and deploy custom Windows AI nodes built around NVIDIA GPUs (RTX 4090 through H100 / H200) sized to team count, usage, privacy needs, and workload.',
+      'Plan and deploy custom Mac Studio nodes (Apple Silicon with large unified memory) sized to team count, usage, privacy needs, and workload.',
     color: 'from-emerald-400 to-teal-500',
   },
   {

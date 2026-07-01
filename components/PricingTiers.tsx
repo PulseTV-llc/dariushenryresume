@@ -11,7 +11,7 @@ const pricingFactors = [
   'Integrations',
   'OCR/scanning needs',
   'Custom dashboard requirements',
-  'GPU class selected (RTX 4090 → H100 / H200)',
+  'Mac Studio spec selected (M4 Max → M3 Ultra)',
   'Hardware procurement (client-direct or coordinated)',
 ];
 
@@ -34,8 +34,8 @@ export default function PricingTiers() {
             System Tiers
           </h2>
           <p className="text-gray-300 text-lg leading-relaxed">
-            Pricing scales with team size, document volume, and the Windows AI nodes
-            deployed. Each tier targets a specific NVIDIA GPU class. Services and
+            Pricing scales with team size, document volume, and the Mac Studio nodes
+            deployed. Each tier targets a specific Mac Studio configuration. Services and
             hardware are quoted separately — all numbers below are planning estimates.
           </p>
         </motion.div>

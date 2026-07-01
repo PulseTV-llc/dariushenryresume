@@ -1,9 +1,9 @@
 // Private AI Workflow Systems — tier definitions and estimator logic.
-// Edit this file to update pricing tiers, node counts, GPU specs, or
+// Edit this file to update pricing tiers, node counts, Mac Studio specs, or
 // estimator adjustment notes. The pricing UI, the intake estimator, and
 // the /api/ai-estimate route all read from these exports.
 //
-// Tiers are anchored on the GPU class used in each AI node. Pricing is
+// Tiers are anchored on the Mac Studio class used in each AI node. Pricing is
 // two-track:
 //   • Services setup (build, integration, training)
 //   • Hardware estimate (BOM range — client procures or we coordinate)
@@ -46,7 +46,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Starter Private AI',
     users: '1–5',
     nodes: 1,
-    gpuSpec: 'NVIDIA RTX 4090 (24GB VRAM)',
+    gpuSpec: 'Mac Studio M4 Max (64GB unified memory)',
     setupRange: '$4,500–$7,500',
     hardwareRange: '$5,000–$9,000',
     monthly: '$750/mo',
@@ -57,7 +57,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Small Team AI',
     users: '6–15',
     nodes: 2,
-    gpuSpec: 'NVIDIA RTX 4090 / RTX 5090 (24–32GB VRAM)',
+    gpuSpec: 'Mac Studio M4 Max (128GB unified memory)',
     setupRange: '$9,500–$15,000',
     hardwareRange: '$12,000–$22,000',
     monthly: '$1,500/mo',
@@ -68,7 +68,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Department AI',
     users: '16–30',
     nodes: 3,
-    gpuSpec: 'NVIDIA RTX 5090 / RTX 6000 Ada (32–48GB VRAM)',
+    gpuSpec: 'Mac Studio M3 Ultra (96GB unified memory)',
     setupRange: '$17,500–$27,500',
     hardwareRange: '$25,000–$45,000',
     monthly: '$2,500/mo',
@@ -80,7 +80,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Business AI Cluster',
     users: '31–50',
     nodes: 4,
-    gpuSpec: 'NVIDIA RTX 6000 Ada (48GB VRAM)',
+    gpuSpec: 'Mac Studio M3 Ultra (256GB unified memory)',
     setupRange: '$30,000–$45,000',
     hardwareRange: '$50,000–$85,000',
     monthly: '$3,500/mo',
@@ -91,7 +91,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Advanced Business AI',
     users: '51–75',
     nodes: 5,
-    gpuSpec: 'NVIDIA RTX 6000 Ada / L40S (48GB VRAM)',
+    gpuSpec: 'Mac Studio M3 Ultra (256GB unified memory) · dual-node',
     setupRange: '$45,000–$65,000',
     hardwareRange: '$80,000–$130,000',
     monthly: '$5,000/mo',
@@ -102,7 +102,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Enterprise AI Cluster',
     users: '76–100',
     nodes: 6,
-    gpuSpec: 'NVIDIA L40S / H100 (48–80GB VRAM)',
+    gpuSpec: 'Mac Studio M3 Ultra (512GB unified memory)',
     setupRange: '$65,000–$90,000',
     hardwareRange: '$130,000–$220,000',
     monthly: '$7,500/mo',
@@ -113,7 +113,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Large Enterprise AI',
     users: '101–150',
     nodes: 7,
-    gpuSpec: 'NVIDIA H100 (80GB VRAM)',
+    gpuSpec: 'Mac Studio M3 Ultra (512GB unified memory) · dual-node',
     setupRange: '$90,000–$125,000',
     hardwareRange: '$220,000–$350,000',
     monthly: '$10,000/mo',
@@ -124,7 +124,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Full Private AI Infrastructure',
     users: '151–250',
     nodes: 8,
-    gpuSpec: 'NVIDIA H100 / H200 (80–141GB VRAM)',
+    gpuSpec: 'Mac Studio M3 Ultra (512GB unified memory) · multi-node cluster',
     setupRange: '$125,000–$175,000+',
     hardwareRange: '$350,000–$550,000',
     monthly: '$12,500–$15,000/mo',
@@ -135,7 +135,7 @@ export const aiSystemTiers: AiSystemTier[] = [
     label: 'Custom Enterprise Architecture',
     users: '250+',
     nodes: 'Custom',
-    gpuSpec: 'NVIDIA H200 / B200 (multi-rack)',
+    gpuSpec: 'Mac Studio M3 Ultra cluster (multi-node, custom)',
     setupRange: 'Custom quote',
     hardwareRange: 'Custom quote',
     monthly: 'Custom support agreement',
@@ -188,7 +188,7 @@ export function buildEstimate(input: EstimateInput): EstimateResultData {
 
   if (input.sensitive === 'highly') {
     notes.push(
-      'Recommended: on-prem Windows AI node deployment, role-based access, audit controls, encrypted backups, and stricter admin permissions.'
+      'Recommended: on-prem Mac Studio node deployment, role-based access, audit controls, encrypted backups, and stricter admin permissions.'
     );
   }
 
@@ -220,7 +220,7 @@ export function buildEstimate(input: EstimateInput): EstimateResultData {
 
   if (input.deployment === 'local' && tier.id !== '250+') {
     notes.push(
-      'On-prem Windows AI nodes keep sensitive files inside the office and give the business a visible private AI infrastructure asset.'
+      'On-prem Mac Studio nodes keep sensitive files inside the office and give the business a visible private AI infrastructure asset.'
     );
   }
 
@@ -257,7 +257,7 @@ function deriveSystemHandles(input: EstimateInput): string[] {
   if (goals.has('client-chatbot')) out.push('Client-facing chatbot with guardrails');
   if (goals.has('voice-transcription')) out.push('Voice and meeting transcription');
 
-  out.push('Dedicated Windows AI node deployment with NVIDIA GPUs, sized to your team');
+  out.push('Dedicated Mac Studio AI node deployment, sized to your team');
 
   return out;
 }

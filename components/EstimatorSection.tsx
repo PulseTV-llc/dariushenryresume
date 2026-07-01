@@ -26,8 +26,8 @@ export default function EstimatorSection() {
           </h2>
           <p className="text-gray-300 text-lg leading-relaxed">
             Answer a few business questions and get a planning estimate for your private
-            AI workflow system — including a recommended tier, Windows AI node count,
-            GPU configuration, services setup range, hardware estimate, and monthly
+            AI workflow system — including a recommended tier, Mac Studio node count,
+            Mac Studio configuration, services setup range, hardware estimate, and monthly
             support estimate.
           </p>
         </motion.div>
