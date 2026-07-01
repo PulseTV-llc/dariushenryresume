@@ -5,10 +5,10 @@ import { Metadata } from 'next';
 // Strategy:
 // 1. Title pattern: <Primary keyword> | <Differentiator> · <Brand>
 //    Kept ≤80 chars so Google does not truncate the keyword.
-// 2. Description: leads with the offering, names the GPU class,
+// 2. Description: leads with the offering, names the Mac Studio class,
 //    lists the most valuable industries, ends with a CTA-style benefit.
 // 3. Keywords: clustered by buyer intent — offering, infrastructure
-//    (Windows + NVIDIA GPU), capability, industry vertical, and
+//    (Mac Studio + Apple Silicon), capability, industry vertical, and
 //    bottom-of-funnel intent.
 
 export const siteConfig = {
@@ -44,28 +44,27 @@ export const siteConfig = {
     'local AI deployment for business',
     'private LLM deployment',
 
-    // === Infrastructure — Windows + NVIDIA GPU specific ===
-    'NVIDIA GPU AI workstation',
-    'RTX 4090 AI workstation',
-    'RTX 5090 AI workstation',
-    'RTX 6000 Ada workstation',
-    'L40S AI server',
-    'H100 private AI',
-    'H100 workstation for business',
-    'H200 AI workstation',
-    'Windows AI server',
-    'Windows AI workstation',
-    'Windows GPU AI node',
-    'Windows 11 Pro for Workstations AI',
-    'Threadripper Pro AI workstation',
-    'Xeon W AI workstation',
-    'private GPU AI',
-    'on-prem GPU AI',
-    'private LLM GPU',
-    'local LLM Windows',
+    // === Infrastructure — Mac Studio + Apple Silicon specific ===
+    'Mac Studio AI node',
+    'Mac Studio AI workstation',
+    'Apple Silicon AI workstation',
+    'Apple Silicon AI server',
+    'Mac Studio M4 Max AI',
+    'Mac Studio M3 Ultra AI',
+    'Mac Studio AI cluster',
+    'on-prem Mac Studio AI server',
+    'Mac Studio LLM server',
+    'private LLM on Mac Studio',
+    'local LLM on Mac Studio',
+    'Apple Silicon LLM deployment',
+    'Apple Silicon private AI',
+    'unified memory AI inference',
+    'on-prem Apple Silicon AI',
+    'private AI appliance',
     'private AI infrastructure',
     'office AI server',
     'on-prem AI workstation',
+    'on-prem AI node',
     'dedicated AI compute node',
 
     // === Capabilities ===
@@ -115,8 +114,8 @@ export const siteConfig = {
     'private AI estimate',
     'private AI pricing',
     'AI system pricing',
-    'GPU AI workstation pricing',
-    'H100 workstation pricing',
+    'Mac Studio AI node pricing',
+    'Apple Silicon AI server pricing',
     'enterprise private AI cost',
     'how much does private AI cost',
 

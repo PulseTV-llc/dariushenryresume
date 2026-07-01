@@ -18,7 +18,7 @@ const SITE_URL = 'https://iamdariushenry.com';
 const SITE_NAME = 'Private AI Workflow Systems';
 const PROVIDER_NAME = 'Darius Henry — Private AI Workflow Systems';
 const PROVIDER_DESCRIPTION =
-  'Custom private AI workflow systems for businesses, powered by custom Windows AI nodes with NVIDIA GPUs (RTX 4090 through H100 / H200). Private document search, custom business assistants, workflow automation, and on-prem AI infrastructure for real estate, law, medical, dental, restaurant, franchise, construction, cleaning, film/media, property management, and insurance businesses.';
+  'Custom private AI workflow systems for businesses, powered by custom Mac Studio nodes running Apple Silicon with large unified memory (Mac Studio M4 Max through M3 Ultra). Private document search, custom business assistants, workflow automation, and on-prem AI infrastructure for real estate, law, medical, dental, restaurant, franchise, construction, cleaning, film/media, property management, and insurance businesses.';
 
 /* ============================================================
  *  1. IDENTITY
@@ -65,11 +65,11 @@ export const organizationSchema = {
   ],
   knowsAbout: [
     'Private AI Infrastructure',
-    'Windows GPU AI Workstation Deployment',
-    'NVIDIA GPU AI Infrastructure',
-    'RTX 6000 Ada Workstations',
-    'H100 Private AI',
-    'Local LLM on Windows',
+    'Mac Studio AI Node Deployment',
+    'Apple Silicon AI Infrastructure',
+    'Mac Studio M3 Ultra Nodes',
+    'Apple Silicon Private AI',
+    'Local LLM on Mac Studio',
     'Document Intelligence',
     'Retrieval-Augmented Generation',
     'Workflow Automation',
@@ -90,7 +90,7 @@ export const personSchema = {
   jobTitle: 'Private AI Workflow Systems Builder',
   worksFor: { '@id': `${SITE_URL}#organization` },
   description:
-    'Filmmaker, app developer, and business systems builder. Designs and deploys private AI workflow systems on custom Windows AI nodes with NVIDIA GPUs for real estate, law, medical/dental, restaurant, construction, franchise, media, and local service businesses.',
+    'Filmmaker, app developer, and business systems builder. Designs and deploys private AI workflow systems on custom Mac Studio nodes running Apple Silicon for real estate, law, medical/dental, restaurant, construction, franchise, media, and local service businesses.',
   email: 'support@vexaos.io',
   sameAs: [
     'https://www.linkedin.com/in/darius-henry-292b21373/',
@@ -98,9 +98,9 @@ export const personSchema = {
   ],
   knowsAbout: [
     'Private AI Infrastructure',
-    'Windows GPU AI Workstation Deployment',
-    'NVIDIA GPU AI Infrastructure',
-    'Local LLM on Windows',
+    'Mac Studio AI Node Deployment',
+    'Apple Silicon AI Infrastructure',
+    'Local LLM on Mac Studio',
     'Document Intelligence',
     'Workflow Automation',
     'Business AI Assistants',
@@ -136,7 +136,7 @@ export const professionalServiceSchema = {
     'Private AI Assistant Development',
     'Document Intelligence Systems',
     'Workflow Automation',
-    'Custom Windows AI Node Deployment',
+    'Custom Mac Studio AI Node Deployment',
     'Custom AI Dashboards',
     'Ongoing AI Optimization',
   ],
@@ -208,13 +208,13 @@ const servicesList = [
   {
     name: 'Private AI Assistant',
     description:
-      "A company-specific AI assistant trained around business documents, policies, services, and workflows. Built on dedicated Windows AI nodes with NVIDIA GPUs for privacy, control, and tone fidelity to the business.",
+      "A company-specific AI assistant trained around business documents, policies, services, and workflows. Built on dedicated Mac Studio nodes running Apple Silicon for privacy, control, and tone fidelity to the business.",
     serviceType: 'Private AI Assistant Development',
   },
   {
     name: 'Document Intelligence System',
     description:
-      'Upload and search PDFs, contracts, invoices, reports, spreadsheets, SOPs, training material, and scanned files. Natural-language Q&A over private company knowledge with optional OCR ingestion, accelerated on local NVIDIA GPUs.',
+      'Upload and search PDFs, contracts, invoices, reports, spreadsheets, SOPs, training material, and scanned files. Natural-language Q&A over private company knowledge with optional OCR ingestion, accelerated locally on Apple Silicon.',
     serviceType: 'Document Intelligence',
   },
   {
@@ -224,9 +224,9 @@ const servicesList = [
     serviceType: 'Workflow Automation',
   },
   {
-    name: 'Custom Windows AI Node Deployment',
+    name: 'Custom Mac Studio AI Node Deployment',
     description:
-      'Planning and deployment of custom Windows AI nodes built around NVIDIA GPUs — RTX 4090, RTX 5090, RTX 6000 Ada, L40S, H100, and H200 — sized to team count, usage, privacy requirements, and workload. Scales from a single node up to 8-node clusters.',
+      'Planning and deployment of custom Mac Studio nodes running Apple Silicon — Mac Studio M4 Max through M3 Ultra with large unified memory — sized to team count, usage, privacy requirements, and workload. Scales from a single node up to 8-node clusters.',
     serviceType: 'AI Infrastructure Deployment',
   },
   {
@@ -305,8 +305,8 @@ const tierOffers = aiSystemTiers
       name: tier.label,
       description: `${tier.label} — ${tier.users} users, ${
         typeof tier.nodes === 'number'
-          ? `${tier.nodes} Windows AI node${tier.nodes === 1 ? '' : 's'} on ${tier.gpuSpec}`
-          : `custom Windows AI node count on ${tier.gpuSpec}`
+          ? `${tier.nodes} Mac Studio node${tier.nodes === 1 ? '' : 's'} on ${tier.gpuSpec}`
+          : `custom Mac Studio node count on ${tier.gpuSpec}`
       }. Services setup ${tier.setupRange}, hardware estimate ${tier.hardwareRange}, monthly support ${tier.monthly}. ${tier.bestFor}.`,
       priceCurrency: 'USD',
       priceSpecification: {
@@ -341,7 +341,7 @@ export const aggregateOfferSchema = {
   '@id': `${SITE_URL}#aggregate-offer`,
   name: 'Private AI Workflow System — Tier Services Pricing',
   description:
-    'Services setup pricing for Private AI Workflow Systems ranges from Starter Private AI for small teams to Full Private AI Infrastructure for enterprise deployments. Each tier targets a specific NVIDIA GPU class (RTX 4090, RTX 5090, RTX 6000 Ada, L40S, H100, H200). Hardware is billed separately.',
+    'Services setup pricing for Private AI Workflow Systems ranges from Starter Private AI for small teams to Full Private AI Infrastructure for enterprise deployments. Each tier targets a specific Mac Studio class (Apple Silicon M4 Max through M3 Ultra). Hardware is billed separately.',
   priceCurrency: 'USD',
   lowPrice: offerLowestPrice,
   highPrice: offerHighestPrice,
@@ -404,7 +404,7 @@ export const howToSchema = {
   '@id': `${SITE_URL}#how-to-estimate`,
   name: 'How to estimate a Private AI Workflow System for your business',
   description:
-    'Answer a few business questions on this site and the estimator generates a recommended tier, Windows AI node count, GPU class, services setup price range, hardware estimate range, monthly support estimate, and planning notes.',
+    'Answer a few business questions on this site and the estimator generates a recommended tier, Mac Studio node count, Mac Studio spec, services setup price range, hardware estimate range, monthly support estimate, and planning notes.',
   totalTime: 'PT5M',
   step: [
     {
@@ -434,7 +434,7 @@ export const howToSchema = {
     {
       '@type': 'HowToStep',
       name: 'Set security and deployment preferences',
-      text: 'Indicate document sensitivity, role-based access needs, and whether the deployment should be on-prem Windows AI nodes, hybrid on-prem + cloud, or undecided.',
+      text: 'Indicate document sensitivity, role-based access needs, and whether the deployment should be on-prem Mac Studio nodes, hybrid on-prem + cloud, or undecided.',
       url: `${SITE_URL}#estimate`,
     },
     {
@@ -446,13 +446,13 @@ export const howToSchema = {
     {
       '@type': 'HowToStep',
       name: 'Receive your estimate',
-      text: 'The estimator returns a recommended tier, Windows AI node count, GPU class (RTX 4090 through H100 / H200), services setup price range, hardware estimate range, monthly support estimate, the workflows the system will handle, and planning notes specific to your answers.',
+      text: 'The estimator returns a recommended tier, Mac Studio node count, Mac Studio spec (M4 Max through M3 Ultra), services setup price range, hardware estimate range, monthly support estimate, the workflows the system will handle, and planning notes specific to your answers.',
       url: `${SITE_URL}#estimate`,
     },
   ],
   tool: [
-    { '@type': 'HowToTool', name: 'Custom Windows AI Node Cluster' },
-    { '@type': 'HowToTool', name: 'NVIDIA GPU AI Acceleration (RTX 4090 / RTX 6000 Ada / H100)' },
+    { '@type': 'HowToTool', name: 'Custom Mac Studio AI Node Cluster' },
+    { '@type': 'HowToTool', name: 'Apple Silicon AI Acceleration (Mac Studio M4 Max / M3 Ultra)' },
     { '@type': 'HowToTool', name: 'Private Document Search Engine' },
   ],
   supply: [
@@ -475,15 +475,15 @@ export const faqSchema = {
       name: 'What is a Private AI Workflow System?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A Private AI Workflow System turns scattered business knowledge — PDFs, policies, contracts, invoices, SOPs, customer messages, and internal procedures — into a private, searchable AI assistant your team can actually use. It is built around your specific documents and workflows, runs on dedicated Windows AI nodes with NVIDIA GPUs, and keeps sensitive files under company control rather than being pasted into public AI tools.',
+        text: 'A Private AI Workflow System turns scattered business knowledge — PDFs, policies, contracts, invoices, SOPs, customer messages, and internal procedures — into a private, searchable AI assistant your team can actually use. It is built around your specific documents and workflows, runs on dedicated Mac Studio nodes running Apple Silicon, and keeps sensitive files under company control rather than being pasted into public AI tools.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Why use custom Windows GPU AI nodes instead of public AI tools?',
+      name: 'Why use custom Mac Studio AI nodes instead of public AI tools?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A custom Windows GPU AI node deployment gives the business its own private AI infrastructure: a Threadripper Pro or Xeon W class workstation with NVIDIA GPUs sitting inside the office, studio, equipment room, or controlled technology environment. Sensitive files stay under company control, models and embeddings run locally on the GPU, the system can be tuned around your own documents and policies, and additional nodes (or larger GPUs) can be added as users, document volume, and workloads grow. The business gets a visible AI infrastructure asset instead of only another monthly software subscription.',
+        text: 'A custom Mac Studio AI node deployment gives the business its own private AI infrastructure: a Mac Studio running Apple Silicon (M-series Max or Ultra) with large unified memory sitting inside the office, studio, equipment room, or controlled technology environment. Sensitive files stay under company control, models and embeddings run locally on the Mac Studio, the system can be tuned around your own documents and policies, and additional nodes (or higher Mac Studio specs) can be added as users, document volume, and workloads grow. The business gets a visible AI infrastructure asset instead of only another monthly software subscription.',
       },
     },
     {
@@ -491,15 +491,15 @@ export const faqSchema = {
       name: 'How is this different from ChatGPT, Copilot, or other public AI tools?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Public AI tools are general-purpose and run on shared infrastructure outside your company. A Private AI Workflow System is built specifically around your business — your documents, your policies, your tone of voice, your customer workflows — and the model and document store can run on Windows AI nodes with NVIDIA GPUs physically located in your office. That keeps confidential information off public model training paths, supports role-based access for staff, and enables custom workflows that public chatbots cannot perform.',
+        text: 'Public AI tools are general-purpose and run on shared infrastructure outside your company. A Private AI Workflow System is built specifically around your business — your documents, your policies, your tone of voice, your customer workflows — and the model and document store can run on Mac Studio nodes running Apple Silicon physically located in your office. That keeps confidential information off public model training paths, supports role-based access for staff, and enables custom workflows that public chatbots cannot perform.',
       },
     },
     {
       '@type': 'Question',
-      name: 'What GPUs are used in the AI nodes?',
+      name: 'What Mac Studio configurations are used in the AI nodes?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'GPU class scales with tier. Starter tiers use NVIDIA RTX 4090 (24GB VRAM). Mid tiers step up to RTX 5090 (32GB) and RTX 6000 Ada Generation (48GB ECC). Larger tiers use NVIDIA L40S (48GB) and H100 (80GB) datacenter GPUs. Enterprise tiers use H100 / H200 (80–141GB), and the Custom Enterprise tier extends to H200 / B200 in multi-rack configurations. The estimator on this site recommends the right GPU class based on your team size and workload.',
+        text: 'The Mac Studio spec scales with tier. Starter tiers use a Mac Studio M4 Max (64GB unified memory). Mid tiers step up to Mac Studio M4 Max (128GB) and Mac Studio M3 Ultra (96GB). Larger tiers use Mac Studio M3 Ultra (256GB unified memory), often as dual-node configurations. Enterprise tiers use Mac Studio M3 Ultra (512GB), and the Custom Enterprise tier extends to multi-node Mac Studio M3 Ultra clusters. The estimator on this site recommends the right Mac Studio spec based on your team size and workload.',
       },
     },
     {
@@ -507,7 +507,7 @@ export const faqSchema = {
       name: 'Do I have to buy the hardware separately?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. Pricing is two-track: services (build, integration, training, deployment) are quoted separately from hardware (the AI node workstations themselves). The client can procure hardware directly, or hardware procurement can be coordinated as part of the engagement. Every tier on this site displays both numbers — Services setup price range and Hardware estimate range — so you see the full picture up front.',
+        text: 'Yes. Pricing is two-track: services (build, integration, training, deployment) are quoted separately from hardware (the Mac Studio nodes themselves). The client can procure hardware directly, or hardware procurement can be coordinated as part of the engagement. Every tier on this site displays both numbers — Services setup price range and Hardware estimate range — so you see the full picture up front.',
       },
     },
     {
@@ -515,7 +515,7 @@ export const faqSchema = {
       name: 'How much does a Private AI Workflow System cost?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Services setup scales with team size and the number of Windows AI nodes deployed. Starter Private AI for 1–5 users is $4,500–$7,500 services with about $5,000–$9,000 hardware (single RTX 4090 workstation) and $750/mo support. Small Team AI for 6–15 users is $9,500–$15,000 services with $12,000–$22,000 hardware. Mid tiers (Department AI through Advanced Business AI) range from $17,500 up to $65,000 services with hardware from $25,000 up to $130,000. Enterprise tiers scale up to Full Private AI Infrastructure at $125,000+ services and $350,000–$550,000 hardware (multi-node H100 / H200 cluster). Final pricing depends on document volume, security requirements, integrations, OCR needs, custom dashboards, and the GPU class selected.',
+        text: 'Services setup scales with team size and the number of Mac Studio nodes deployed. Starter Private AI for 1–5 users is $4,500–$7,500 services with about $5,000–$9,000 hardware (single Mac Studio M4 Max node) and $750/mo support. Small Team AI for 6–15 users is $9,500–$15,000 services with $12,000–$22,000 hardware. Mid tiers (Department AI through Advanced Business AI) range from $17,500 up to $65,000 services with hardware from $25,000 up to $130,000. Enterprise tiers scale up to Full Private AI Infrastructure at $125,000+ services and $350,000–$550,000 hardware (multi-node Mac Studio M3 Ultra cluster). Final pricing depends on document volume, security requirements, integrations, OCR needs, custom dashboards, and the Mac Studio spec selected.',
       },
     },
     {
@@ -523,7 +523,7 @@ export const faqSchema = {
       name: 'How many AI nodes does my business need?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'As a rule of thumb: 1 node for 1–5 users, 2 nodes for 6–15 users, 3 nodes for 16–30 users, 4 nodes for 31–50 users, 5 nodes for 51–75 users, 6 nodes for 76–100 users, 7 nodes for 101–150 users, and 8 nodes for 151–250 users. Larger deployments use a custom architecture. Document volume, OCR needs, client-facing chatbot workloads, and concurrency requirements can shift the recommendation, as can the GPU class chosen — a single H100 can do the work of several RTX 4090s.',
+        text: 'As a rule of thumb: 1 node for 1–5 users, 2 nodes for 6–15 users, 3 nodes for 16–30 users, 4 nodes for 31–50 users, 5 nodes for 51–75 users, 6 nodes for 76–100 users, 7 nodes for 101–150 users, and 8 nodes for 151–250 users. Larger deployments use a custom architecture. Document volume, OCR needs, client-facing chatbot workloads, and concurrency requirements can shift the recommendation, as can the Mac Studio spec chosen — a higher-spec Mac Studio M3 Ultra can do the work of several entry Mac Studio nodes.',
       },
     },
     {
@@ -539,7 +539,7 @@ export const faqSchema = {
       name: 'Is this safe for businesses with sensitive or regulated information?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. For businesses handling sensitive documents, the recommended configuration is an on-prem Windows AI node deployment with role-based access, audit controls, encrypted backups, and stricter admin permissions. Models and document indexes run on the local NVIDIA GPU; files do not leave the company environment. This is the configuration used for law offices, medical and dental practices, insurance agencies, and other businesses with confidentiality requirements.',
+        text: 'Yes. For businesses handling sensitive documents, the recommended configuration is an on-prem Mac Studio node deployment with role-based access, audit controls, encrypted backups, and stricter admin permissions. Models and document indexes run locally on the Mac Studio; files do not leave the company environment. This is the configuration used for law offices, medical and dental practices, insurance agencies, and other businesses with confidentiality requirements.',
       },
     },
     {
@@ -579,7 +579,7 @@ export const faqSchema = {
       name: 'Can I deploy this entirely on-premises, or is cloud involved?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Three deployment options are available: fully on-prem on Windows AI nodes inside the office (recommended for sensitive documents), hybrid on-prem plus cloud (for businesses that want some cloud-side processing), or undecided (the planning conversation determines the best path). On-prem deployment is the configuration most often chosen by law, medical, dental, insurance, and high-security businesses.',
+        text: 'Three deployment options are available: fully on-prem on Mac Studio nodes inside the office (recommended for sensitive documents), hybrid on-prem plus cloud (for businesses that want some cloud-side processing), or undecided (the planning conversation determines the best path). On-prem deployment is the configuration most often chosen by law, medical, dental, insurance, and high-security businesses.',
       },
     },
     {
@@ -587,7 +587,7 @@ export const faqSchema = {
       name: 'How long does deployment take?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Most deployments target a 30 to 90 day launch window depending on tier, document volume, integration count, OCR scope, and hardware procurement lead time. Smaller tiers (Starter and Small Team) typically launch faster. Larger tiers with high document volume, OCR workflows, custom dashboards, or many integrations require longer planning and ingestion phases. Datacenter-class GPUs (H100 / H200) carry additional procurement lead time.',
+        text: 'Most deployments target a 30 to 90 day launch window depending on tier, document volume, integration count, OCR scope, and hardware procurement lead time. Smaller tiers (Starter and Small Team) typically launch faster. Larger tiers with high document volume, OCR workflows, custom dashboards, or many integrations require longer planning and ingestion phases. Higher-spec Mac Studio M3 Ultra configurations can carry additional procurement lead time.',
       },
     },
     {
@@ -603,7 +603,7 @@ export const faqSchema = {
       name: 'How do I get a planning estimate for my business?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Use the on-site estimator. Answer a few business questions — team size, document volume, workflow goals, security and integration needs — and the system generates a recommended tier, Windows AI node count, GPU class, services setup price range, hardware estimate range, monthly support estimate, and planning notes specific to your answers. The estimate is a planning number; final pricing is confirmed during a workflow consultation.',
+        text: 'Use the on-site estimator. Answer a few business questions — team size, document volume, workflow goals, security and integration needs — and the system generates a recommended tier, Mac Studio node count, Mac Studio spec, services setup price range, hardware estimate range, monthly support estimate, and planning notes specific to your answers. The estimate is a planning number; final pricing is confirmed during a workflow consultation.',
       },
     },
   ],
