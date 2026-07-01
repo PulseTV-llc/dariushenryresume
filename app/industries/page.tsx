@@ -34,8 +34,8 @@ export default function IndustriesPage() {
               <span className="gradient-text">how your industry runs.</span>
             </h1>
             <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Not a template forced onto your business. Each system below is built around the real
-              workflow of that industry — from the front desk to the field.
+              Not a template forced onto your business. Each VexaOS system below is built around the
+              real workflow of that industry — from the front desk to the field.
             </p>
           </div>
         </section>

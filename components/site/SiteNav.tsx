@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import { NAV_LINKS } from '@/lib/business-data';
+import VexaLogo from './VexaLogo';
 
 export default function SiteNav() {
   const [open, setOpen] = useState(false);
@@ -37,13 +38,8 @@ export default function SiteNav() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-2 group" aria-label="Darius Henry — Home">
-            <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-500 flex items-center justify-center font-black text-black text-sm">
-              DH
-            </span>
-            <span className="hidden sm:block text-white font-bold tracking-tight">
-              Darius Henry
-            </span>
+          <Link href="/" className="flex items-center group" aria-label="VexaOS — Connected Business Systems, Home">
+            <VexaLogo markSize={30} />
           </Link>
 
           {/* Desktop links */}

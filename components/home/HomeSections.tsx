@@ -69,7 +69,7 @@ export function SolutionSection() {
             <span className="gradient-text">around your business.</span>
           </>
         }
-        subtitle="Replace scattered tools with a platform your staff, customers, and managers can actually use — where every part of your operation finally stays connected."
+        subtitle="Replace scattered tools with VexaOS — one platform your staff, customers, and managers can actually use, where every part of your operation finally stays connected."
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {SOLUTION_CARDS.map((card, i) => (
@@ -411,7 +411,7 @@ export function FinalCTASection() {
             Ready to turn your business into a connected system?
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-9">
-            Let's map how your business runs today — and design the platform that will run it
+            Let's map how your business runs today — and design the VexaOS platform that will run it
             tomorrow. It starts with a Business Blueprint.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

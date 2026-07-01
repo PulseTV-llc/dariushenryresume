@@ -35,7 +35,7 @@ export default function ContactPage() {
               Tell me about your business.
             </h1>
             <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Share a few details and I'll come back with a connected-system plan and a clear quote —
+              Share a few details and I'll come back with a VexaOS system plan and a clear quote —
               built around the way your business actually works.
             </p>
           </div>

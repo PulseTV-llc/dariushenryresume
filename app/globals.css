@@ -49,9 +49,9 @@ html {
   color: white;
 }
 
-/* Gradient text utility */
+/* Gradient text utility — VexaOS electric-blue → cyan brand gradient */
 .gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background: linear-gradient(135deg, #a5f3fc 0%, #38bdf8 35%, #0ea5e9 70%, #2563eb 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

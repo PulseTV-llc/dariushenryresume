@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, Linkedin, Github, ArrowUpRight } from 'lucide-react';
 import { NAV_LINKS } from '@/lib/business-data';
 
@@ -13,15 +14,21 @@ export default function SiteFooter() {
         <div className="grid gap-12 lg:grid-cols-3">
           {/* Brand + pitch */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-500 flex items-center justify-center font-black text-black">
-                DH
-              </span>
-              <span className="text-white font-bold text-lg">Darius Henry</span>
-            </div>
+            <Image
+              src="/vexaos-logo.png"
+              alt="VexaOS — Connected Business Systems"
+              width={340}
+              height={191}
+              className="w-[220px] h-auto -ml-2 mb-3"
+              priority={false}
+            />
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
               Custom connected business systems across web, iOS, Android, and touchscreen —
               designed around the way your business actually works.
+            </p>
+            <p className="mt-4 text-xs text-gray-500">
+              Founded &amp; built by{' '}
+              <span className="text-gray-300 font-medium">Darius Henry</span>.
             </p>
           </div>
 
@@ -89,7 +96,7 @@ export default function SiteFooter() {
 
         <div className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500">
-            © {year} Darius Henry · Custom Connected Business Systems
+            © {year} VexaOS · Connected Business Systems · by Darius Henry
           </p>
           <p className="text-xs text-gray-600">
             Web · iOS · Android · Touchscreen · Dashboards · Real-Time Sync

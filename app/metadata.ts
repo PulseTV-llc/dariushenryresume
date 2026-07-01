@@ -12,15 +12,15 @@ import { Metadata } from 'next';
 //    bottom-of-funnel intent.
 
 export const siteConfig = {
-  name: 'Private AI Workflow Systems',
-  brandName: 'Private AI Workflow Systems · Darius Henry',
-  shortTitle: 'Private AI Workflow Systems for Businesses',
+  name: 'VexaOS',
+  brandName: 'VexaOS · Connected Business Systems · Darius Henry',
+  shortTitle: 'VexaOS — Connected Business Systems',
   longTitle:
-    'Private AI Workflow Systems for Businesses — Custom Windows GPU AI Nodes | Darius Henry',
+    'VexaOS — Custom Web, Mobile & Touchscreen Business Systems | Darius Henry',
   description:
-    'Custom private AI systems for businesses, powered by Windows AI nodes with NVIDIA GPUs (RTX 4090 to H100 / H200). Private document search, business assistants, and workflow automation for real estate, law, medical, restaurants, and franchise teams.',
+    'VexaOS by Darius Henry builds custom connected business systems across web apps, iOS, Android, touchscreen kiosks, dashboards, staff tools, customer portals, scheduling, payments, and real-time operations.',
   url: 'https://iamdariushenry.com',
-  ogImage: 'https://iamdariushenry.com/og-image.jpg',
+  ogImage: 'https://iamdariushenry.com/og-vexaos.png',
   twitterHandle: '@dariushenry',
   locale: 'en_US',
   author: {
@@ -165,8 +165,8 @@ export const generateMetadata = (): Metadata => {
           url: siteConfig.ogImage,
           width: 1200,
           height: 630,
-          alt: 'Private AI Workflow Systems — custom Windows AI nodes with NVIDIA GPUs (RTX 4090 to H100) for businesses, by Darius Henry',
-          type: 'image/jpeg',
+          alt: 'VexaOS — Connected Business Systems by Darius Henry',
+          type: 'image/png',
         },
       ],
     },
@@ -179,7 +179,7 @@ export const generateMetadata = (): Metadata => {
       images: [
         {
           url: siteConfig.ogImage,
-          alt: 'Private AI Workflow Systems for businesses, powered by custom Windows AI nodes with NVIDIA GPUs',
+          alt: 'VexaOS — Connected Business Systems by Darius Henry',
         },
       ],
     },

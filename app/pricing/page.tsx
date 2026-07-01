@@ -72,8 +72,8 @@ export default function PricingPage() {
               <span className="gradient-text">Transparent starting points.</span>
             </h1>
             <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Every system is custom-quoted. These are the starting points for each tier — your exact
-              price depends on the features, devices, integrations, and size of your business.
+              Every VexaOS system is custom-quoted. These are the starting points for each tier — your
+              exact price depends on the features, devices, integrations, and size of your business.
             </p>
           </div>
         </section>

@@ -58,7 +58,7 @@ export default function DeviceShowcase() {
             <span className="w-2 h-2 rounded-full bg-red-400/70" />
             <span className="w-2 h-2 rounded-full bg-yellow-400/70" />
             <span className="w-2 h-2 rounded-full bg-green-400/70" />
-            <span className="ml-2 text-[8px] text-gray-500 font-medium">Business Dashboard</span>
+            <span className="ml-2 text-[8px] text-gray-500 font-medium">VexaOS Dashboard</span>
           </div>
           <div className="p-3 space-y-2">
             <div className="flex items-center justify-between">

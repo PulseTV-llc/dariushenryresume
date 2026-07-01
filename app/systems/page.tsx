@@ -34,7 +34,7 @@ export default function SystemsPage() {
               <span className="gradient-text">business operating system.</span>
             </h1>
             <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Your system is assembled from connected layers — dashboards, mobile, touchscreen,
+              Every VexaOS system is assembled from connected layers — dashboards, mobile, touchscreen,
               automation, data, and integrations — all sharing one real-time source of truth.
             </p>
           </div>

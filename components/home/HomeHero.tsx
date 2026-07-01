@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, PlayCircle, Laptop, Smartphone, Tablet, MonitorSmartphone, RefreshCw } from 'lucide-react';
 import DeviceShowcase from '@/components/business/DeviceShowcase';
+import VexaMark from '@/components/site/VexaMark';
 
 const chips = [
   { icon: Laptop, label: 'Web App' },
@@ -38,11 +39,11 @@ export default function HomeHero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-7"
+              className="inline-flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-7"
             >
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span className="text-sm text-gray-200 font-medium">
-                One Platform. Every Device. Fully Connected.
+              <VexaMark size={22} />
+              <span className="text-sm text-gray-200 font-semibold tracking-wide">
+                VexaOS · One Platform. Every Device. Fully Connected.
               </span>
             </motion.div>
 
@@ -62,8 +63,9 @@ export default function HomeHero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mt-6 text-lg md:text-xl text-gray-300 max-w-xl mx-auto lg:mx-0 leading-relaxed"
             >
-              I build custom web apps, iPhone apps, Android apps, touchscreen interfaces,
-              dashboards, and employee tools that sync together in real time —{' '}
+              <span className="text-white font-semibold">VexaOS</span> is the custom platform I build
+              for your business — web apps, iPhone and Android apps, touchscreen interfaces, dashboards,
+              and staff tools that sync together in real time,{' '}
               <span className="text-white font-medium">designed around the way your business actually works.</span>
             </motion.p>
 
