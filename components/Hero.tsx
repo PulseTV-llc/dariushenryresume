@@ -69,7 +69,7 @@ export default function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto lg:mx-0 font-medium leading-relaxed"
             >
-              I help companies turn their documents, policies, procedures, customer
+              VexaOS helps companies turn their documents, policies, procedures, customer
               messages, and internal knowledge into a{' '}
               <span className="text-white">secure, searchable AI assistant</span>{' '}
               powered by dedicated Windows AI nodes with high-performance NVIDIA GPUs —

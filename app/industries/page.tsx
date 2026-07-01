@@ -80,7 +80,7 @@ export default function IndustriesPage() {
               href="/contact"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
             >
-              Tell me about your business
+              Tell us about your business
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

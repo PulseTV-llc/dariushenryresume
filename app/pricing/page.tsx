@@ -166,7 +166,7 @@ export default function PricingPage() {
               <p className="text-gray-300 text-sm leading-relaxed">
                 Systems are built remotely and delivered worldwide. Pricing is adjusted to align with
                 the purchasing power of your country and the size of your business — while keeping the
-                work at the premium quality standard. Tell me where you're based and I'll tailor the
+                work at the premium quality standard. Tell us where you're based and we'll tailor the
                 quote to your market.
               </p>
             </div>
@@ -180,7 +180,7 @@ export default function PricingPage() {
               Get an exact quote for your business.
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto mb-8">
-              Share what you're trying to build and I'll come back with a clear, itemized quote and a
+              Share what you're trying to build and we'll come back with a clear, itemized quote and a
               recommended system plan.
             </p>
             <Link

@@ -70,9 +70,9 @@ export default function ShyftGridCaseStudy() {
               <span className="gradient-text">not a pile of tools.</span>
             </h1>
             <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              ShyftGrid shows the VexaOS approach in action: business-specific software that ties a
-              web dashboard, a mobile experience, and a touchscreen station together on one real-time
-              backend.
+              ShyftGrid is the proof-of-concept behind the VexaOS approach: business-specific software
+              that ties a web dashboard, a mobile experience, and a touchscreen station together on one
+              real-time backend.
             </p>
           </div>
         </section>
@@ -130,7 +130,7 @@ export default function ShyftGridCaseStudy() {
           <div className="max-w-3xl mx-auto text-center">
             <SectionHeading
               eyebrow="The takeaway"
-              title="This is what I can build for your business."
+              title="This is what VexaOS can build for your business."
               subtitle="ShyftGrid is one example of the VexaOS connected-system approach — a dashboard, mobile tools, touchscreen stations, and real-time data — that can be shaped around your industry and your workflow."
             />
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

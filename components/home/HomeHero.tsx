@@ -63,7 +63,7 @@ export default function HomeHero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mt-6 text-lg md:text-xl text-gray-300 max-w-xl mx-auto lg:mx-0 leading-relaxed"
             >
-              <span className="text-white font-semibold">VexaOS</span> is the custom platform I build
+              <span className="text-white font-semibold">VexaOS</span> is the custom platform we build
               for your business — web apps, iPhone and Android apps, touchscreen interfaces, dashboards,
               and staff tools that sync together in real time,{' '}
               <span className="text-white font-medium">designed around the way your business actually works.</span>

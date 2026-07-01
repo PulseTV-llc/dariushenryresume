@@ -367,7 +367,7 @@ export function InternationalSection() {
             Built remotely. Sold globally.
           </h2>
           <p className="text-gray-300 leading-relaxed mb-6">
-            Distance is not a limitation. I build and deliver complete connected systems for
+            Distance is not a limitation. VexaOS builds and delivers complete connected systems for
             businesses across the world — with pricing adapted to your market and a process
             designed for remote collaboration.
           </p>

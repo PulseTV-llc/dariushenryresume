@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const assurances = [
   { icon: MessageSquare, title: 'A real plan, not a sales pitch', detail: 'You get a system plan and clear quote shaped around your actual business.' },
-  { icon: Clock, title: 'Fast, thoughtful reply', detail: 'I read every message personally and respond with real next steps.' },
+  { icon: Clock, title: 'Fast, thoughtful reply', detail: 'Every message gets a real reply from our team with clear next steps.' },
   { icon: ShieldCheck, title: 'Your details stay private', detail: 'Used only to prepare your quote — never shared or sold.' },
 ];
 
@@ -32,10 +32,10 @@ export default function ContactPage() {
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.05] text-balance">
-              Tell me about your business.
+              Tell us about your business.
             </h1>
             <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Share a few details and I'll come back with a VexaOS system plan and a clear quote —
+              Share a few details and we'll come back with a VexaOS system plan and a clear quote —
               built around the way your business actually works.
             </p>
           </div>

@@ -269,7 +269,7 @@ export const PROCESS_STEPS = [
   {
     step: '03',
     title: 'Connected Build',
-    detail: 'I build the web, mobile, and touchscreen layers on one real-time synced backend — your single source of truth.',
+    detail: 'We build the web, mobile, and touchscreen layers on one real-time synced backend — your single source of truth.',
   },
   {
     step: '04',
