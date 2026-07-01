@@ -165,6 +165,13 @@ export async function POST(request: NextRequest) {
       timeline,
       features,
       additionalDetails,
+      // New connected-business-system fields (optional, persisted additively)
+      businessName,
+      country,
+      industry,
+      currentWebsite,
+      systemType,
+      devices,
       // Legacy fields (backward compatibility)
       projectType,
       currentSituation,
@@ -285,6 +292,15 @@ export async function POST(request: NextRequest) {
       inquiry.timeline = timeline;
       inquiry.features = features || [];
       inquiry.additionalDetails = additionalDetails ? additionalDetails.trim() : '';
+
+      // Optional connected-business-system fields (only stored when provided)
+      if (businessName) inquiry.businessName = String(businessName).slice(0, 200);
+      if (country) inquiry.country = String(country).slice(0, 100);
+      if (industry) inquiry.industry = String(industry).slice(0, 100);
+      if (currentWebsite) inquiry.currentWebsite = String(currentWebsite).slice(0, 300);
+      if (systemType) inquiry.systemType = String(systemType).slice(0, 200);
+      if (Array.isArray(devices)) inquiry.devices = devices.slice(0, 20);
+      if (budget) inquiry.budget = String(budget).slice(0, 100);
     } else {
       // Legacy format fields
       inquiry.projectType = projectType;

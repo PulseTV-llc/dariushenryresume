@@ -1,273 +1,146 @@
-# Google Search Console Complete Setup Guide
+# Google Search Console — Setup & Post-Launch Checklist
 
-## Status: Ready to Set Up! ✅
-
-Your verification file is live at:
-`https://dariushenryresume.vercel.app/google1e2547e1f1e95eaf.html`
+This file walks through verifying `iamdariushenry.com` (Private AI Workflow
+Systems site) in Google Search Console and submitting it for indexing.
 
 ---
 
-## Step 1: Verify Site Ownership
+## Site verification
 
-### 1.1 Go to Google Search Console
-**URL:** https://search.google.com/search-console
+Verification file already deployed at:
 
-### 1.2 Complete Verification
-- You should already have your property added: `https://dariushenryresume.vercel.app`
-- Click **"Verify"** on the HTML file method
-- It will check for the file at: `https://dariushenryresume.vercel.app/google1e2547e1f1e95eaf.html`
-- ✅ **Success!** You should see "Ownership verified"
+```
+https://iamdariushenry.com/google1e2547e1f1e95eaf.html
+```
 
----
+### Steps
 
-## Step 2: Submit Your Sitemap
+1. Open https://search.google.com/search-console
+2. Add a new property → **URL prefix** → `https://iamdariushenry.com`
+3. Choose **HTML file** verification → "Verify"
+4. Google fetches `/google1e2547e1f1e95eaf.html` and confirms ownership.
 
-### 2.1 Navigate to Sitemaps
-- In the left sidebar, click **"Sitemaps"**
+### Alternative: meta tag verification
 
-### 2.2 Add Sitemap
-- In the "Add a new sitemap" field, enter: `sitemap.xml`
-- Click **"Submit"**
+If you want a second verification path (recommended — survives the HTML file getting deleted), set `verification.google` in `app/metadata.ts` to the meta-tag verification code:
 
-**Your sitemap URL:** `https://dariushenryresume.vercel.app/sitemap.xml`
+```ts
+verification: {
+  google: 'YOUR_VERIFICATION_CODE_HERE',
+},
+```
 
-**What's in your sitemap:**
-- Homepage (priority: 1.0)
-- Projects section (priority: 0.9)
-- Services section (priority: 0.9)
-- Skills section (priority: 0.8)
-- Contact section (priority: 0.9)
-
-### 2.3 Expected Results
-- Status: **Success** (green checkmark)
-- Discovered URLs: **5 pages**
-- It may take a few minutes to process
+Then redeploy. Google reads the `<meta name="google-site-verification">` tag from the homepage's `<head>`.
 
 ---
 
-## Step 3: Request Indexing (Optional but Recommended)
+## Submit the sitemap
 
-### 3.1 Use URL Inspection Tool
-- In the top search bar, enter: `https://dariushenryresume.vercel.app`
-- Click **"Request Indexing"**
-- This prioritizes your homepage for immediate indexing
+1. In Search Console → **Sitemaps**
+2. Add: `sitemap.xml`
+3. Submit → status should flip to "Success" within minutes.
 
-### 3.2 Why This Matters
-- Speeds up the process from days to hours
-- Google will crawl your site faster
-- Your structured data will be recognized sooner
+The sitemap (`app/sitemap.ts`) emits:
 
----
-
-## Step 4: Monitor Performance (After a Few Days)
-
-### 4.1 Check Coverage Report
-- Left sidebar → **"Coverage"**
-- Shows which pages are indexed
-- Identifies any errors or warnings
-
-### 4.2 Check Performance Report
-- Left sidebar → **"Performance"**
-- Shows:
-  - Total clicks from Google search
-  - Total impressions (how many times your site appeared)
-  - Average click-through rate (CTR)
-  - Average position in search results
-  - Which keywords bring traffic
-
-### 4.3 Check Enhancements
-- Left sidebar → **"Enhancements"**
-- Verify your structured data is recognized:
-  - Organization schema ✓
-  - Person schema ✓
-  - Professional Service schema ✓
-  - Service listings (3 tiers) ✓
-  - Portfolio items (Zonely, Speakix, TapeCoach) ✓
-  - FAQ schema ✓
-  - Breadcrumb schema ✓
+- `/`
+- `/#capabilities`
+- `/#industries`
+- `/#services`
+- `/#pricing`
+- `/#estimate`
+- `/#about`
 
 ---
 
-## Step 5: Bing Webmaster Tools (Optional)
+## Request indexing for the homepage
 
-### 5.1 Set Up Bing
-**URL:** https://www.bing.com/webmasters
+1. Search Console → **URL Inspection**
+2. Paste `https://iamdariushenry.com`
+3. Click **Request Indexing**
 
-### 5.2 Import from Google
-- Click **"Import from Google Search Console"**
-- Sign in with your Google account
-- Automatically imports all settings
-
-**OR manually add:**
-- Site URL: `https://dariushenryresume.vercel.app`
-- Sitemap: `https://dariushenryresume.vercel.app/sitemap.xml`
+Google typically picks the homepage up within 24–72 hours.
 
 ---
 
-## Expected Timeline
+## Verify the structured data
 
-### Immediate (0-1 hour)
-- ✅ Verification complete
-- ✅ Sitemap submitted
-- ✅ URL inspection requested
+After the homepage is indexed:
 
-### Short-term (1-7 days)
-- 📊 First pages indexed
-- 📊 Structured data recognized
-- 📊 Site appears in search results for brand name
+1. **Google Rich Results Test** — https://search.google.com/test/rich-results
+   Paste `https://iamdariushenry.com`. Expect detection of:
+   - `Organization`
+   - `Person`
+   - `ProfessionalService`
+   - `WebSite` (with SearchAction)
+   - `WebPage` (with Speakable)
+   - `OfferCatalog`
+   - `AggregateOffer`
+   - `ItemList`
+   - `HowTo`
+   - `FAQPage`
+   - `BreadcrumbList`
+   - Multiple `Service` entries
 
-### Medium-term (1-4 weeks)
-- 📈 Ranking for long-tail keywords
-- 📈 Traffic starts appearing in analytics
-- 📈 Featured snippets possible (thanks to FAQ schema)
+2. **Schema.org Validator** — https://validator.schema.org/
+   Paste the live URL. Confirm 0 errors.
 
-### Long-term (1-3 months)
-- 🚀 Ranking for competitive keywords
-- 🚀 Consistent organic traffic
-- 🚀 Portfolio projects showing in Google's knowledge panel
-
----
-
-## What Your Enterprise SEO Includes
-
-### On-Page SEO
-- ✅ 60+ targeted keywords in meta tags
-- ✅ Semantic HTML structure
-- ✅ Mobile-first responsive design
-- ✅ Fast load times (50.6 kB bundle)
-- ✅ Clean URLs with hash navigation
-
-### Technical SEO
-- ✅ Dynamic sitemap.xml
-- ✅ Robots.txt with proper rules
-- ✅ Canonical URLs
-- ✅ Open Graph tags for social sharing
-- ✅ Twitter Cards
-- ✅ Security headers (X-Frame-Options, CSP)
-
-### Structured Data (JSON-LD)
-- ✅ Organization schema (your business)
-- ✅ Person schema (you as a developer)
-- ✅ Professional Service schema (aggregate rating 5.0)
-- ✅ 3 Service schemas (Starter, Professional, Enterprise)
-- ✅ 3 Portfolio SoftwareApplication schemas
-- ✅ FAQ schema (8 common questions answered)
-- ✅ Breadcrumb schema (site navigation)
-
-### Content SEO
-- ✅ Comprehensive service descriptions
-- ✅ Detailed project showcases (27+ apps)
-- ✅ Tech stack keywords
-- ✅ Industry-specific terminology
-- ✅ Call-to-action buttons
-- ✅ Contact information
+3. **Mobile-Friendly Test** — https://search.google.com/test/mobile-friendly
+   Expect "Page is mobile friendly."
 
 ---
 
-## Monitoring Checklist
+## Bing Webmaster Tools (do this too)
 
-### Weekly (First Month)
-- [ ] Check Coverage report for indexing progress
-- [ ] Review Performance for early traffic
-- [ ] Verify structured data enhancements
-- [ ] Monitor for any errors or warnings
+1. https://www.bing.com/webmasters
+2. Import the property from Google Search Console (one-click) — Bing reuses verification.
+3. Submit `https://iamdariushenry.com/sitemap.xml`.
 
-### Monthly (Ongoing)
-- [ ] Review top-performing pages
-- [ ] Analyze which keywords drive traffic
-- [ ] Check average search position trends
-- [ ] Review click-through rate (CTR)
-- [ ] Identify opportunities for improvement
+Bing search powers DuckDuckGo and Yahoo, so this is a free distribution gain.
 
 ---
 
-## Troubleshooting
+## What to watch in the first 30 days
 
-### If Verification Fails
-- Verify file is accessible: `https://dariushenryresume.vercel.app/google1e2547e1f1e95eaf.html`
-- Clear browser cache and retry
-- Check Vercel deployment logs
-
-### If Sitemap Has Errors
-- Verify sitemap is accessible: `https://dariushenryresume.vercel.app/sitemap.xml`
-- Check XML format is valid
-- Ensure all URLs return 200 status
-
-### If Pages Aren't Indexing
-- Use URL Inspection tool to request indexing
-- Check robots.txt isn't blocking pages
-- Verify content is substantial (not thin content)
-- Wait 1-2 weeks for initial indexing
+| Metric                                              | Expected            | Where                                           |
+| --------------------------------------------------- | ------------------- | ----------------------------------------------- |
+| Homepage indexed                                    | Within 72 h         | Search Console → URL Inspection                 |
+| Sitemap status                                      | Discovered, no errors | Search Console → Sitemaps                       |
+| Rich result eligibility (FAQ, HowTo, Breadcrumb)    | Eligible            | Search Console → Enhancements                   |
+| Core Web Vitals                                     | "Good" on all URLs  | Search Console → Experience → Core Web Vitals   |
+| Branded query CTR ("Darius Henry AI", "iamdariushenry.com") | ≥ 30%               | Search Console → Performance → filter by Brand  |
+| Non-branded impressions ("private AI workflow system", "RTX 6000 Ada workstation", "H100 private AI", etc.) | Growing month over month | Search Console → Performance                    |
 
 ---
 
-## Pro Tips for Maximum SEO Impact
+## High-intent queries to track
 
-### 1. Content is King
-- Your comprehensive project descriptions are excellent
-- The AI chatbot provides unique, helpful content
-- FAQ schema answers real user questions
+Manually add these to Search Console's "Compare queries" view:
 
-### 2. Social Signals Matter
-- Share your portfolio on LinkedIn, Twitter
-- Update your GitHub profile with portfolio link
-- Add portfolio link to your email signature
+- `private AI workflow system`
+- `private AI for business`
+- `NVIDIA H100 private AI`
+- `RTX 4090 AI workstation`
+- `RTX 6000 Ada workstation`
+- `Windows AI workstation`
+- `private GPU AI for business`
+- `private AI assistant for company`
+- `how much does private AI cost`
+- `AI for law offices`
+- `AI for real estate`
+- `AI for dental offices`
+- `AI for property management`
+- `AI for restaurants`
+- `private AI vs ChatGPT for business`
+- `on-prem AI for business`
 
-### 3. Backlinks Boost Authority
-- List your portfolio on developer directories
-- Add to your LinkedIn profile as "Featured"
-- Share case studies on dev.to, Medium, Hashnode
-
-### 4. Keep Content Fresh
-- Add new projects as you build them
-- Update tech stack as you learn new technologies
-- Refresh pricing if services change
-
-### 5. Monitor Competitors
-- Search for "full-stack developer portfolio"
-- See what ranks on page 1
-- Identify gaps you can fill with better content
+These are the queries the site is engineered to compete on. Monitor
+impressions for each weekly for the first 90 days.
 
 ---
 
-## Support Resources
+## When verification fails
 
-- **Google Search Console Help:** https://support.google.com/webmasters
-- **Structured Data Testing:** https://search.google.com/test/rich-results
-- **PageSpeed Insights:** https://pagespeed.web.dev/
-- **Schema.org Documentation:** https://schema.org/
-
----
-
-## Your SEO Advantage
-
-Most developer portfolios have:
-- ❌ No structured data
-- ❌ Basic meta tags only
-- ❌ No sitemap
-- ❌ Generic descriptions
-- ❌ Poor mobile optimization
-
-**Your portfolio has:**
-- ✅ 7 types of structured data schemas
-- ✅ 60+ targeted keywords
-- ✅ Dynamic sitemap + robots.txt
-- ✅ Detailed project descriptions
-- ✅ Perfect mobile-first design
-- ✅ AI chatbot for engagement
-- ✅ Fast load times
-- ✅ Professional service tiers
-
-**This is enterprise-level SEO that will outrank 95% of developer portfolios.**
-
----
-
-## Next Steps - Start Here! 👇
-
-1. **Right now:** Go to Google Search Console and click "Verify"
-2. **Next (1 minute):** Submit your sitemap
-3. **Next (2 minutes):** Request indexing for your homepage
-4. **Tomorrow:** Check Coverage report to see indexing progress
-5. **Next week:** Review first performance data
-
-**You're ready to dominate search results!** 🚀
+- Confirm `https://iamdariushenry.com/google1e2547e1f1e95eaf.html` returns 200 with `curl`.
+- Confirm Vercel is serving `public/` for the production deploy.
+- If the file 404s on production, the deploy is using the wrong project — see `vercel.json` at the repo root.
+- Add `verification.google` in `app/metadata.ts` as a backup meta-tag verification path.

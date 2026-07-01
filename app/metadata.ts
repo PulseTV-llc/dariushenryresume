@@ -1,10 +1,28 @@
 import { Metadata } from 'next';
 
+// Award-winning enterprise SEO metadata.
+//
+// Strategy:
+// 1. Title pattern: <Primary keyword> | <Differentiator> · <Brand>
+//    Kept ≤80 chars so Google does not truncate the keyword.
+// 2. Description: leads with the offering, names the GPU class,
+//    lists the most valuable industries, ends with a CTA-style benefit.
+// 3. Keywords: clustered by buyer intent — offering, infrastructure
+//    (Windows + NVIDIA GPU), capability, industry vertical, and
+//    bottom-of-funnel intent.
+
 export const siteConfig = {
-  name: 'I BUILD REVENUE-READY iOS APPS IN 7 DAYS | Darius Henry',
-  description: 'Fix Your Broken App or Get Your MVP Live Fast. iOS, React Native, SaaS Developer. 27+ Apps Shipped (Zonely, Speakix, TapeCoach). Emergency App Rescue, 7-Day MVPs, Revenue-Ready Apps, Production SaaS. Real Estate Tech, EdTech, Entertainment. Taking 2 new clients this month.',
+  name: 'Private AI Workflow Systems',
+  brandName: 'Private AI Workflow Systems · Darius Henry',
+  shortTitle: 'Private AI Workflow Systems for Businesses',
+  longTitle:
+    'Private AI Workflow Systems for Businesses — Custom Windows GPU AI Nodes | Darius Henry',
+  description:
+    'Custom private AI systems for businesses, powered by Windows AI nodes with NVIDIA GPUs (RTX 4090 to H100 / H200). Private document search, business assistants, and workflow automation for real estate, law, medical, restaurants, and franchise teams.',
   url: 'https://iamdariushenry.com',
   ogImage: 'https://iamdariushenry.com/og-image.jpg',
+  twitterHandle: '@dariushenry',
+  locale: 'en_US',
   author: {
     name: 'Darius Henry',
     email: 'darius.henry@gmail.com',
@@ -12,103 +30,101 @@ export const siteConfig = {
     github: 'https://github.com/PulseTV-llc',
   },
   keywords: [
-    // URGENT/CONVERSION KEYWORDS (NEW - PRIORITY)
-    'fix broken app',
-    'broken app rescue',
-    'emergency app repair',
-    'agency delivered broken app',
-    'stuck app development',
-    'app not working',
-    '7 day MVP',
-    '7-day MVP developer',
-    'fast MVP development',
-    'quick app development',
-    'revenue ready app',
-    'revenue-ready iOS app',
-    'build app fast',
-    'rapid app development',
+    // === Offering — exact-match buyer intent ===
+    'private AI workflow system',
+    'private AI workflow systems',
+    'private AI for business',
+    'private business AI',
+    'custom AI for business',
+    'business AI assistant',
+    'private AI assistant for company',
+    'company AI system',
+    'private document search AI',
+    'on-premise AI for business',
+    'local AI deployment for business',
+    'private LLM deployment',
 
-    // Core developer keywords
-    'iOS developer',
-    'iOS app developer',
-    'full-stack developer',
-    'full stack developer',
-    'software developer',
-    'mobile developer',
-    'React Native developer',
-    'Swift developer',
+    // === Infrastructure — Windows + NVIDIA GPU specific ===
+    'NVIDIA GPU AI workstation',
+    'RTX 4090 AI workstation',
+    'RTX 5090 AI workstation',
+    'RTX 6000 Ada workstation',
+    'L40S AI server',
+    'H100 private AI',
+    'H100 workstation for business',
+    'H200 AI workstation',
+    'Windows AI server',
+    'Windows AI workstation',
+    'Windows GPU AI node',
+    'Windows 11 Pro for Workstations AI',
+    'Threadripper Pro AI workstation',
+    'Xeon W AI workstation',
+    'private GPU AI',
+    'on-prem GPU AI',
+    'private LLM GPU',
+    'local LLM Windows',
+    'private AI infrastructure',
+    'office AI server',
+    'on-prem AI workstation',
+    'dedicated AI compute node',
 
-    // Technology keywords
-    'React developer',
-    'Next.js developer',
-    'TypeScript developer',
-    'Node.js developer',
-    'Python developer',
-    'JavaScript developer',
+    // === Capabilities ===
+    'document intelligence',
+    'document intelligence system',
+    'AI document search',
+    'natural language document search',
+    'retrieval augmented generation for business',
+    'AI workflow automation',
+    'staff workflow automation',
+    'AI internal FAQ',
+    'AI SOP assistant',
+    'AI staff training assistant',
+    'contract summarization AI',
+    'invoice extraction AI',
+    'OCR document AI',
+    'AI report generation',
+    'AI email drafting',
+    'client-facing chatbot',
+    'voice transcription for business',
 
-    // Specialty keywords
-    'SaaS developer',
-    'SaaS platform builder',
-    'AI integration developer',
-    'AI developer',
-    'machine learning developer',
-    'OpenAI developer',
-    'ChatGPT integration',
+    // === Industries ===
+    'AI for real estate',
+    'AI for real estate brokerages',
+    'AI for law offices',
+    'AI for law firms',
+    'AI for medical offices',
+    'AI for dental offices',
+    'AI for restaurants',
+    'AI for franchises',
+    'AI for franchise groups',
+    'AI for construction companies',
+    'AI for cleaning companies',
+    'AI for film and media',
+    'AI for production companies',
+    'AI for property management',
+    'AI for insurance agencies',
+    'AI for local service businesses',
 
-    // Service keywords (UPDATED - no pricing)
-    'custom app development',
-    'mobile app development',
-    'startup developer',
-    'MVP development',
-    'MVP builder',
-    'prototype developer',
+    // === Bottom-of-funnel intent ===
+    'build private AI for my business',
+    'custom AI assistant for company',
+    'AI consultant for small business',
+    'AI workflow consultant',
+    'AI implementation consultant',
+    'business automation with AI',
+    'private AI estimate',
+    'private AI pricing',
+    'AI system pricing',
+    'GPU AI workstation pricing',
+    'H100 workstation pricing',
+    'enterprise private AI cost',
+    'how much does private AI cost',
 
-    // Platform keywords
-    'AWS developer',
-    'Firebase developer',
-    'cloud developer',
-    'Vercel expert',
-
-    // Industry keywords
-    'real estate tech developer',
-    'real estate app developer',
-    'edtech developer',
-    'education app developer',
-    'entertainment tech developer',
-    'SaaS for real estate',
-
-    // Project-specific
-    'Zonely',
-    'Zonely developer',
-    'Speakix',
-    'Speakix developer',
-    'TapeCoach',
-    'TapeCoach developer',
-    'PulseTV developer',
-
-    // Solution keywords
-    'subscription platform',
-    'Stripe integration',
-    'payment integration',
-    'multi-tenant SaaS',
-    'SaaS architecture',
-
-    // Hiring keywords
-    'hire iOS developer',
-    'hire app developer',
-    'freelance iOS developer',
-    'contract developer',
-    'remote developer',
-    'independent developer',
-
-    // Problem-solving keywords (NEW)
-    'app development rescue',
-    'fix my app',
-    'complete unfinished app',
-    'app development help',
-    'startup app developer',
-    'validate app idea',
-    'fast app launch',
+    // === Comparison intent ===
+    'private AI vs ChatGPT for business',
+    'on-prem AI vs cloud AI',
+    'alternative to ChatGPT for business',
+    'private alternative to public AI',
   ],
 };
 
@@ -116,11 +132,14 @@ export const generateMetadata = (): Metadata => {
   return {
     metadataBase: new URL(siteConfig.url),
     title: {
-      default: siteConfig.name,
-      template: `%s | ${siteConfig.name}`,
+      default: siteConfig.longTitle,
+      template: `%s · Darius Henry`,
     },
     description: siteConfig.description,
     keywords: siteConfig.keywords,
+    applicationName: siteConfig.name,
+    generator: 'Next.js',
+    referrer: 'origin-when-cross-origin',
     authors: [
       {
         name: siteConfig.author.name,
@@ -136,9 +155,9 @@ export const generateMetadata = (): Metadata => {
     },
     openGraph: {
       type: 'website',
-      locale: 'en_US',
+      locale: siteConfig.locale,
       url: siteConfig.url,
-      title: siteConfig.name,
+      title: siteConfig.longTitle,
       description: siteConfig.description,
       siteName: siteConfig.name,
       images: [
@@ -146,42 +165,65 @@ export const generateMetadata = (): Metadata => {
           url: siteConfig.ogImage,
           width: 1200,
           height: 630,
-          alt: 'Darius Henry - Full-Stack Developer Portfolio',
+          alt: 'Private AI Workflow Systems — custom Windows AI nodes with NVIDIA GPUs (RTX 4090 to H100) for businesses, by Darius Henry',
+          type: 'image/jpeg',
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: siteConfig.name,
+      site: siteConfig.twitterHandle,
+      creator: siteConfig.twitterHandle,
+      title: siteConfig.longTitle,
       description: siteConfig.description,
-      images: [siteConfig.ogImage],
-      creator: '@dariushenry',
+      images: [
+        {
+          url: siteConfig.ogImage,
+          alt: 'Private AI Workflow Systems for businesses, powered by custom Windows AI nodes with NVIDIA GPUs',
+        },
+      ],
     },
     robots: {
       index: true,
       follow: true,
+      nocache: false,
       googleBot: {
         index: true,
         follow: true,
+        noimageindex: false,
         'max-video-preview': -1,
         'max-image-preview': 'large',
         'max-snippet': -1,
       },
     },
     icons: {
-      icon: '/favicon.ico',
+      icon: [
+        { url: '/favicon.ico' },
+        { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+        { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      ],
       shortcut: '/favicon-16x16.png',
-      apple: '/apple-touch-icon.png',
+      apple: [
+        { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      ],
     },
     manifest: '/site.webmanifest',
     verification: {
-      google: 'your-google-verification-code', // Add after Google Search Console setup
-      // yandex: 'your-yandex-verification-code',
-      // bing: 'your-bing-verification-code',
+      // Add your Google Search Console verification code here once issued.
+      google: 'your-google-verification-code',
     },
     alternates: {
       canonical: siteConfig.url,
+      languages: {
+        'en-US': siteConfig.url,
+        'x-default': siteConfig.url,
+      },
     },
     category: 'technology',
+    classification: 'Private AI Infrastructure for Businesses',
+    other: {
+      'og:price:currency': 'USD',
+      'og:availability': 'in stock',
+    },
   };
 };

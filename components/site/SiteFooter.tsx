@@ -1,0 +1,101 @@
+'use client';
+
+import Link from 'next/link';
+import { Mail, Linkedin, Github, ArrowUpRight } from 'lucide-react';
+import { NAV_LINKS } from '@/lib/business-data';
+
+export default function SiteFooter() {
+  const year = new Date().getFullYear();
+
+  return (
+    <footer className="relative bg-black border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid gap-12 lg:grid-cols-3">
+          {/* Brand + pitch */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-500 flex items-center justify-center font-black text-black">
+                DH
+              </span>
+              <span className="text-white font-bold text-lg">Darius Henry</span>
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
+              Custom connected business systems across web, iOS, Android, and touchscreen —
+              designed around the way your business actually works.
+            </p>
+          </div>
+
+          {/* Pages */}
+          <div>
+            <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+              Explore
+            </h3>
+            <ul className="space-y-2">
+              {NAV_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-gray-400 hover:text-white text-sm transition-colors"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+              Connect
+            </h3>
+            <div className="space-y-3">
+              <a
+                href="mailto:darius.henry@gmail.com"
+                className="group flex items-center gap-3 text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                <Mail className="w-4 h-4 text-cyan-400" />
+                darius.henry@gmail.com
+              </a>
+              <a
+                href="https://www.linkedin.com/in/darius-henry-292b21373/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3 text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                <Linkedin className="w-4 h-4 text-blue-400" />
+                LinkedIn
+                <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </a>
+              <a
+                href="https://github.com/PulseTV-llc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3 text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                <Github className="w-4 h-4 text-gray-300" />
+                GitHub
+                <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </a>
+            </div>
+            <Link
+              href="/contact"
+              className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
+            >
+              Start a Business Blueprint
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-gray-500">
+            © {year} Darius Henry · Custom Connected Business Systems
+          </p>
+          <p className="text-xs text-gray-600">
+            Web · iOS · Android · Touchscreen · Dashboards · Real-Time Sync
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}

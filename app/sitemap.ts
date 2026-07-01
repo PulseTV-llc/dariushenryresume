@@ -4,54 +4,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://iamdariushenry.com';
   const currentDate = new Date();
 
-  return [
-    {
-      url: baseUrl,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/#services`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/#projects`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/#contact`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/how-i-built-zonely`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/7-day-mvp-guide`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/rescuing-broken-apps`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
+  const routes: { path: string; priority: number; freq: 'weekly' | 'monthly' }[] = [
+    { path: '/', priority: 1.0, freq: 'weekly' },
+    { path: '/industries', priority: 0.9, freq: 'monthly' },
+    { path: '/systems', priority: 0.9, freq: 'monthly' },
+    { path: '/pricing', priority: 0.9, freq: 'monthly' },
+    { path: '/case-study-shyftgrid', priority: 0.8, freq: 'monthly' },
+    { path: '/ai-solutions', priority: 0.7, freq: 'monthly' },
+    { path: '/contact', priority: 0.95, freq: 'monthly' },
   ];
+
+  return routes.map((r) => ({
+    url: `${baseUrl}${r.path === '/' ? '' : r.path}`,
+    lastModified: currentDate,
+    changeFrequency: r.freq,
+    priority: r.priority,
+  }));
 }
