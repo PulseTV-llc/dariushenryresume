@@ -3,10 +3,14 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock, CheckCircle } from 'lucide-react';
+import SiteNav from '@/components/site/SiteNav';
+import SiteFooter from '@/components/site/SiteFooter';
 
 export default function ZonelyPost() {
   return (
-    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
+    <>
+      <SiteNav />
+      <div className="min-h-screen bg-black pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <article className="max-w-4xl mx-auto">
         {/* Back Link */}
         <Link href="/blog">
@@ -14,7 +18,7 @@ export default function ZonelyPost() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-2 text-green-400 hover:text-green-300 mb-8"
+            className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Blog</span>
@@ -28,7 +32,7 @@ export default function ZonelyPost() {
           className="mb-12"
         >
           <div className="flex items-center gap-4 mb-6">
-            <span className="px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm font-medium">
+            <span className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 text-sm font-medium">
               Case Study
             </span>
             <div className="flex items-center gap-4 text-sm text-gray-400">
@@ -99,18 +103,18 @@ export default function ZonelyPost() {
 
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                  <h3 className="text-xl font-bold text-green-400 mb-2">iOS App (React Native)</h3>
+                  <h3 className="text-xl font-bold text-cyan-400 mb-2">iOS App (React Native)</h3>
                   <ul className="space-y-1 text-sm">
                     <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-cyan-500" />
                       <span>Deal calculator & ROI analysis</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-cyan-500" />
                       <span>Property search & filtering</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-cyan-500" />
                       <span>AI-powered market insights</span>
                     </li>
                   </ul>
@@ -188,8 +192,8 @@ export default function ZonelyPost() {
                   </ul>
                 </div>
 
-                <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-green-400 mb-2">Days 15-45: Core Features</h3>
+                <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-lg p-6">
+                  <h3 className="text-xl font-bold text-cyan-400 mb-2">Days 15-45: Core Features</h3>
                   <ul className="space-y-2">
                     <li>✅ User authentication (email, Google, Apple Sign-In)</li>
                     <li>✅ Deal calculator with ROI formulas</li>
@@ -224,11 +228,11 @@ export default function ZonelyPost() {
             </section>
 
             {/* Results */}
-            <section className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-2xl p-8">
+            <section className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-2xl p-8">
               <h2 className="text-3xl font-bold text-white mb-6">💰 The Outcome</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-green-400 mb-2">90 days</div>
+                  <div className="text-4xl font-bold text-cyan-400 mb-2">90 days</div>
                   <div className="text-sm text-gray-400">Total Development Time</div>
                 </div>
                 <div className="text-center">
@@ -250,7 +254,7 @@ export default function ZonelyPost() {
               <h2 className="text-3xl font-bold text-white mb-4">🛠️ Tech Stack</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-bold text-green-400 mb-2">Frontend:</h4>
+                  <h4 className="font-bold text-cyan-400 mb-2">Frontend:</h4>
                   <ul className="space-y-1">
                     <li>• React Native (iOS app)</li>
                     <li>• Next.js 14 (Web portal)</li>
@@ -275,7 +279,7 @@ export default function ZonelyPost() {
               <h2 className="text-3xl font-bold text-white mb-4">📝 Key Lessons</h2>
               <div className="space-y-4">
                 <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                  <h4 className="font-bold text-green-400 mb-2">1. Ship revenue features FIRST</h4>
+                  <h4 className="font-bold text-cyan-400 mb-2">1. Ship revenue features FIRST</h4>
                   <p>Don't wait to add payments. Stripe integration took 2 days and unlocked immediate monetization.</p>
                 </div>
 
@@ -297,16 +301,16 @@ export default function ZonelyPost() {
             </section>
 
             {/* CTA */}
-            <section className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-2xl p-8 text-center">
+            <section className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-2xl p-8 text-center">
               <h2 className="text-3xl font-bold text-white mb-4">Want a Zonely-Level App?</h2>
               <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
                 I can build your revenue-ready SaaS platform in 90 days too. Stop wasting time and money on slow agencies.
               </p>
-              <Link href="/#contact">
+              <Link href="/contact">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-10 py-5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl font-bold text-lg text-white hover:shadow-2xl hover:shadow-green-500/50 transition-all"
+                  className="px-10 py-5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-bold text-lg text-white hover:shadow-2xl hover:shadow-cyan-500/50 transition-all"
                 >
                   Tell Me Your Problem →
                 </motion.button>
@@ -315,6 +319,8 @@ export default function ZonelyPost() {
           </div>
         </motion.div>
       </article>
-    </div>
+      </div>
+      <SiteFooter />
+    </>
   );
 }

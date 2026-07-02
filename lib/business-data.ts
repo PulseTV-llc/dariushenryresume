@@ -10,6 +10,7 @@ export const NAV_LINKS = [
   { href: '/pricing', label: 'Pricing' },
   { href: '/case-study-shyftgrid', label: 'ShyftGrid Case Study' },
   { href: '/ai-solutions', label: 'AI Solutions' },
+  { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
 ];
 

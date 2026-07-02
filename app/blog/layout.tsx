@@ -1,23 +1,28 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Blog - iOS Development, SaaS, MVP Guides | Darius Henry',
-  description: 'Real stories from building revenue-ready apps in 7 days, rescuing broken projects, and shipping production SaaS platforms. Case studies, guides, and lessons learned.',
+  title: 'Blog | Connected Business Systems, Explained | VexaOS',
+  description:
+    'Deep dives, case studies, and field notes on running a real business on one connected VexaOS system — booking, POS, mobile apps, dashboards, and inventory in sync across web, iOS, Android, and touchscreen.',
   keywords: [
-    'iOS development blog',
-    'SaaS development blog',
-    'MVP development guide',
-    'app rescue stories',
-    '7-day MVP guide',
-    'broken app fix',
-    'React Native tutorials',
-    'startup development',
+    'connected business system',
+    'barbershop software',
+    'salon booking system',
+    'salon POS',
+    'small business operating system',
+    'inventory scanner system',
+    'custom business software',
+    'multi-location software',
+    'VexaOS blog',
   ],
+  alternates: { canonical: 'https://www.vexaos.io/blog' },
   openGraph: {
-    title: 'Blog - iOS Development & App Rescue Stories',
-    description: 'Case studies, guides, and real stories from building apps fast and rescuing broken projects.',
+    title: 'The VexaOS Blog — Connected Systems, Explained',
+    description:
+      'Deep dives and case studies on running a real business on one connected system — booking, POS, apps, dashboards, and inventory in sync.',
     url: 'https://www.vexaos.io/blog',
     type: 'website',
+    siteName: 'VexaOS',
   },
 };
 

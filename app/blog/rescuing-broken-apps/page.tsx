@@ -3,15 +3,19 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import SiteNav from '@/components/site/SiteNav';
+import SiteFooter from '@/components/site/SiteFooter';
 
 export default function RescuingAppsPost() {
   return (
-    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
+    <>
+      <SiteNav />
+      <div className="min-h-screen bg-black pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <article className="max-w-4xl mx-auto">
         <Link href="/blog">
           <motion.button
             whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-2 text-green-400 hover:text-green-300 mb-8"
+            className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Blog</span>
@@ -28,6 +32,8 @@ export default function RescuingAppsPost() {
           </p>
         </div>
       </article>
-    </div>
+      </div>
+      <SiteFooter />
+    </>
   );
 }
