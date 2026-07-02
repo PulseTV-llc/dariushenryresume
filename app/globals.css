@@ -66,3 +66,280 @@ html {
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 50px 50px;
 }
+
+/* ==========================================================================
+   QUOTE DOCUMENT — client-facing proposal / PDF
+   A deterministic, print-friendly layout. All colors below render on paper
+   because `print-color-adjust: exact` is forced. The document is authored once
+   and used both in the on-screen preview sheet and in the locked print output.
+   ========================================================================== */
+
+:root {
+  --qd-ink: #0f172a;          /* slate-900 */
+  --qd-ink-soft: #475569;     /* slate-600 */
+  --qd-ink-faint: #94a3b8;    /* slate-400 */
+  --qd-line: #e2e8f0;         /* slate-200 */
+  --qd-line-strong: #cbd5e1;  /* slate-300 */
+  --qd-bg-soft: #f8fafc;      /* slate-50  */
+  --qd-blue: #0ea5e9;
+  --qd-cyan: #22d3ee;
+  --qd-blue-deep: #2563eb;
+  --qd-accent-grad: linear-gradient(135deg, #2563eb 0%, #0ea5e9 45%, #22d3ee 100%);
+}
+
+.qd-root,
+.qd-root * {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  box-sizing: border-box;
+}
+
+.qd-root {
+  color: var(--qd-ink);
+  background: #ffffff;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 11.5px;
+  line-height: 1.5;
+  width: 100%;
+}
+
+/* --- page-break discipline: nothing splits mid-block --- */
+.qd-block {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+/* Keep a heading with the content that follows it (no orphaned headers). */
+.qd-keepnext {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+.qd-section {
+  break-inside: auto;
+  page-break-inside: auto;
+  margin-top: 22px;
+}
+
+.qd-accent-text {
+  background: var(--qd-accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--qd-blue);
+}
+
+/* --- Header --- */
+.qd-header { margin-bottom: 4px; }
+.qd-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.qd-brand { display: flex; align-items: center; gap: 12px; }
+.qd-wordmark { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+.qd-tagline {
+  font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--qd-blue-deep); font-weight: 600; margin-top: 3px;
+}
+.qd-doclabel { text-align: right; }
+.qd-doclabel-title {
+  font-size: 15px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--qd-ink); margin-bottom: 8px;
+}
+.qd-doclabel-meta { display: flex; gap: 20px; justify-content: flex-end; }
+.qd-doclabel-meta > div { display: flex; flex-direction: column; align-items: flex-end; }
+.qd-doclabel-meta span { font-size: 8px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--qd-ink-faint); }
+.qd-doclabel-meta strong { font-size: 11px; font-weight: 700; color: var(--qd-ink); }
+
+.qd-accentbar {
+  height: 4px; border-radius: 4px; margin: 16px 0 14px;
+  background: var(--qd-accent-grad);
+}
+
+.qd-parties {
+  display: flex; justify-content: space-between; gap: 24px;
+}
+.qd-parties-right { text-align: right; }
+.qd-eyebrow {
+  font-size: 8px; text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--qd-ink-faint); margin-bottom: 4px; font-weight: 600;
+}
+.qd-party-name { font-size: 15px; font-weight: 700; color: var(--qd-ink); }
+.qd-party-sub { font-size: 10.5px; color: var(--qd-ink-soft); margin-top: 1px; }
+
+/* --- Hero / investment summary --- */
+.qd-hero {
+  margin-top: 20px; border-radius: 14px; overflow: hidden;
+  background: var(--qd-accent-grad);
+  color: #ffffff;
+  display: flex; align-items: stretch; justify-content: space-between;
+  box-shadow: 0 10px 24px -12px rgba(37, 99, 235, 0.55);
+}
+.qd-hero-main { padding: 20px 22px; }
+.qd-hero-eyebrow {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em;
+  opacity: 0.85; font-weight: 600;
+}
+.qd-hero-figure {
+  font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin-top: 4px;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.qd-hero-figure-unit { font-size: 11px; font-weight: 500; opacity: 0.85; letter-spacing: 0; }
+.qd-hero-monthly { font-size: 13px; font-weight: 600; margin-top: 6px; opacity: 0.95; }
+.qd-hero-grid {
+  display: flex; flex-direction: column; justify-content: center; gap: 10px;
+  padding: 18px 22px; min-width: 200px;
+  background: rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.22);
+}
+.qd-hero-stat { display: flex; flex-direction: column; }
+.qd-hero-stat span { font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.82; }
+.qd-hero-stat strong { font-size: 13px; font-weight: 700; }
+
+/* --- Sections / headings --- */
+.qd-h2 {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.02em; color: var(--qd-ink);
+  padding-bottom: 7px; margin-bottom: 12px;
+  border-bottom: 2px solid var(--qd-line-strong);
+  position: relative;
+}
+.qd-h2::after {
+  content: ''; position: absolute; left: 0; bottom: -2px; width: 46px; height: 2px;
+  background: var(--qd-accent-grad);
+}
+.qd-section-intro { font-size: 10.5px; color: var(--qd-ink-soft); margin: -4px 0 12px; }
+
+/* --- Line-item tables (scope, payments) --- */
+.qd-linetable { display: flex; flex-direction: column; gap: 0; }
+.qd-lineitem {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; border: 1px solid var(--qd-line);
+  border-bottom: none; background: #fff;
+}
+.qd-lineitem:first-child { border-top-left-radius: 10px; border-top-right-radius: 10px; }
+.qd-lineitem:last-child {
+  border-bottom: 1px solid var(--qd-line);
+  border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;
+}
+.qd-lineitem:nth-child(even) { background: var(--qd-bg-soft); }
+.qd-line-label { display: flex; align-items: center; gap: 9px; font-size: 11px; color: var(--qd-ink); font-weight: 500; }
+.qd-line-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--qd-blue); flex: none; }
+.qd-line-pct { color: var(--qd-ink-faint); font-weight: 400; }
+.qd-line-price { font-size: 11.5px; font-weight: 700; color: var(--qd-ink); white-space: nowrap; }
+
+/* --- Investment breakdown --- */
+.qd-breakdown {
+  border: 1px solid var(--qd-line); border-radius: 12px; overflow: hidden;
+}
+.qd-breakdown-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 16px; font-size: 11.5px; color: var(--qd-ink-soft);
+  border-bottom: 1px solid var(--qd-line);
+}
+.qd-breakdown-row span:last-child { font-weight: 600; color: var(--qd-ink); }
+.qd-breakdown-total {
+  background: var(--qd-bg-soft); font-weight: 800; color: var(--qd-ink); font-size: 13.5px;
+}
+.qd-breakdown-total span:last-child { font-weight: 800; }
+.qd-breakdown-monthly {
+  border-bottom: none; color: var(--qd-blue-deep);
+}
+.qd-breakdown-monthly span:last-child { color: var(--qd-blue-deep); }
+
+/* --- Phases --- */
+.qd-phases { display: flex; gap: 12px; }
+.qd-phase {
+  flex: 1; border: 1px solid var(--qd-line); border-radius: 12px; padding: 14px;
+  background: var(--qd-bg-soft); border-top: 3px solid var(--qd-blue);
+}
+.qd-phase-name { font-size: 11px; font-weight: 700; color: var(--qd-ink); margin-bottom: 5px; }
+.qd-phase-detail { font-size: 9.5px; color: var(--qd-ink-soft); line-height: 1.45; margin-bottom: 10px; }
+.qd-phase-amount { font-size: 16px; font-weight: 800; color: var(--qd-blue-deep); }
+
+/* --- Terms & acceptance --- */
+.qd-terms { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 9px; }
+.qd-terms li {
+  font-size: 9.8px; color: var(--qd-ink-soft); line-height: 1.5;
+  padding-left: 16px; position: relative;
+}
+.qd-terms li::before {
+  content: ''; position: absolute; left: 0; top: 6px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--qd-cyan);
+}
+.qd-accept {
+  display: flex; gap: 40px; margin-top: 22px;
+}
+.qd-accept-col { flex: 1; }
+.qd-accept-line { border-bottom: 1.5px solid var(--qd-line-strong); height: 30px; }
+.qd-accept-label {
+  font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--qd-ink-faint); margin-top: 6px;
+}
+
+/* --- Footers --- */
+.qd-endfoot {
+  margin-top: 26px; padding-top: 12px; border-top: 1px solid var(--qd-line);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 9px; color: var(--qd-ink-faint);
+}
+.qd-runfoot { display: none; }
+
+/* ==========================================================================
+   ON-SCREEN PREVIEW — simulate the paper so the admin can see the result.
+   ========================================================================== */
+.qd-preview-backdrop {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(2, 6, 23, 0.82); backdrop-filter: blur(4px);
+  overflow: auto; padding: 24px 16px 80px;
+}
+.qd-preview-toolbar {
+  position: sticky; top: 0; z-index: 2;
+  max-width: 8.5in; margin: 0 auto 16px; display: flex; gap: 8px; justify-content: flex-end;
+}
+.qd-sheet {
+  width: 8.5in; min-height: 11in; margin: 0 auto;
+  background: #fff; color: var(--qd-ink);
+  padding: 0.5in; border-radius: 4px;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6);
+}
+
+/* ==========================================================================
+   PRINT — the deterministic, locked output. Independent of dialog settings.
+   ========================================================================== */
+@page {
+  size: Letter;
+  margin: 0.5in;
+}
+
+@media print {
+  /* Force a white canvas regardless of the dark app theme. */
+  html, body {
+    background: #ffffff !important;
+    margin: 0 !important;
+  }
+  /* Hide everything, then reveal only the print root. */
+  body * { visibility: hidden !important; }
+  .qd-print-root, .qd-print-root * { visibility: visible !important; }
+  .qd-print-root {
+    display: block !important;
+    position: absolute; left: 0; top: 0; width: 100%;
+  }
+  /* Never print the preview overlay chrome. */
+  .qd-preview-backdrop, .qd-preview-toolbar { display: none !important; }
+  /* Reset the on-screen sheet framing for print (page margins come from @page). */
+  .qd-sheet {
+    width: 100% !important; min-height: 0 !important;
+    padding: 0 !important; margin: 0 !important;
+    box-shadow: none !important; border-radius: 0 !important;
+  }
+
+  /* Repeating footer on every printed page. */
+  .qd-runfoot {
+    display: flex !important; justify-content: space-between; align-items: center;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding-top: 6px; border-top: 1px solid var(--qd-line);
+    font-size: 8px; color: var(--qd-ink-faint);
+    background: #fff;
+  }
+  .qd-endfoot { display: none !important; }
+}

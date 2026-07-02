@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import {
@@ -13,7 +13,11 @@ import {
   Check,
   AlertTriangle,
   Info,
+  X,
+  Download,
+  Eye,
 } from 'lucide-react';
+import QuoteDocument from './QuoteDocument';
 import { auth } from '@/lib/firebase';
 import {
   PLATFORM_OPTIONS,
@@ -87,6 +91,18 @@ export default function QuoteCalculator() {
   // Budget
   const [clientBudget, setClientBudget] = useState('');
   const [copied, setCopied] = useState(false);
+  // Print/PDF preview overlay
+  const [showPreview, setShowPreview] = useState(false);
+  // Date + quote number are set on the client to keep the printed document
+  // deterministic within a session and to avoid SSR hydration mismatches.
+  const [docMeta, setDocMeta] = useState({ dateLabel: '', quoteNumber: '' });
+  useEffect(() => {
+    const now = new Date();
+    const dateLabel = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+    const seq = String(Math.floor(now.getHours() * 60 + now.getMinutes())).padStart(4, '0');
+    setDocMeta({ dateLabel, quoteNumber: `VX-${stamp}-${seq}` });
+  }, []);
 
   const input: QuoteInput = useMemo(
     () => ({
@@ -150,6 +166,11 @@ export default function QuoteCalculator() {
     [clientName, businessName, industry, r],
   );
 
+  const industryLabel = useMemo(
+    () => INDUSTRIES.find((i) => i.key === industry)?.label ?? 'Custom',
+    [industry],
+  );
+
   const copyQuote = async () => {
     try {
       await navigator.clipboard.writeText(quoteText);
@@ -205,7 +226,7 @@ export default function QuoteCalculator() {
         </div>
       </header>
 
-      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-6 grid lg:grid-cols-[1fr_400px] gap-6 pb-28 lg:pb-6">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-6 grid lg:grid-cols-[1fr_400px] gap-6 pb-28 lg:pb-6 print:hidden">
         {/* ---------- LEFT: form ---------- */}
         <div className="space-y-5">
           {/* A. Client info */}
@@ -454,7 +475,7 @@ export default function QuoteCalculator() {
               onCopy={copyQuote}
               onText={exportText}
               onJson={exportJson}
-              onPrint={() => window.print()}
+              onPrint={() => setShowPreview(true)}
               onReset={reset}
             />
           </div>
@@ -473,6 +494,65 @@ export default function QuoteCalculator() {
           </button>
         </div>
       </div>
+
+      {/* Floating mobile "Preview / PDF" action (screen only) */}
+      <button
+        onClick={() => setShowPreview(true)}
+        className="lg:hidden fixed bottom-20 right-4 z-30 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/10 border border-white/15 text-white text-sm font-semibold backdrop-blur-xl print:hidden"
+      >
+        <Eye className="w-4 h-4" /> Preview quote
+      </button>
+
+      {/* ============================================================
+          PRINT ROOT — always in the DOM, hidden on screen, revealed
+          only by the print stylesheet. This is what actually prints,
+          independent of whether the preview overlay is open.
+          ============================================================ */}
+      <div className="qd-print-root hidden print:block" aria-hidden={!showPreview}>
+        <div className="qd-sheet">
+          <QuoteDocument
+            clientName={clientName}
+            businessName={businessName}
+            industryLabel={industryLabel}
+            quoteNumber={docMeta.quoteNumber}
+            dateLabel={docMeta.dateLabel}
+            r={r}
+          />
+        </div>
+      </div>
+
+      {/* ============================================================
+          ON-SCREEN PREVIEW OVERLAY — lets the admin see the exact
+          printable document and trigger a deterministic print/PDF.
+          ============================================================ */}
+      {showPreview && (
+        <div className="qd-preview-backdrop print:hidden" role="dialog" aria-modal="true" aria-label="Quote preview">
+          <div className="qd-preview-toolbar">
+            <button
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold shadow-lg"
+            >
+              <Download className="w-4 h-4" /> Download / Print PDF
+            </button>
+            <button
+              onClick={() => setShowPreview(false)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white text-sm font-medium hover:bg-white/20"
+            >
+              <X className="w-4 h-4" /> Close
+            </button>
+          </div>
+          <div className="qd-sheet">
+            <QuoteDocument
+              clientName={clientName}
+              businessName={businessName}
+              industryLabel={industryLabel}
+              quoteNumber={docMeta.quoteNumber}
+              dateLabel={docMeta.dateLabel}
+              r={r}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
