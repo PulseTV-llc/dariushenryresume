@@ -28,6 +28,9 @@ const blogPosts: Post[] = [
     category: 'Industry Deep Dive',
     tags: ['Restaurant POS', 'Kitchen Display System', 'QR Ordering', 'Self-Order Kiosk', 'Connected System'],
     featured: true,
+    image: '/blog/ember-and-oak-vexaos.jpg',
+    imageAlt:
+      'Ember & Oak café + kitchen running VexaOS — self-order kiosk, live Kitchen Orders display, VexaOS POS, and QR order-and-pay',
   },
   {
     slug: 'barbershop-salon-vexaos-system',

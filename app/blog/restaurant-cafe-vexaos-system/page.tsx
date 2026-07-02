@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeft,
   ArrowRight,
@@ -10,7 +11,6 @@ import {
   Building2,
   Calendar,
   Clock,
-  Coffee,
   ChefHat,
   CheckCircle2,
   ConciergeBell,
@@ -76,7 +76,6 @@ export const metadata: Metadata = {
     siteName: 'VexaOS',
     images: [
       {
-        // TODO: owner will drop the real photo at public/blog/ember-and-oak-vexaos.jpg
         url: 'https://www.vexaos.io/blog/ember-and-oak-vexaos.jpg',
         width: 1600,
         height: 900,
@@ -308,45 +307,18 @@ export default function RestaurantCafePost() {
               </div>
             </header>
 
-            {/* Hero — gradient placeholder (16:9). TODO: swap in the real photo. */}
-            {/* TODO(image): drop the supplied photo at public/blog/ember-and-oak-vexaos.jpg
-                and replace this whole <figure> with a next/image <Image> block
-                (see the barbershop post for the exact pattern). One-line swap. */}
+            {/* Hero image */}
             <figure className="relative mb-16 rounded-3xl overflow-hidden border border-cyan-500/25 shadow-2xl shadow-cyan-500/10 ring-1 ring-white/5">
-              <div className="relative aspect-video w-full bg-[radial-gradient(120%_120%_at_20%_10%,rgba(6,182,212,0.22),transparent_55%),radial-gradient(120%_120%_at_85%_90%,rgba(37,99,235,0.22),transparent_55%),linear-gradient(160deg,#05070d_0%,#0a0f1d_55%,#05070d_100%)]">
-                {/* faint grid texture */}
-                <div
-                  aria-hidden
-                  className="absolute inset-0 opacity-[0.12] [background-image:linear-gradient(to_right,rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:44px_44px]"
-                />
-                {/* centered brand lockup */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-                  <div className="flex items-center gap-3 mb-5">
-                    <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500/25 to-blue-600/25 border border-cyan-400/30">
-                      <Coffee className="w-6 h-6 text-cyan-200" />
-                    </span>
-                    <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500/25 to-blue-600/25 border border-cyan-400/30">
-                      <Flame className="w-6 h-6 text-cyan-200" />
-                    </span>
-                  </div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300/90 mb-2">
-                    A café + kitchen on VexaOS
-                  </p>
-                  <p className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-                    Ember <span className="text-cyan-300/70">&amp;</span> Oak
-                  </p>
-                  <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px] text-gray-400">
-                    {['QR', 'Kiosk', 'POS', 'KDS', 'Inventory', 'Dashboard'].map((c) => (
-                      <span
-                        key={c}
-                        className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10"
-                      >
-                        {c}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <Image
+                src="/blog/ember-and-oak-vexaos.jpg"
+                alt="Ember & Oak café + kitchen running VexaOS — self-order kiosk, live Kitchen Orders display, VexaOS POS, and QR order-and-pay"
+                width={1600}
+                height={900}
+                priority
+                sizes="(max-width: 896px) 100vw, 896px"
+                className="w-full h-auto"
+              />
+              {/* subtle brand gradient edge + bottom scrim for caption legibility */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-cyan-400/10 rounded-3xl"
@@ -357,8 +329,8 @@ export default function RestaurantCafePost() {
               />
               <figcaption className="absolute bottom-0 inset-x-0 px-5 py-4 text-sm text-gray-300">
                 <span className="text-white font-semibold">Ember &amp; Oak</span> — one
-                service day, one connected system: order, fire, plate, pay, and count,
-                all on the same live thread.
+                full service running on VexaOS: order-here kiosk, live kitchen display,
+                POS, and QR table ordering.
               </figcaption>
             </figure>
 
