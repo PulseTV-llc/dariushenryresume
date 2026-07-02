@@ -157,6 +157,23 @@ export const TIMELINE_MULTIPLIERS = [
 export type TimelineKey = (typeof TIMELINE_MULTIPLIERS)[number]['key'];
 
 /* --------------------------------------------------------------------------
+ * COMBINED MULTIPLIER CAP
+ *
+ * Safety ceiling on the COMPOUNDED setup multiplier (complexity × timeline ×
+ * country). No matter how the levers stack — e.g. Enterprise (×2.25) +
+ * Emergency (×1.75) + Tier 1 (×1.1) = ×4.33 — the setup BUILD FEE is never
+ * charged at more than base × this value. If the raw product exceeds the cap it
+ * is scaled down to exactly the cap.
+ *
+ * This ONLY clamps the setup fee. Individual multipliers are still shown as-is,
+ * and monthly support pricing + the minimum-price floors are unaffected.
+ *
+ * Darius: tune this if you ever want to allow (or tighten) how aggressively the
+ * combined levers can push a setup price. 3.0 = "never more than 3× base".
+ * ------------------------------------------------------------------------ */
+export const MAX_COMBINED_MULTIPLIER = 3.0;
+
+/* --------------------------------------------------------------------------
  * SECTION H — COUNTRY-BASED PRICING INTELLIGENCE (4-tier system)
  *
  * Each tier has a suggested multiplier RANGE and a default suggested value

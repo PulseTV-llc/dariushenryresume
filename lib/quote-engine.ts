@@ -31,6 +31,7 @@ import {
   TIMELINE_ESTIMATOR,
   PACKAGE_THRESHOLDS,
   PROFIT_PROTECTION,
+  MAX_COMBINED_MULTIPLIER,
 } from './quote-config';
 
 export interface QuoteInput {
@@ -273,8 +274,15 @@ export function calculateQuote(input: QuoteInput) {
     input.manualMultiplier != null ? input.manualMultiplier : countryInfo.suggestedMultiplier;
   const isManualOverride = input.manualMultiplier != null;
 
-  // 4. Market-adjusted setup (pre-minimum)
-  const marketSetupRaw = usBaseSetup * effectiveMultiplier;
+  // 4. Market-adjusted setup (pre-minimum) — with the combined-multiplier cap.
+  // The compounded setup multiplier is complexity × timeline × country; if the
+  // raw product exceeds MAX_COMBINED_MULTIPLIER it is scaled down to exactly the
+  // cap, so the setup build fee can never exceed base × MAX_COMBINED_MULTIPLIER.
+  // Individual multipliers above are still reported as-is.
+  const rawCombinedMultiplier = complexity.value * timeline.value * effectiveMultiplier;
+  const combinedMultiplierCapped = rawCombinedMultiplier > MAX_COMBINED_MULTIPLIER;
+  const effectiveCombinedMultiplier = Math.min(rawCombinedMultiplier, MAX_COMBINED_MULTIPLIER);
+  const marketSetupRaw = buildFeeBase * effectiveCombinedMultiplier;
 
   // 5. Minimum protection
   const floorInfo = computeMinimumFloor(input.platforms, buildFeeBase);
@@ -314,7 +322,12 @@ export function calculateQuote(input: QuoteInput) {
   // 10. Country comparison table (all four tiers, using each tier's suggested mult)
   const comparison = (Object.keys(COUNTRY_TIERS) as CountryTierKey[]).map((k) => {
     const t = COUNTRY_TIERS[k];
-    const setupRaw = usBaseSetup * t.suggested;
+    // Apply the same combined-multiplier cap so the comparison matches reality.
+    const tierCombined = Math.min(
+      complexity.value * timeline.value * t.suggested,
+      MAX_COMBINED_MULTIPLIER,
+    );
+    const setupRaw = buildFeeBase * tierCombined;
     const setup = round(Math.max(setupRaw, floorInfo.floor));
     const monthly = round(Math.max(monthlyBase * t.suggested, MINIMUMS.monthly));
     return {
@@ -401,6 +414,14 @@ export function calculateQuote(input: QuoteInput) {
     countryMapped: countryInfo.mapped,
   });
 
+  // Internal (admin-only) note when the combined-multiplier cap actually fired.
+  if (combinedMultiplierCapped) {
+    warnings.unshift({
+      level: 'info',
+      text: `Combined multiplier capped at ${MAX_COMBINED_MULTIPLIER}× — raw was ${rawCombinedMultiplier.toFixed(2)}× (complexity ×${complexity.value} · timeline ×${timeline.value} · country ×${effectiveMultiplier}). Setup held at base × ${MAX_COMBINED_MULTIPLIER}.`,
+    });
+  }
+
   return {
     // subtotals
     platform,
@@ -424,6 +445,11 @@ export function calculateQuote(input: QuoteInput) {
     minimumFloor: floorInfo.floor,
     minApplied,
     finalSetup,
+    // combined-multiplier cap (internal / admin-only)
+    maxCombinedMultiplier: MAX_COMBINED_MULTIPLIER,
+    rawCombinedMultiplier: Number(rawCombinedMultiplier.toFixed(2)),
+    effectiveCombinedMultiplier: Number(effectiveCombinedMultiplier.toFixed(2)),
+    combinedMultiplierCapped,
     // monthly
     recommendedSupportTierKey: recommendedTierKey,
     supportTier,
