@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeft,
   ArrowRight,
@@ -60,12 +61,21 @@ export const metadata: Metadata = {
     url: 'https://www.vexaos.io/blog/barbershop-salon-vexaos-system',
     type: 'article',
     siteName: 'VexaOS',
+    images: [
+      {
+        url: 'https://www.vexaos.io/blog/kingsman-cuts-vexaos.jpg',
+        width: 1600,
+        height: 900,
+        alt: 'Kingsman Cuts barbershop running the VexaOS connected system — check-in kiosk, live schedule dashboard, and VexaOS POS',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How a Barbershop or Salon Runs Its Entire Business on VexaOS',
     description:
       'One connected system for booking, POS, staff & customer apps, dashboards, and barcode inventory. A day at Kingsman Cuts on VexaOS.',
+    images: ['https://www.vexaos.io/blog/kingsman-cuts-vexaos.jpg'],
   },
 };
 
@@ -231,6 +241,33 @@ export default function BarbershopSalonPost() {
                 ))}
               </div>
             </header>
+
+            {/* Hero image */}
+            <figure className="relative mb-16 rounded-3xl overflow-hidden border border-cyan-500/25 shadow-2xl shadow-cyan-500/10 ring-1 ring-white/5">
+              <Image
+                src="/blog/kingsman-cuts-vexaos.jpg"
+                alt="Kingsman Cuts barbershop running the VexaOS connected system — check-in kiosk, live schedule dashboard, and VexaOS POS"
+                width={1600}
+                height={900}
+                priority
+                sizes="(max-width: 896px) 100vw, 896px"
+                className="w-full h-auto"
+              />
+              {/* subtle brand gradient edge + bottom scrim for caption legibility */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-cyan-400/10 rounded-3xl"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 to-transparent"
+              />
+              <figcaption className="absolute bottom-0 inset-x-0 px-5 py-4 text-sm text-gray-300">
+                <span className="text-white font-semibold">Kingsman Cuts</span> — the
+                whole shop running on one VexaOS system: check-in kiosk, live schedule
+                dashboard, and VexaOS POS.
+              </figcaption>
+            </figure>
 
             {/* Intro */}
             <div className="space-y-6 text-lg text-gray-300 leading-relaxed mb-16">

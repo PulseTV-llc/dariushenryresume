@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Calendar, Clock, Scissors, Sparkles } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
@@ -12,6 +13,8 @@ type Post = {
   category: string;
   tags: string[];
   featured?: boolean;
+  image?: string;
+  imageAlt?: string;
 };
 
 const blogPosts: Post[] = [
@@ -25,6 +28,9 @@ const blogPosts: Post[] = [
     category: 'Industry Deep Dive',
     tags: ['Barbershop Software', 'Salon POS', 'Booking System', 'Inventory Scanner', 'Connected System'],
     featured: true,
+    image: '/blog/kingsman-cuts-vexaos.jpg',
+    imageAlt:
+      'Kingsman Cuts barbershop running the VexaOS connected system — check-in kiosk, live schedule dashboard, and VexaOS POS',
   },
   {
     slug: 'how-i-built-zonely',
@@ -108,6 +114,23 @@ export default function BlogPage() {
                 className="pointer-events-none absolute -top-20 -right-10 h-56 w-72 rounded-full bg-cyan-500/10 blur-3xl"
               />
               <div className="relative">
+                {featured.image && (
+                  <div className="relative mb-7 rounded-2xl overflow-hidden border border-cyan-500/20 ring-1 ring-white/5">
+                    <Image
+                      src={featured.image}
+                      alt={featured.imageAlt ?? featured.title}
+                      width={1600}
+                      height={900}
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 960px"
+                      className="w-full h-auto"
+                    />
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"
+                    />
+                  </div>
+                )}
                 <div className="flex flex-wrap items-center gap-3 mb-5">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
                     <Scissors className="w-3.5 h-3.5" />
