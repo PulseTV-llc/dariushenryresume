@@ -1,7 +1,7 @@
 {
-  "name": "Private AI Workflow Systems — Darius Henry",
-  "short_name": "Private AI",
-  "description": "Custom private AI systems for businesses, powered by Windows AI nodes with NVIDIA GPUs (RTX 4090 to H100). Private document search, business assistants, and workflow automation.",
+  "name": "VexaOS — Connected Business Systems",
+  "short_name": "VexaOS",
+  "description": "Custom connected business systems across web apps, iOS, Android, touchscreen kiosks, dashboards, staff tools, customer portals, scheduling, payments, and real-time operations.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
