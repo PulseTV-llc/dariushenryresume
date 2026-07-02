@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/ai-solutions', priority: 0.7, freq: 'monthly' },
     { path: '/contact', priority: 0.95, freq: 'monthly' },
     { path: '/blog', priority: 0.7, freq: 'weekly' },
+    { path: '/blog/restaurant-cafe-vexaos-system', priority: 0.85, freq: 'monthly' },
     { path: '/blog/barbershop-salon-vexaos-system', priority: 0.85, freq: 'monthly' },
     { path: '/blog/how-i-built-zonely', priority: 0.6, freq: 'monthly' },
     { path: '/blog/7-day-mvp-guide', priority: 0.5, freq: 'monthly' },

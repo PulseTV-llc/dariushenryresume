@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Calendar, Clock, Scissors, Sparkles } from 'lucide-react';
+import { ArrowRight, Calendar, Clock, Sparkles } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 
@@ -18,6 +18,17 @@ type Post = {
 };
 
 const blogPosts: Post[] = [
+  {
+    slug: 'restaurant-cafe-vexaos-system',
+    title: 'How a Restaurant or Café Runs Its Entire Business on VexaOS',
+    excerpt:
+      'A vivid, in-depth walkthrough of a café + kitchen running its whole operation on one connected system — online ordering, QR table ordering, a self-order kiosk, handheld POS, a real-time Kitchen Display System, ingredient inventory, and a live owner dashboard — told as a single service day at "Ember & Oak," seen through the guest, the server, the kitchen line, and the owner.',
+    date: '2026-07-02',
+    readTime: '19 min read',
+    category: 'Industry Deep Dive',
+    tags: ['Restaurant POS', 'Kitchen Display System', 'QR Ordering', 'Self-Order Kiosk', 'Connected System'],
+    featured: true,
+  },
   {
     slug: 'barbershop-salon-vexaos-system',
     title: 'How a Barbershop or Salon Runs Its Entire Business on VexaOS',
@@ -133,7 +144,7 @@ export default function BlogPage() {
                 )}
                 <div className="flex flex-wrap items-center gap-3 mb-5">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
-                    <Scissors className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5" />
                     Featured · {featured.category}
                   </span>
                   <div className="flex items-center gap-4 text-sm text-gray-500">
