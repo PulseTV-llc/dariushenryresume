@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'Industries We Build For | Connected Business Systems',
   description:
     'Custom connected systems for salons, restaurants, retail, field workforce, cleaning, security, clinics, med spas, gyms, and repair shops — web dashboards, mobile apps, and touchscreen tools built around your workflow.',
-  alternates: { canonical: 'https://iamdariushenry.com/industries' },
+  alternates: { canonical: 'https://www.vexaos.io/industries' },
 };
 
 export default function IndustriesPage() {

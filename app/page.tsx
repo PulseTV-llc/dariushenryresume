@@ -21,15 +21,15 @@ export const metadata: Metadata = {
   },
   description:
     'VexaOS by Darius Henry builds custom connected business systems across web apps, iOS, Android, touchscreen kiosks, dashboards, staff tools, customer portals, scheduling, payments, and real-time operations.',
-  alternates: { canonical: 'https://iamdariushenry.com' },
+  alternates: { canonical: 'https://www.vexaos.io' },
   openGraph: {
     title: 'VexaOS — Custom Connected Business Systems for Web, Mobile & Touchscreen',
     description:
       'Premium custom software systems for salons, restaurants, stores, clinics, field teams, and modern businesses that need web dashboards, mobile apps, touchscreen tools, and real-time operations.',
-    url: 'https://iamdariushenry.com',
+    url: 'https://www.vexaos.io',
     images: [
       {
-        url: 'https://iamdariushenry.com/og-vexaos.png',
+        url: 'https://www.vexaos.io/og-vexaos.png',
         width: 1200,
         height: 630,
         alt: 'VexaOS — Connected Business Systems by Darius Henry',

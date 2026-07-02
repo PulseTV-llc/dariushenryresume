@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'What Can Be Built | Systems, Apps & Touchscreen Platforms',
   description:
     'Web dashboards, iOS and Android apps, touchscreen kiosks, employee and customer apps, manager dashboards, scheduling, payments, inventory, CRM, real-time syncing, AI tools and more — the building blocks of your connected business system.',
-  alternates: { canonical: 'https://iamdariushenry.com/systems' },
+  alternates: { canonical: 'https://www.vexaos.io/systems' },
 };
 
 export default function SystemsPage() {

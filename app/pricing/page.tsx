@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'Pricing | Custom Connected Business Systems',
   description:
     'Transparent starting points for custom connected business systems — Blueprint Session, Launch System, Growth System, and Custom Business OS. Final pricing depends on features, devices, integrations, country, and business size.',
-  alternates: { canonical: 'https://iamdariushenry.com/pricing' },
+  alternates: { canonical: 'https://www.vexaos.io/pricing' },
 };
 
 const INCLUDES: Record<string, string[]> = {

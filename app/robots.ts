@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://iamdariushenry.com';
+  const baseUrl = 'https://www.vexaos.io';
   const disallow = ['/api/', '/_next/', '/admin/'];
 
   return {
@@ -26,7 +26,7 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 0,
       },
       // AI crawlers — site is intentionally open to AI assistants so the
-      // Private AI Workflow Systems offering surfaces in AI answer engines.
+      // VexaOS private-AI workflow systems offering surfaces in AI answer engines.
       {
         userAgent: 'GPTBot',
         allow: '/',

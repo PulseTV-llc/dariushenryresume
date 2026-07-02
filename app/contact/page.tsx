@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Contact | Request a Business System Blueprint',
   description:
     'Tell Darius Henry about your business and get a custom connected system plan and quote — web dashboards, iOS and Android apps, touchscreen tools, and real-time operations built around your workflow.',
-  alternates: { canonical: 'https://iamdariushenry.com/contact' },
+  alternates: { canonical: 'https://www.vexaos.io/contact' },
 };
 
 const assurances = [

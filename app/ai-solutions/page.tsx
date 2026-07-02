@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: 'AI Solutions & Private AI Workflow Systems | Darius Henry',
   description:
     'AI tools and automation are still available from Darius Henry — private AI workflow systems, custom AI business assistants, and Mac Studio AI nodes. The main focus of the site is now custom connected business systems.',
-  alternates: { canonical: 'https://iamdariushenry.com/ai-solutions' },
+  alternates: { canonical: 'https://www.vexaos.io/ai-solutions' },
 };
 
 export default function AiSolutionsPage() {

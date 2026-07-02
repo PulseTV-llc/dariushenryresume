@@ -14,7 +14,7 @@
 
 import { aiSystemTiers } from './ai-tiers';
 
-const SITE_URL = 'https://iamdariushenry.com';
+const SITE_URL = 'https://www.vexaos.io';
 const SITE_NAME = 'Private AI Workflow Systems';
 const PROVIDER_NAME = 'Darius Henry — Private AI Workflow Systems';
 const PROVIDER_DESCRIPTION =

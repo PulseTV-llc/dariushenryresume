@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Blog - iOS Development & App Rescue Stories',
     description: 'Case studies, guides, and real stories from building apps fast and rescuing broken projects.',
-    url: 'https://iamdariushenry.com/blog',
+    url: 'https://www.vexaos.io/blog',
     type: 'website',
   },
 };

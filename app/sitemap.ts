@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://iamdariushenry.com';
+  const baseUrl = 'https://www.vexaos.io';
   const currentDate = new Date();
 
   const routes: { path: string; priority: number; freq: 'weekly' | 'monthly' }[] = [

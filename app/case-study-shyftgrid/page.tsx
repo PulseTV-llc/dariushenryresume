@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'ShyftGrid Case Study | A Connected Business System',
   description:
     'ShyftGrid is a real example of a connected business system — a web dashboard, mobile app experience, Android touchscreen board, and real-time synced operations replacing disconnected tools with one platform.',
-  alternates: { canonical: 'https://iamdariushenry.com/case-study-shyftgrid' },
+  alternates: { canonical: 'https://www.vexaos.io/case-study-shyftgrid' },
 };
 
 const layers = [

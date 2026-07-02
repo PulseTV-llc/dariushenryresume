@@ -19,8 +19,8 @@ export const siteConfig = {
     'VexaOS — Custom Web, Mobile & Touchscreen Business Systems | Darius Henry',
   description:
     'VexaOS by Darius Henry builds custom connected business systems across web apps, iOS, Android, touchscreen kiosks, dashboards, staff tools, customer portals, scheduling, payments, and real-time operations.',
-  url: 'https://iamdariushenry.com',
-  ogImage: 'https://iamdariushenry.com/og-vexaos.png',
+  url: 'https://www.vexaos.io',
+  ogImage: 'https://www.vexaos.io/og-vexaos.png',
   twitterHandle: '@dariushenry',
   locale: 'en_US',
   author: {
