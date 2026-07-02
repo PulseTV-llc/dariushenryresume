@@ -16,8 +16,10 @@ import {
   X,
   Download,
   Eye,
+  Loader2,
 } from 'lucide-react';
 import QuoteDocument from './QuoteDocument';
+import { QUOTE_DOC_CSS } from '@/lib/quotePrintCss';
 import { auth } from '@/lib/firebase';
 import {
   PLATFORM_OPTIONS,
@@ -93,6 +95,9 @@ export default function QuoteCalculator() {
   const [copied, setCopied] = useState(false);
   // Print/PDF preview overlay
   const [showPreview, setShowPreview] = useState(false);
+  // One-click server PDF download
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState('');
   // Date + quote number are set on the client to keep the printed document
   // deterministic within a session and to avoid SSR hydration mismatches.
   const [docMeta, setDocMeta] = useState({ dateLabel: '', quoteNumber: '' });
@@ -201,6 +206,45 @@ export default function QuoteCalculator() {
       'application/json',
     );
 
+  // One-click PDF: the server renders the exact QuoteDocument to a US-Letter PDF
+  // and streams it back as a download (no print dialog). The Print button below
+  // remains as a guaranteed fallback if this path is unavailable.
+  const downloadPdf = async () => {
+    setDownloadError('');
+    setDownloading(true);
+    try {
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error('Not signed in.');
+      // Send the exact rendered document markup so the PDF matches the preview.
+      const node = document.querySelector('.qd-print-root .qd-root');
+      if (!node) throw new Error('Quote not ready.');
+      const res = await fetch('/api/quote-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          idToken,
+          html: node.outerHTML,
+          filenameBase: businessName || clientName || 'client',
+        }),
+      });
+      if (!res.ok) {
+        const msg = await res.json().catch(() => ({}));
+        throw new Error(msg?.error || `Server error (${res.status}).`);
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `VexaOS-Quote-${(businessName || clientName || 'client').replace(/[^a-z0-9\-_]+/gi, '-')}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setDownloadError(e instanceof Error ? e.message : 'Download failed.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut(auth).catch(() => {});
     router.replace('/admin/login');
@@ -208,6 +252,8 @@ export default function QuoteCalculator() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-950 text-white">
+      {/* Quote-document styling (single source, shared with the server PDF route). */}
+      <style dangerouslySetInnerHTML={{ __html: QUOTE_DOC_CSS }} />
       {/* Top bar */}
       <header className="sticky top-0 z-30 bg-black/70 backdrop-blur-xl border-b border-white/10 print:hidden">
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
@@ -472,6 +518,9 @@ export default function QuoteCalculator() {
             <SummaryPanel r={r} />
             <ExportButtons
               copied={copied}
+              downloading={downloading}
+              downloadError={downloadError}
+              onDownloadPdf={downloadPdf}
               onCopy={copyQuote}
               onText={exportText}
               onJson={exportJson}
@@ -528,11 +577,21 @@ export default function QuoteCalculator() {
       {showPreview && (
         <div className="qd-preview-backdrop print:hidden" role="dialog" aria-modal="true" aria-label="Quote preview">
           <div className="qd-preview-toolbar">
+            {downloadError && (
+              <span className="self-center mr-1 text-xs text-amber-300">{downloadError} — use Print instead.</span>
+            )}
+            <button
+              onClick={downloadPdf}
+              disabled={downloading}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold shadow-lg disabled:opacity-60"
+            >
+              {downloading ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating…</> : <><Download className="w-4 h-4" /> Download PDF</>}
+            </button>
             <button
               onClick={() => window.print()}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold shadow-lg"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white text-sm font-medium hover:bg-white/20"
             >
-              <Download className="w-4 h-4" /> Download / Print PDF
+              <Printer className="w-4 h-4" /> Print
             </button>
             <button
               onClick={() => setShowPreview(false)}
@@ -698,16 +757,48 @@ function SummaryPanel({ r }: { r: ReturnType<typeof calculateQuote> }) {
   );
 }
 
-function ExportButtons({ copied, onCopy, onText, onJson, onPrint, onReset }: { copied: boolean; onCopy: () => void; onText: () => void; onJson: () => void; onPrint: () => void; onReset: () => void }) {
+function ExportButtons({
+  copied,
+  downloading,
+  downloadError,
+  onDownloadPdf,
+  onCopy,
+  onText,
+  onJson,
+  onPrint,
+  onReset,
+}: {
+  copied: boolean;
+  downloading: boolean;
+  downloadError: string;
+  onDownloadPdf: () => void;
+  onCopy: () => void;
+  onText: () => void;
+  onJson: () => void;
+  onPrint: () => void;
+  onReset: () => void;
+}) {
   const btn = 'flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all';
   return (
     <div className="rounded-2xl bg-white/[0.02] border border-white/10 p-4 grid grid-cols-2 gap-2 print:hidden">
-      <button onClick={onCopy} className={`${btn} col-span-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white`}>
-        {copied ? <><Check className="w-4 h-4" /> Copied</> : <><Copy className="w-4 h-4" /> Copy Quote Summary</>}
+      {/* One-click branded PDF download (server-rendered). */}
+      <button
+        onClick={onDownloadPdf}
+        disabled={downloading}
+        className={`${btn} col-span-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white disabled:opacity-60`}
+      >
+        {downloading ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating PDF…</> : <><Download className="w-4 h-4" /> Download PDF</>}
+      </button>
+      {downloadError && (
+        <p className="col-span-2 -mt-1 text-xs text-amber-300">{downloadError} Use “Print” below as a fallback.</p>
+      )}
+      {/* Deterministic browser Print/PDF — always-available fallback. */}
+      <button onClick={onPrint} className={`${btn} col-span-2 bg-white/10 border border-white/15 text-gray-100 hover:bg-white/15`}><Printer className="w-4 h-4" /> Preview &amp; Print</button>
+      <button onClick={onCopy} className={`${btn} bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10`}>
+        {copied ? <><Check className="w-4 h-4" /> Copied</> : <><Copy className="w-4 h-4" /> Copy</>}
       </button>
       <button onClick={onText} className={`${btn} bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10`}><FileText className="w-4 h-4" /> Text</button>
       <button onClick={onJson} className={`${btn} bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10`}><FileJson className="w-4 h-4" /> JSON</button>
-      <button onClick={onPrint} className={`${btn} bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10`}><Printer className="w-4 h-4" /> Print / PDF</button>
       <button onClick={onReset} className={`${btn} bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10`}><RotateCcw className="w-4 h-4" /> Reset</button>
     </div>
   );

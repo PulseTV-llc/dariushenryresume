@@ -1,5 +1,3 @@
-'use client';
-
 import VexaMark from '@/components/site/VexaMark';
 import { DISCLAIMERS } from '@/lib/quote-config';
 import type { QuoteResult } from '@/lib/quote-engine';
@@ -101,7 +99,7 @@ export default function QuoteDocument({
             <div className="qd-eyebrow">Prepared by</div>
             <div className="qd-party-name">VexaOS</div>
             <div className="qd-party-sub">Custom Connected Business Systems</div>
-            <div className="qd-party-sub">hello@vexaos.io</div>
+            <div className="qd-party-sub">support@vexaos.io</div>
           </div>
         </div>
       </header>

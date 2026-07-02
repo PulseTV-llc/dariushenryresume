@@ -16,6 +16,9 @@ const nextConfig = {
   // Optimize output for Vercel
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
+    // Keep headless-chromium packages out of the webpack bundle so the
+    // serverless PDF route (/api/quote-pdf) loads Chromium's binary correctly.
+    serverComponentsExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
   },
   // NO 'output: standalone' - This breaks Vercel routing!
 };
