@@ -367,11 +367,12 @@ export default function QuoteCalculator() {
 
           {/* G. Timeline */}
           <Card title="G · Rush / Timeline Multiplier">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
               {TIMELINE_MULTIPLIERS.map((t) => (
                 <Pill key={t.key} active={timeline === t.key} onClick={() => setTimeline(t.key)} title={t.label} sub={`×${t.value}`} />
               ))}
             </div>
+            <p className="mt-3 text-xs text-gray-500">Estimated delivery: <span className="text-cyan-300 font-semibold">{r.timelineEstimate}</span> · price ×{r.timeline.value}</p>
           </Card>
 
           {/* H. Country pricing */}

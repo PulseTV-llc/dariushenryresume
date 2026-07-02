@@ -164,12 +164,35 @@ function recommendPackage(usBaseSetup: number) {
 
 /* ------------------------------------------------------------------ */
 /* Timeline estimate                                                   */
+/*                                                                     */
+/* The scope-based standard range comes from TIMELINE_ESTIMATOR. Rush  */
+/* selections COMPRESS the shown window toward their target cap — the   */
+/* estimate is never longer than the standard one, and never longer     */
+/* than the rush cap. Price multipliers are unaffected by this.         */
 /* ------------------------------------------------------------------ */
-function estimateTimeline(buildFeeBase: number) {
-  return (
-    TIMELINE_ESTIMATOR.find((t) => buildFeeBase <= t.maxBuildFee)?.weeks ??
-    TIMELINE_ESTIMATOR[TIMELINE_ESTIMATOR.length - 1].weeks
-  );
+// Per-rush target caps (in weeks). `capLo` pulls the low end down for the
+// most aggressive tiers; Infinity means "don't lower the standard low end".
+const RUSH_CAPS: Record<TimelineKey, { capHi: number; capLo: number; suffix: string } | null> = {
+  noDeadline: null, // standard, unchanged
+  flexible: null, // standard, unchanged
+  sixtyDays: { capHi: 8, capLo: Infinity, suffix: '' }, // within ~60 days
+  thirtyDays: { capHi: 4, capLo: Infinity, suffix: '' }, // within ~30 days
+  emergency: { capHi: 3, capLo: 1, suffix: ' · ASAP' }, // shortest feasible
+};
+
+function estimateTimeline(buildFeeBase: number, timelineKey: TimelineKey) {
+  const tier =
+    TIMELINE_ESTIMATOR.find((t) => buildFeeBase <= t.maxBuildFee) ??
+    TIMELINE_ESTIMATOR[TIMELINE_ESTIMATOR.length - 1];
+
+  const cap = RUSH_CAPS[timelineKey];
+  if (!cap) return tier.weeks; // flexible / no deadline → standard range verbatim
+
+  // Compress toward the rush cap, but never longer than the standard estimate.
+  const hi = Math.min(tier.hi, cap.capHi);
+  const lo = Math.min(tier.lo, hi, cap.capLo);
+  const range = lo === hi ? `~${hi} weeks` : `${lo}–${hi} weeks`;
+  return `${range}${cap.suffix}`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -276,8 +299,8 @@ export function calculateQuote(input: QuoteInput) {
   // 7. Package recommendation (from US base, then show market price)
   const pkg = recommendPackage(usBaseSetup);
 
-  // 8. Timeline estimate
-  const timelineEstimate = estimateTimeline(buildFeeBase);
+  // 8. Timeline estimate (scope-based, compressed by the rush selection)
+  const timelineEstimate = estimateTimeline(buildFeeBase, input.timeline);
 
   // 9. Payment schedule
   const schedule = PAYMENT_SCHEDULES[input.paymentSchedule];

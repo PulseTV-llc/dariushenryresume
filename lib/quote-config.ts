@@ -147,6 +147,7 @@ export type ComplexityKey = (typeof COMPLEXITY_MULTIPLIERS)[number]['key'];
  * Also applied to the build fee only.
  * ------------------------------------------------------------------------ */
 export const TIMELINE_MULTIPLIERS = [
+  { key: 'noDeadline', label: 'No set timeline / Not sure', value: 1.0, note: 'No deadline — standard schedule, no rush premium.' },
   { key: 'flexible', label: 'Flexible / Standard', value: 1.0, note: 'Normal schedule.' },
   { key: 'sixtyDays', label: 'Within 60 days', value: 1.15, note: 'Mild acceleration.' },
   { key: 'thirtyDays', label: 'Within 30 days', value: 1.35, note: 'Significant acceleration.' },
@@ -411,10 +412,10 @@ export type PaymentScheduleKey = keyof typeof PAYMENT_SCHEDULES;
  * SECTION K — TIMELINE ESTIMATOR (weeks, by total build-fee scope in USD)
  * ------------------------------------------------------------------------ */
 export const TIMELINE_ESTIMATOR = [
-  { maxBuildFee: 7500, weeks: '3–5 weeks' },
-  { maxBuildFee: 20000, weeks: '6–10 weeks' },
-  { maxBuildFee: 50000, weeks: '10–16 weeks' },
-  { maxBuildFee: Infinity, weeks: '16–24+ weeks' },
+  { maxBuildFee: 7500, weeks: '3–5 weeks', lo: 3, hi: 5 },
+  { maxBuildFee: 20000, weeks: '6–10 weeks', lo: 6, hi: 10 },
+  { maxBuildFee: 50000, weeks: '10–16 weeks', lo: 10, hi: 16 },
+  { maxBuildFee: Infinity, weeks: '16–24+ weeks', lo: 16, hi: 24 },
 ] as const;
 
 /* --------------------------------------------------------------------------
