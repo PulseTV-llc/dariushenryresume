@@ -128,6 +128,39 @@ export const QUANTITY_PRICING = {
 export type QuantityKey = keyof typeof QUANTITY_PRICING;
 
 /* --------------------------------------------------------------------------
+ * SECTION E2 — TOUCH BOARD HARDWARE (pass-through physical goods)
+ *
+ * Physical all-in-one touchscreen boards resold to the client. These are
+ * PASS-THROUGH HARDWARE: each selected board is added to the setup total at its
+ * flat per-unit `price` and is NEVER marked up by the complexity / timeline /
+ * country multipliers, and never affected by the software minimum-price floors.
+ *
+ * `cost` (optional) is our internal landed-cost basis (what we pay, before tax
+ * & shipping). It is used ONLY for the admin-side margin readout and is NEVER
+ * shown on the client-facing quote/PDF. Edit sizes / prices / costs here — this
+ * is the only place.
+ *
+ * COST STATUS: only the 55" cost is a real confirmed supplier price ($1,750).
+ * Every other `cost` below is a STANDARD-MARKET ESTIMATE (~50% of sell price,
+ * anchored to the confirmed 55" ratio) — replace each with the actual landed
+ * cost as you confirm it with the supplier. The `estimate` flag drives the
+ * "est." label in the admin margin readout.
+ * ------------------------------------------------------------------------ */
+export const TOUCH_BOARDS = [
+  { key: 'tb8', size: '8"', price: 349, cost: 175, estimate: true },
+  { key: 'tb10', size: '10"', price: 499, cost: 250, estimate: true },
+  { key: 'tb24', size: '24"', price: 1099, cost: 550, estimate: true },
+  { key: 'tb32', size: '32"', price: 1799, cost: 900, estimate: true },
+  { key: 'tb43', size: '43"', price: 2499, cost: 1250, estimate: true },
+  { key: 'tb55', size: '55"', price: 3499, cost: 1750, estimate: false }, // confirmed: we pay $1,750 + tax & shipping
+  { key: 'tb65', size: '65"', price: 4499, cost: 2250, estimate: true },
+  { key: 'tb75', size: '75"', price: 5999, cost: 3000, estimate: true },
+  { key: 'tb86', size: '86"', price: 7999, cost: 4000, estimate: true },
+] as const;
+
+export type TouchBoardKey = (typeof TOUCH_BOARDS)[number]['key'];
+
+/* --------------------------------------------------------------------------
  * SECTION F — COMPLEXITY MULTIPLIERS
  * Applied to the BUILD FEE (platform + modules + quantities), NOT to hard
  * third-party usage fees (those are pass-through, see THIRD_PARTY note).

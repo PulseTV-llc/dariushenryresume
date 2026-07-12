@@ -46,6 +46,11 @@ export default function QuoteDocument({
     ...r.platform.lines.map((l) => ({ ...l, group: 'Platform' })),
     ...r.feature.lines.map((l) => ({ ...l, group: 'Feature' })),
     ...r.quantity.lines.map((l) => ({ ...l, group: 'Quantity' })),
+    ...r.touchBoard.lines.map((l) => ({
+      label: `Touch Board — ${l.size} × ${l.qty}`,
+      price: l.price,
+      group: 'Hardware',
+    })),
   ];
   const activePhases = r.phases.filter((p) => p.amount > 0);
 
@@ -168,8 +173,14 @@ export default function QuoteDocument({
           </div>
           <div className="qd-breakdown-row">
             <span>Engineering, delivery &amp; market adjustment</span>
-            <span>{money(Math.max(0, r.finalSetup - r.buildFeeBase))}</span>
+            <span>{money(Math.max(0, r.setupBuild - r.buildFeeBase))}</span>
           </div>
+          {r.hardwareSubtotal > 0 && (
+            <div className="qd-breakdown-row">
+              <span>Touch board hardware</span>
+              <span>{money(r.hardwareSubtotal)}</span>
+            </div>
+          )}
           <div className="qd-breakdown-row qd-breakdown-total">
             <span>Setup investment (one-time)</span>
             <span>{money(r.finalSetup)}</span>

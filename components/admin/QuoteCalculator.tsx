@@ -28,6 +28,8 @@ import {
   FeatureModuleKey,
   QUANTITY_PRICING,
   QuantityKey,
+  TOUCH_BOARDS,
+  TouchBoardKey,
   COMPLEXITY_MULTIPLIERS,
   ComplexityKey,
   TIMELINE_MULTIPLIERS,
@@ -77,6 +79,8 @@ export default function QuoteCalculator() {
   const [platforms, setPlatforms] = useState<Record<PlatformKey, boolean>>(emptyPlatforms());
   const [features, setFeatures] = useState<Partial<Record<FeatureModuleKey, boolean>>>({});
   const [quantities, setQuantities] = useState<Partial<Record<QuantityKey, number>>>({});
+  // Section E2 — touch board hardware (pass-through), count per size
+  const [touchBoards, setTouchBoards] = useState<Partial<Record<TouchBoardKey, number>>>({});
   // Section F/G
   const [complexity, setComplexity] = useState<ComplexityKey>('moderate');
   const [timeline, setTimeline] = useState<TimelineKey>('flexible');
@@ -114,6 +118,7 @@ export default function QuoteCalculator() {
       platforms,
       features,
       quantities,
+      touchBoards,
       complexity,
       timeline,
       country,
@@ -124,7 +129,7 @@ export default function QuoteCalculator() {
       paymentSchedule,
       clientBudget: clientBudget ? Number(clientBudget) : null,
     }),
-    [platforms, features, quantities, complexity, timeline, country, useManualMultiplier, manualMultiplier, overrideMinimums, supportTierOverride, supportAddons, paymentSchedule, clientBudget],
+    [platforms, features, quantities, touchBoards, complexity, timeline, country, useManualMultiplier, manualMultiplier, overrideMinimums, supportTierOverride, supportAddons, paymentSchedule, clientBudget],
   );
 
   const r = useMemo(() => calculateQuote(input), [input]);
@@ -135,6 +140,8 @@ export default function QuoteCalculator() {
     setFeatures((f) => ({ ...f, [k]: !f[k] }));
   const setQty = (k: QuantityKey, v: number) =>
     setQuantities((q) => ({ ...q, [k]: Math.max(0, v) }));
+  const setBoardQty = (k: TouchBoardKey, v: number) =>
+    setTouchBoards((b) => ({ ...b, [k]: Math.max(0, Math.floor(v) || 0) }));
   const toggleAddon = (k: string) =>
     setSupportAddons((a) => (a.includes(k) ? a.filter((x) => x !== k) : [...a, k]));
 
@@ -154,6 +161,7 @@ export default function QuoteCalculator() {
     setPlatforms(emptyPlatforms());
     setFeatures({});
     setQuantities({});
+    setTouchBoards({});
     setComplexity('moderate');
     setTimeline('flexible');
     setCountry('United States');
@@ -353,6 +361,64 @@ export default function QuoteCalculator() {
                 );
               })}
             </div>
+          </Card>
+
+          {/* E2. Touch board hardware */}
+          <Card
+            title="E2 · Touch Board Hardware"
+            hint="Physical touch boards — flat pass-through pricing. NOT marked up by complexity / timeline / country multipliers, and not subject to the software minimum floors. Added straight to the setup total."
+          >
+            <div className="grid sm:grid-cols-2 gap-3">
+              {TOUCH_BOARDS.map((b) => {
+                const qty = touchBoards[b.key] ?? 0;
+                const active = qty > 0;
+                return (
+                  <div
+                    key={b.key}
+                    className={`rounded-lg border px-3 py-2.5 transition-all ${
+                      active ? 'bg-cyan-500/10 border-cyan-500/40' : 'bg-black/30 border-white/10'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center flex-wrap gap-x-2 gap-y-1">
+                        <span className={`text-sm font-semibold ${active ? 'text-white' : 'text-gray-300'}`}>{b.size} board</span>
+                        <span className="text-xs font-medium text-cyan-300">{money(b.price)} ea</span>
+                        <span
+                          title={b.estimate ? `Cost basis ${money(b.cost)} is a market estimate — replace with the confirmed supplier price.` : `Cost basis ${money(b.cost)} is a confirmed supplier price.`}
+                          className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${
+                            b.estimate
+                              ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
+                              : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                          }`}
+                        >
+                          {b.estimate ? 'est. cost' : 'confirmed'}
+                        </span>
+                      </div>
+                      <Stepper value={qty} onChange={(v) => setBoardQty(b.key, v)} />
+                    </div>
+                    {active && (
+                      <div className="mt-1.5 text-[11px] text-gray-500">
+                        {qty} × {money(b.price)} = <span className="text-gray-300 font-medium">{money(qty * b.price)}</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {r.hardwareSubtotal > 0 && (
+              <div className="mt-4 flex items-center justify-between rounded-lg bg-white/[0.03] border border-white/10 px-4 py-3">
+                <span className="text-sm text-gray-300">Hardware subtotal (pass-through)</span>
+                <div className="text-right">
+                  <div className="text-base font-bold text-white">{money(r.hardwareSubtotal)}</div>
+                  {r.touchBoard.totalMargin != null && (
+                    <div className="text-[11px] text-emerald-300/80">
+                      {r.touchBoard.anyEstimatedCost ? 'est. ' : ''}margin ~{money(r.touchBoard.totalMargin)}{' '}
+                      <span className="text-gray-500">(internal{r.touchBoard.anyEstimatedCost ? ' · costs partly estimated' : ''})</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </Card>
 
           {/* F. Complexity */}
@@ -661,6 +727,28 @@ function Toggle({ active, onClick, label, price, note, small }: { active: boolea
   );
 }
 
+function Stepper({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const btn =
+    'w-7 h-7 flex items-center justify-center rounded-md bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 disabled:opacity-30 transition-all text-base leading-none';
+  return (
+    <div className="flex items-center gap-1.5">
+      <button type="button" aria-label="Decrease" className={btn} disabled={value <= 0} onClick={() => onChange(value - 1)}>
+        −
+      </button>
+      <input
+        type="number"
+        min={0}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-12 text-center px-1 py-1 bg-black/40 border border-white/10 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+      />
+      <button type="button" aria-label="Increase" className={btn} onClick={() => onChange(value + 1)}>
+        +
+      </button>
+    </div>
+  );
+}
+
 function Pill({ active, onClick, title, sub }: { active: boolean; onClick: () => void; title: string; sub: string }) {
   return (
     <button
@@ -711,6 +799,24 @@ function SummaryPanel({ r }: { r: ReturnType<typeof calculateQuote> }) {
         <span className="text-sm text-gray-500">setup</span>
       </div>
       <div className="text-cyan-300 font-semibold">+ {money(r.finalMonthly)}/mo support</div>
+
+      {r.hardwareSubtotal > 0 && (
+        <div className="mt-3 rounded-xl bg-white/[0.03] border border-white/10 px-3 py-2.5 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-gray-400">Software setup</span>
+            <span className="text-gray-200 font-medium">{money(r.setupBuild)}</span>
+          </div>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-gray-400">Touch board hardware</span>
+            <span className="text-gray-200 font-medium">{money(r.hardwareSubtotal)}</span>
+          </div>
+          {r.touchBoard.totalMargin != null && (
+            <div className="mt-1 text-[11px] text-emerald-300/80 text-right">
+              {r.touchBoard.anyEstimatedCost ? 'est. ' : ''}hardware margin ~{money(r.touchBoard.totalMargin)} <span className="text-gray-500">(internal)</span>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
         <Stat label="Package" value={r.pkg.label} />
@@ -823,6 +929,15 @@ function buildQuoteText({ clientName, businessName, industry, r }: { clientName:
   r.platform.lines.forEach((l) => line(`  • ${l.label} — ${money(l.price)}`));
   r.feature.lines.forEach((l) => line(`  • ${l.label} — ${money(l.price)}`));
   r.quantity.lines.forEach((l) => line(`  • ${l.label} — ${money(l.price)}`));
+  if (r.touchBoard.lines.length > 0) {
+    line('');
+    line('TOUCH BOARD HARDWARE (flat, pass-through)');
+    line('-----------------------------------------');
+    r.touchBoard.lines.forEach((l) =>
+      line(`  • ${l.size} board × ${l.qty} @ ${money(l.unit)} — ${money(l.price)}`),
+    );
+    line(`  Hardware subtotal:        ${money(r.hardwareSubtotal)}`);
+  }
   line('');
   line(`Base build fee (US):      ${money(r.buildFeeBase)}`);
   line(`Complexity:               ${r.complexity.label} (×${r.complexity.value})`);
@@ -834,6 +949,10 @@ function buildQuoteText({ clientName, businessName, industry, r }: { clientName:
   line('');
   line('RECOMMENDATION');
   line('--------------');
+  if (r.hardwareSubtotal > 0) {
+    line(`Software setup:           ${money(r.setupBuild)}`);
+    line(`Touch board hardware:     ${money(r.hardwareSubtotal)} (flat)`);
+  }
   line(`Setup total:              ${money(r.finalSetup)}`);
   line(`Monthly support:          ${money(r.finalMonthly)}/mo (${r.supportTier.label})`);
   line(`Recommended package:      ${r.pkg.label}`);

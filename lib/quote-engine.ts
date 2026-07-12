@@ -15,6 +15,8 @@ import {
   FeatureModuleKey,
   QUANTITY_PRICING,
   QuantityKey,
+  TOUCH_BOARDS,
+  TouchBoardKey,
   COMPLEXITY_MULTIPLIERS,
   ComplexityKey,
   TIMELINE_MULTIPLIERS,
@@ -38,6 +40,8 @@ export interface QuoteInput {
   platforms: Record<PlatformKey, boolean>;
   features: Partial<Record<FeatureModuleKey, boolean>>;
   quantities: Partial<Record<QuantityKey, number>>;
+  /** Physical touch board hardware, keyed by size — count per size. */
+  touchBoards: Partial<Record<TouchBoardKey, number>>;
   complexity: ComplexityKey;
   timeline: TimelineKey;
   country: string;
@@ -113,6 +117,53 @@ export function computeQuantitySubtotal(quantities: Partial<Record<QuantityKey, 
     }
   });
   return { subtotal, lines };
+}
+
+/**
+ * Touch board hardware subtotal — PASS-THROUGH. Flat per-unit prices summed;
+ * never multiplied and never floored. `totalCost` / `totalMargin` are internal
+ * margin figures (only over sizes that have a known `cost`) and are for the
+ * admin readout only — never surfaced on the client quote.
+ */
+export function computeTouchBoardSubtotal(touchBoards: Partial<Record<TouchBoardKey, number>>) {
+  const lines: {
+    key: string;
+    size: string;
+    qty: number;
+    unit: number;
+    price: number;
+    cost: number | null;
+    lineCost: number | null;
+    estimate: boolean;
+  }[] = [];
+  let subtotal = 0;
+  let totalCost = 0;
+  let revenueWithKnownCost = 0;
+  let hasCost = false;
+  let anyEstimatedCost = false;
+
+  TOUCH_BOARDS.forEach((b) => {
+    const qty = Math.max(0, Math.floor(touchBoards[b.key] ?? 0));
+    if (qty <= 0) return;
+    const price = qty * b.price;
+    const lineCost = b.cost != null ? qty * b.cost : null;
+    if (lineCost != null) {
+      totalCost += lineCost;
+      revenueWithKnownCost += price;
+      hasCost = true;
+      if (b.estimate) anyEstimatedCost = true;
+    }
+    lines.push({ key: b.key, size: b.size, qty, unit: b.price, price, cost: b.cost, lineCost, estimate: b.estimate });
+    subtotal += price;
+  });
+
+  return {
+    subtotal,
+    lines,
+    totalCost: hasCost ? totalCost : null,
+    totalMargin: hasCost ? revenueWithKnownCost - totalCost : null,
+    anyEstimatedCost,
+  };
 }
 
 /* ------------------------------------------------------------------ */
@@ -259,8 +310,11 @@ export function calculateQuote(input: QuoteInput) {
   const platform = computePlatformSubtotal(input.platforms);
   const feature = computeFeatureSubtotal(input.features);
   const quantity = computeQuantitySubtotal(input.quantities);
+  // Touch board hardware — PASS-THROUGH, never enters the multiplied build fee.
+  const touchBoard = computeTouchBoardSubtotal(input.touchBoards);
+  const hardwareSubtotal = touchBoard.subtotal;
 
-  // 1. US-base build fee (pre-multiplier)
+  // 1. US-base build fee (pre-multiplier) — software only, hardware excluded.
   const buildFeeBase = platform.subtotal + feature.subtotal + quantity.subtotal;
 
   // 2. Complexity & timeline multipliers (applied to build fee only)
@@ -284,12 +338,14 @@ export function calculateQuote(input: QuoteInput) {
   const effectiveCombinedMultiplier = Math.min(rawCombinedMultiplier, MAX_COMBINED_MULTIPLIER);
   const marketSetupRaw = buildFeeBase * effectiveCombinedMultiplier;
 
-  // 5. Minimum protection
+  // 5. Minimum protection (applies to the software build fee only)
   const floorInfo = computeMinimumFloor(input.platforms, buildFeeBase);
   const minApplied = !input.overrideMinimums && marketSetupRaw < floorInfo.floor;
-  const finalSetup = round(
+  const setupBuild = round(
     input.overrideMinimums ? marketSetupRaw : Math.max(marketSetupRaw, floorInfo.floor),
   );
+  // Grand setup total = multiplied+floored software build fee + flat hardware.
+  const finalSetup = setupBuild + hardwareSubtotal;
 
   // 6. Monthly support
   const recommendedTierKey = recommendSupportTier(input.complexity);
@@ -328,7 +384,8 @@ export function calculateQuote(input: QuoteInput) {
       MAX_COMBINED_MULTIPLIER,
     );
     const setupRaw = buildFeeBase * tierCombined;
-    const setup = round(Math.max(setupRaw, floorInfo.floor));
+    // Hardware is flat pass-through — added equally across every tier.
+    const setup = round(Math.max(setupRaw, floorInfo.floor)) + hardwareSubtotal;
     const monthly = round(Math.max(monthlyBase * t.suggested, MINIMUMS.monthly));
     return {
       tierKey: k,
@@ -392,7 +449,9 @@ export function calculateQuote(input: QuoteInput) {
   const strategy = recommendStrategy({
     tierKey: countryInfo.tierKey,
     effectiveMultiplier,
-    finalSetup,
+    // Strategy is about the software build decision — judge it on the build
+    // setup, not the hardware-inflated grand total.
+    finalSetup: setupBuild,
     floor: floorInfo.floor,
     marketSetupRaw,
     overrideMinimums: input.overrideMinimums,
@@ -403,7 +462,8 @@ export function calculateQuote(input: QuoteInput) {
   // 14. Profit protection warnings (internal only)
   const warnings = buildWarnings({
     buildFeeBase,
-    finalSetup,
+    // Effective-hourly / floor warnings judge the build fee, not hardware.
+    finalSetup: setupBuild,
     effectiveMultiplier,
     marketSetupRaw,
     floor: floorInfo.floor,
@@ -427,6 +487,8 @@ export function calculateQuote(input: QuoteInput) {
     platform,
     feature,
     quantity,
+    touchBoard,
+    hardwareSubtotal,
     buildFeeBase: round(buildFeeBase),
     // multipliers
     complexity,
@@ -444,6 +506,7 @@ export function calculateQuote(input: QuoteInput) {
     marketSetupRaw: round(marketSetupRaw),
     minimumFloor: floorInfo.floor,
     minApplied,
+    setupBuild,
     finalSetup,
     // combined-multiplier cap (internal / admin-only)
     maxCombinedMultiplier: MAX_COMBINED_MULTIPLIER,
