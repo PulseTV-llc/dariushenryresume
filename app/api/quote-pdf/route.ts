@@ -61,6 +61,9 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (err) {
+    // Log the full error (message + stack) so it is visible in Vercel runtime
+    // logs — the returned JSON detail alone is not persisted anywhere.
+    console.error('[quote-pdf] generation failed:', err);
     return NextResponse.json(
       { error: 'PDF generation failed.', detail: err instanceof Error ? err.message : String(err) },
       { status: 500 },

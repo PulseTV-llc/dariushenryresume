@@ -237,7 +237,8 @@ export default function QuoteCalculator() {
       });
       if (!res.ok) {
         const msg = await res.json().catch(() => ({}));
-        throw new Error(msg?.error || `Server error (${res.status}).`);
+        const parts = [msg?.error, msg?.detail].filter(Boolean).join(' — ');
+        throw new Error(parts || `Server error (${res.status}).`);
       }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
