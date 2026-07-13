@@ -9,6 +9,22 @@ async function launchBrowser() {
   const puppeteer = await import('puppeteer-core');
 
   if (isServerless) {
+    // @sparticuz/chromium only extracts its bundled shared libraries (libnss3.so
+    // et al., packed in al2/al2023.tar.br) when it detects an AWS Lambda runtime
+    // via AWS_EXECUTION_ENV / AWS_LAMBDA_JS_RUNTIME. Vercel functions run on
+    // Lambda but do not expose those vars, so the libs are never extracted and
+    // Chromium fails to launch with "libnss3.so: cannot open shared object file".
+    // Set the var the package looks for — matched to the running Node major so it
+    // extracts the correct glibc pack — BEFORE importing it (its LD_LIBRARY_PATH
+    // setup runs at module-load time).
+    if (!process.env.AWS_EXECUTION_ENV && !process.env.AWS_LAMBDA_JS_RUNTIME) {
+      const nodeMajor = Number(process.versions.node.split('.')[0]);
+      if (nodeMajor >= 20) {
+        process.env.AWS_LAMBDA_JS_RUNTIME = 'nodejs20.x'; // → extract al2023 libs
+      } else {
+        process.env.AWS_EXECUTION_ENV = 'AWS_Lambda_nodejs18.x'; // → extract al2 libs
+      }
+    }
     const chromium = (await import('@sparticuz/chromium')).default;
     // We only need PDF output — skip GPU/graphics to keep memory low.
     chromium.setGraphicsMode = false;
