@@ -21,7 +21,7 @@ import { projects } from '@/data/projects';
 import { SITE_URL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'Darius Henry — Founder & Chief Architect, VexaOS',
+  title: 'Darius Henry — Founder & Chief Architect',
   description:
     'Darius Henry founded VexaOS after a decade building connected business software. Track record, technical background, and the operating principles behind the platform.',
   alternates: { canonical: `${SITE_URL}/about/founder` },

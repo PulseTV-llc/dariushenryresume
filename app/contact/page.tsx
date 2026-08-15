@@ -8,7 +8,7 @@ import { PageHero } from '@/components/site/Section';
 import { SITE_URL, APP_URL, CONTACT_EMAIL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'Contact VexaOS — Sales, quotes, and enterprise enquiries',
+  title: 'Contact — Sales, quotes, and enterprise enquiries',
   description:
     'Talk to VexaOS about pricing, multi-location deployments, hardware quotes, or enterprise and franchise requirements.',
   alternates: { canonical: `${SITE_URL}/contact` },

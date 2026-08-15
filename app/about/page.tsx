@@ -16,7 +16,7 @@ import { FOUNDER, FOUNDER_STATS } from '@/lib/founder';
 import { SITE_URL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'About VexaOS — The business operating system company',
+  title: 'About — The business operating system company',
   description:
     'VexaOS builds one operating system for the whole business: workforce, commerce, inventory, customer experiences, and the hardware they run on. Founded and built by Darius Henry.',
   alternates: { canonical: `${SITE_URL}/about` },

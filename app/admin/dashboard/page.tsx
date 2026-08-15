@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
@@ -17,7 +18,8 @@ import {
   AlertCircle,
   User,
   MessageSquare,
-  Calendar
+  Calendar,
+  Calculator
 } from 'lucide-react';
 
 // Prevent static generation - this page requires runtime Firebase
@@ -190,13 +192,22 @@ export default function AdminDashboard() {
                 {inquiries.length} total {unreadCount > 0 && `• ${unreadCount} unread`}
               </p>
             </div>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-300 hover:text-white transition-all"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Sign Out</span>
-            </button>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/admin/quote-calculator"
+                className="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 rounded-lg text-cyan-400 hover:text-cyan-300 transition-all"
+              >
+                <Calculator className="w-4 h-4" />
+                <span>Quote Calculator</span>
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-300 hover:text-white transition-all"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
