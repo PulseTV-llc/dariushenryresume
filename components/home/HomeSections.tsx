@@ -1,19 +1,39 @@
 import Link from 'next/link';
 import { ArrowRight, Check, X } from 'lucide-react';
 import Icon from '@/components/site/Icon';
+import ScreenshotFrame from '@/components/site/ScreenshotFrame';
 import {
   Section,
   SectionHeading,
   PoweredByBadge,
   SecondaryButton,
 } from '@/components/site/Section';
+import { SCREENS } from '@/lib/screens';
 import {
   PRODUCTS,
   VERTICALS,
   OUTCOMES,
   PLATFORM_PILLARS,
   HARDWARE_LEASE,
+  TOUCHBOARD_PRICING_STATEMENT,
 } from '@/lib/vexaos';
+
+/* -------------------------------------------------------------- */
+/* 0 — The control center (product proof)                         */
+/* -------------------------------------------------------------- */
+
+export function ControlCenterSection() {
+  return (
+    <Section className="border-t border-white/10">
+      <SectionHeading
+        eyebrow="The control center"
+        title="This is the whole business, on one screen."
+        subtitle="Your organization, your locations, and every product you hold — plus the ones you have not switched on yet. No second login, no separate admin panel per tool."
+      />
+      <ScreenshotFrame shot={SCREENS.vexaosHome} priority sizes="(min-width: 1024px) 70vw, 100vw" />
+    </Section>
+  );
+}
 
 /* -------------------------------------------------------------- */
 /* 1 — The problem                                                */
@@ -82,7 +102,7 @@ export function ProductsSection() {
     <Section id="products" className="bg-gradient-to-b from-transparent to-[#03060c]">
       <SectionHeading
         eyebrow="The products"
-        title="Five products. One platform underneath."
+        title="Six products. One platform underneath."
         subtitle="Each product is sold separately and runs on its own. Together they share the same customers, employees, catalog, and devices — with nothing to integrate."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -118,6 +138,14 @@ export function ProductsSection() {
           </SecondaryButton>
         </div>
       </div>
+
+      <div className="mt-16">
+        <ScreenshotFrame
+          shot={SCREENS.productSwitcher}
+          sizes="(min-width: 1024px) 60vw, 100vw"
+          className="max-w-4xl mx-auto"
+        />
+      </div>
     </Section>
   );
 }
@@ -131,7 +159,7 @@ export function PlatformSection() {
     <Section className="border-t border-white/10">
       <SectionHeading
         eyebrow="The platform"
-        title="What makes them one system instead of five."
+        title="What makes them one system instead of six."
         subtitle="VexaOS is not a bundle. It is a shared foundation the products are built on — which is why data never has to be synced between them."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -259,35 +287,18 @@ export function HardwareSection() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-sky-500/[0.08] to-transparent p-7 sm:p-9">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-300/90">
-            Flagship display
-          </p>
-          <p className="mt-2 text-2xl font-bold text-white">
-            {HARDWARE_LEASE.size} touchscreen
-          </p>
-          <p className="mt-1.5 text-sm text-gray-400">
-            The most-deployed size — works as a customer kiosk, a menu board, or an employee
-            TouchBoard.
-          </p>
-          <div className="mt-7 grid grid-cols-2 gap-px rounded-2xl overflow-hidden border border-white/10 bg-white/10">
-            <div className="bg-[#04070e] px-5 py-6">
-              <p className="text-xs text-gray-500">Purchase</p>
-              <p className="mt-1 text-2xl font-bold text-white">
-                ${HARDWARE_LEASE.purchase.toLocaleString()}
-              </p>
-              <p className="mt-1 text-xs text-gray-500">one time</p>
-            </div>
-            <div className="bg-[#04070e] px-5 py-6">
-              <p className="text-xs text-gray-500">Lease</p>
-              <p className="mt-1 text-2xl font-bold text-white">
-                ${HARDWARE_LEASE.monthly}
-                <span className="text-base font-medium text-gray-400">/mo</span>
-              </p>
-              <p className="mt-1 text-xs text-gray-500">{HARDWARE_LEASE.term}</p>
-            </div>
+        <div>
+          <ScreenshotFrame shot={SCREENS.touchBoard} sizes="(min-width: 1024px) 45vw, 100vw" />
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-300/90">
+              Flagship display · {HARDWARE_LEASE.size}
+            </p>
+            <p className="mt-2.5 text-sm text-gray-400 leading-relaxed">
+              ${HARDWARE_LEASE.purchase.toLocaleString()} to purchase, or $
+              {HARDWARE_LEASE.monthly}/month over {HARDWARE_LEASE.term} with replacement
+              included. {TOUCHBOARD_PRICING_STATEMENT}
+            </p>
           </div>
-          <p className="mt-5 text-xs text-gray-500 leading-relaxed">{HARDWARE_LEASE.note}</p>
         </div>
       </div>
     </Section>

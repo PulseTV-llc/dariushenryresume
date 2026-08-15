@@ -4,6 +4,8 @@ import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
 import EcosystemDiagram from '@/components/site/EcosystemDiagram';
+import ScreenshotFrame from '@/components/site/ScreenshotFrame';
+import { SCREENS } from '@/lib/screens';
 import {
   Section,
   SectionHeading,
@@ -59,7 +61,7 @@ export default function PlatformPage() {
           title={
             <>
               The reason it is one system,{' '}
-              <span className="gradient-text">not five subscriptions.</span>
+              <span className="gradient-text">not six subscriptions.</span>
             </>
           }
           subtitle="VexaOS is the foundation the products are built on: one identity, one organization model, one data layer, and one device registry. Integration is not something you configure — it is the architecture."
@@ -110,6 +112,14 @@ export default function PlatformPage() {
               </div>
             ))}
           </div>
+
+          <div className="mt-14">
+            <ScreenshotFrame
+              shot={SCREENS.unifiedSettings}
+              sizes="(min-width: 1024px) 65vw, 100vw"
+              className="max-w-4xl mx-auto"
+            />
+          </div>
         </Section>
 
         {/* Control center */}
@@ -137,6 +147,14 @@ export default function PlatformPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="mt-14">
+            <ScreenshotFrame
+              shot={SCREENS.locationSwitcher}
+              sizes="(min-width: 1024px) 65vw, 100vw"
+              className="max-w-4xl mx-auto"
+            />
           </div>
         </Section>
 

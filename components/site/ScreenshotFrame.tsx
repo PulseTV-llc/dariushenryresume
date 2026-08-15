@@ -1,0 +1,78 @@
+import Image from 'next/image';
+import { ImageIcon } from 'lucide-react';
+import type { Screenshot, HardwareSlot } from '@/lib/screens';
+
+/**
+ * Renders a product screenshot inside brand chrome. `browser` draws a window
+ * bar (for control-center captures); `device` draws a bezel (for board and
+ * kiosk captures).
+ */
+export default function ScreenshotFrame({
+  shot,
+  priority = false,
+  showCaption = true,
+  className = '',
+  sizes = '(min-width: 1024px) 60vw, 100vw',
+}: {
+  shot: Screenshot;
+  priority?: boolean;
+  showCaption?: boolean;
+  className?: string;
+  sizes?: string;
+}) {
+  return (
+    <figure className={className}>
+      <div
+        className={`relative overflow-hidden rounded-2xl border border-white/12 bg-[#070b14] shadow-2xl shadow-black/50 ${
+          shot.frame === 'device' ? 'p-2 sm:p-2.5' : ''
+        }`}
+      >
+        {shot.frame === 'browser' && (
+          <div className="flex items-center gap-1.5 px-4 py-2.5 bg-white/[0.04] border-b border-white/10">
+            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+            <span className="ml-3 h-4 flex-1 max-w-[14rem] rounded bg-white/[0.05]" />
+          </div>
+        )}
+        <Image
+          src={shot.src}
+          width={shot.width}
+          height={shot.height}
+          alt={shot.alt}
+          priority={priority}
+          sizes={sizes}
+          className={`w-full h-auto ${shot.frame === 'device' ? 'rounded-xl' : ''}`}
+        />
+      </div>
+      {showCaption && (
+        <figcaption className="mt-4 text-sm text-gray-500 leading-relaxed text-center max-w-2xl mx-auto">
+          {shot.caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/**
+ * Labelled placeholder for hardware photography that has not been supplied yet.
+ * Deliberately obvious rather than stock imagery — it reads as a reserved slot,
+ * not as a finished asset.
+ */
+export function HardwarePhotoSlot({ slot }: { slot: HardwareSlot }) {
+  return (
+    <div
+      className="relative flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-center"
+      style={{ aspectRatio: slot.ratio }}
+    >
+      <span className="inline-flex w-11 h-11 rounded-xl bg-white/[0.04] border border-white/10 items-center justify-center">
+        <ImageIcon className="w-5 h-5 text-gray-600" />
+      </span>
+      <p className="mt-4 text-sm font-medium text-gray-400">{slot.label}</p>
+      <p className="mt-1 text-xs text-gray-600 leading-relaxed max-w-[16rem]">{slot.hint}</p>
+      <span className="mt-3 px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/10 text-[10px] font-semibold uppercase tracking-wider text-gray-600">
+        Photo pending
+      </span>
+    </div>
+  );
+}

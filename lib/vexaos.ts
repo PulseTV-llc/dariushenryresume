@@ -5,9 +5,11 @@
  * ecosystem, platform pillars, industries, hardware and pricing. Pages stay
  * thin and presentational; everything editable lives here.
  *
- * NOTE ON PRICING: software subscription figures in `PRODUCT_PRICING` are
- * PLACEHOLDERS pending sign-off. Hardware figures in `TOUCH_BOARDS`
- * (lib/quote-config.ts) and `HARDWARE_LEASE` are real. See PRICING_DISCLAIMER.
+ * NOTE ON PRICING: subscription pricing (BUNDLES, STANDALONE_PRICING,
+ * DEVICE_PRICING, FOUNDING_OFFER) is APPROVED and stored in integer cents.
+ * Facility Ops and Inspections are deliberately unpriced — render them as
+ * "Coming soon", never as a number. Hardware figures in `TOUCH_BOARDS`
+ * (lib/quote-config.ts) and `HARDWARE_LEASE` are real.
  */
 
 export const APP_URL = 'https://app.vexaos.io';
@@ -30,6 +32,7 @@ export const PRODUCT_NAV: NavItem[] = [
   { href: '/products/commerce-ops', label: 'Commerce Ops', description: 'Orders, payments, loyalty' },
   { href: '/products/vexafront', label: 'VexaFront', description: 'Customer-facing kiosks' },
   { href: '/products/inventory-ops', label: 'Inventory Ops', description: 'Stock, supply & costing' },
+  { href: '/products/facility-ops', label: 'Facility Ops', description: 'Environmental monitoring' },
 ];
 
 export const PRIMARY_NAV: NavItem[] = [
@@ -367,6 +370,56 @@ export const PRODUCTS: Product[] = [
     industries: ['restaurant', 'retail', 'salon', 'auto-service', 'hospitality', 'gym', 'healthcare'],
     cta: { label: 'Map your stock workflow', href: '/demo' },
   },
+  {
+    slug: 'facility-ops',
+    name: 'Facility Ops',
+    domain: 'Operations',
+    role: 'Environmental monitoring and control',
+    icon: 'Thermometer',
+    accent: 'from-amber-400 to-orange-600',
+    summary:
+      'Telemetry, setpoints, calibration and alerts for the physical spaces your business depends on.',
+    intro:
+      'Facility Ops is the environmental layer of VexaOS. It watches the conditions inside your spaces — temperature, humidity, air, water, power — holds them against setpoints, and tells someone the moment they drift.',
+    problem: {
+      headline: 'Nobody knows a room went out of range until something is ruined.',
+      points: [
+        'A walk-in that drifted overnight, discovered at open.',
+        'Sensor readings scattered across vendor apps that do not talk to your roster.',
+        'Alarms that fire to an email nobody is watching at 2am.',
+        'Calibration records kept — if at all — on a clipboard by the door.',
+        'No history to prove conditions held when someone asks.',
+      ],
+    },
+    product: {
+      headline: 'Conditions held, drift caught, everything on record.',
+      body:
+        'Facility Ops polls your field devices, keeps live readings against per-space setpoints, and raises alarms on the controller rather than in the cloud — so conditions are still enforced when the network is not. Every reading, alarm, and calibration is retained and reportable.',
+      surfaces: [
+        'Space and sensor monitoring in the control center',
+        'Alarms routed to on-shift staff via ShyftGrid',
+        'Condition status on TouchBoard',
+        'Field controllers and Modbus devices on site',
+      ],
+    },
+    capabilities: [
+      { title: 'Live telemetry', detail: 'Temperature, humidity, CO₂, VPD, water, and power read continuously per space and per sensor.' },
+      { title: 'Setpoints & bands', detail: 'Target values and acceptable ranges per space, with drift measured against them rather than guessed at.' },
+      { title: 'Alarms & escalation', detail: 'Conditions evaluated on the controller, escalated to whoever is actually on shift.' },
+      { title: 'Control modes', detail: 'Monitoring-only by default, with every physical output forced to its safe state until control is deliberately enabled.' },
+      { title: 'Calibration records', detail: 'Instrument calibration tracked, scheduled, and retained for audits and compliance.' },
+      { title: 'Advisory intelligence', detail: 'Trend analysis that forecasts when a space will cross its band — advisory only, never silently changing a setpoint.' },
+    ],
+    integrations: [
+      'Routes alarms to the staff ShyftGrid says are on shift right now.',
+      'Puts space status and active alarms on TouchBoard where the team can see them.',
+      'Ties equipment and sensors to the Inventory Ops asset records they belong to.',
+      'Uses VexaOS locations, so each site sees and manages only its own spaces.',
+      'Field controllers enrol in the same VexaOS device registry as kiosks and boards.',
+    ],
+    industries: ['restaurant', 'retail', 'hospitality', 'healthcare', 'gym', 'field-service'],
+    cta: { label: 'Talk to us about Facility Ops', href: '/contact' },
+  },
 ];
 
 export const PRODUCTS_BY_SLUG: Record<string, Product> = Object.fromEntries(
@@ -389,7 +442,7 @@ export const DOMAIN_META: Record<
   },
   Operations: {
     label: 'Operations',
-    blurb: 'What you hold, what it cost, and what it is doing to your margin.',
+    blurb: 'What you hold, what it cost, and the conditions the whole operation depends on.',
     accent: 'text-emerald-300',
   },
 };
@@ -759,21 +812,26 @@ export const HARDWARE_LEASE = {
 } as const;
 
 /**
- * Sizes and outright purchase pricing.
- * 24"–86" mirror TOUCH_BOARDS in lib/quote-config.ts (confirmed pricing).
- * 15" is a PLACEHOLDER — quote-config has a 10" line at $499, not a 15".
- * Confirm the small-kiosk SKU and price before this goes to production.
+ * Sizes and outright purchase pricing, "starting at" per unit.
+ * 24"–86" mirror the confirmed TOUCH_BOARDS catalog in lib/quote-config.ts.
+ * The 15" counter kiosk is not in that catalog, so it is quoted rather than
+ * listed — never invent an MSRP for it.
  */
-export const HARDWARE_SIZES = [
-  { size: '15"', price: 899, note: 'Counter kiosk' },
-  { size: '24"', price: 1099, note: 'Counter kiosk' },
-  { size: '32"', price: 1799, note: 'Kiosk or employee board' },
-  { size: '43"', price: 2499, note: 'Flagship — kiosk, signage, or board' },
-  { size: '55"', price: 3499, note: 'Large employee board' },
-  { size: '65"', price: 4499, note: 'Large-format board' },
-  { size: '75"', price: 5999, note: 'Large-format board' },
-  { size: '86"', price: 7999, note: 'Large-format board' },
-] as const;
+export const HARDWARE_SIZES: {
+  size: string;
+  priceCents: number | null;
+  note: string;
+  quoteOnly?: boolean;
+}[] = [
+  { size: '15"', priceCents: null, note: 'Counter kiosk', quoteOnly: true },
+  { size: '24"', priceCents: 109900, note: 'Counter kiosk' },
+  { size: '32"', priceCents: 179900, note: 'Kiosk or employee board' },
+  { size: '43"', priceCents: 249900, note: 'Flagship — kiosk, signage, or board' },
+  { size: '55"', priceCents: 349900, note: 'Large employee board' },
+  { size: '65"', priceCents: 449900, note: 'Large-format board' },
+  { size: '75"', priceCents: 599900, note: 'Large-format board' },
+  { size: '86"', priceCents: 799900, note: 'Large-format board' },
+];
 
 export const HARDWARE_INCLUDED = [
   'Commercial-grade capacitive touchscreen',
@@ -788,98 +846,226 @@ export const HARDWARE_INCLUDED = [
 /* Pricing                                                        */
 /* ============================================================== */
 
-export const PRICING_DISCLAIMER =
-  'Prices shown are per location, billed monthly in USD, and exclude payment processing and hardware. Multi-location, multi-brand, and high-volume deployments are quoted individually.';
+/**
+ * APPROVED PRICING. All money is stored in integer cents — never floats — and
+ * formatted through `usd()` at the edge. List prices are per location per month
+ * unless the unit says otherwise.
+ *
+ * Products without approved pricing (Facility Ops, Inspections) carry
+ * `comingSoon: true` and must render as "Coming soon / Contact us". Never
+ * substitute a number for them.
+ */
 
-export interface ProductPrice {
-  slug: string;
-  name: string;
-  /** Starting monthly price per location, USD. */
-  from: number;
-  unit: string;
-  includes: string[];
+/** Format integer cents as USD, dropping `.00` on whole dollars. */
+export function usd(cents: number): string {
+  const whole = cents % 100 === 0;
+  return `$${(cents / 100).toLocaleString('en-US', {
+    minimumFractionDigits: whole ? 0 : 2,
+    maximumFractionDigits: whole ? 0 : 2,
+  })}`;
 }
 
-/**
- * PLACEHOLDER SUBSCRIPTION PRICING — confirm before production.
- * Each product is sold separately; the Platform line is required and carries
- * identity, org model, data layer, and device registry.
- */
-export const PRODUCT_PRICING: ProductPrice[] = [
+export const PRICING_DISCLAIMER =
+  'Prices are per location, billed monthly in USD, and exclude payment processing fees and hardware. Multi-location, multi-brand, and franchise deployments are quoted individually.';
+
+/* -------------------------------------------------------------- */
+/* Bundles — the primary way VexaOS is bought                     */
+/* -------------------------------------------------------------- */
+
+export interface Bundle {
+  key: string;
+  name: string;
+  /** List price, integer cents, per location per month. */
+  priceCents: number;
+  /** Founding Customer price, integer cents, per location per month. */
+  foundingCents: number;
+  blurb: string;
+  /** Product slugs included in the bundle. */
+  products: string[];
+  /** Non-product inclusions worth calling out. */
+  extras: string[];
+  highlight?: boolean;
+}
+
+export const BUNDLES: Bundle[] = [
   {
-    slug: 'platform',
-    name: 'VexaOS Platform',
-    from: 149,
-    unit: 'per location / month',
-    includes: [
-      'Identity, org model, roles and permissions',
-      'Shared customer and employee records',
-      'Device registry and remote management',
-      'Cross-product reporting',
-      'Required with any product',
-    ],
+    key: 'workforce',
+    name: 'Workforce',
+    priceCents: 7900,
+    foundingCents: 5900,
+    blurb: 'Scheduling, shifts, time and labor cost for a single team.',
+    products: ['shyftgrid'],
+    extras: [],
   },
+  {
+    key: 'operations',
+    name: 'Operations',
+    priceCents: 14900,
+    foundingCents: 11900,
+    blurb: 'Workforce plus the stock and cost side of the operation.',
+    products: ['shyftgrid', 'inventory-ops'],
+    extras: [],
+  },
+  {
+    key: 'commerce',
+    name: 'Commerce',
+    priceCents: 17900,
+    foundingCents: 14900,
+    blurb: 'Selling and stock together — orders drawing down live inventory.',
+    products: ['commerce-ops', 'inventory-ops'],
+    extras: [],
+  },
+  {
+    key: 'complete',
+    name: 'Complete',
+    priceCents: 24900,
+    foundingCents: 19900,
+    blurb: 'The whole operating system: people, selling, and stock on one platform.',
+    products: ['shyftgrid', 'commerce-ops', 'inventory-ops'],
+    extras: [
+      '1 TouchBoard license included per location',
+      'Premium platform features',
+      'Discounted VexaFront and additional TouchBoard licenses',
+    ],
+    highlight: true,
+  },
+];
+
+/* -------------------------------------------------------------- */
+/* Standalone products — per location / month                     */
+/* -------------------------------------------------------------- */
+
+export interface StandalonePrice {
+  slug: string;
+  name: string;
+  /** Integer cents per location per month. Null when not yet priced. */
+  priceCents: number | null;
+  comingSoon?: boolean;
+  summary: string;
+  /** Product page, when one exists. */
+  href?: string;
+}
+
+export const STANDALONE_PRICING: StandalonePrice[] = [
   {
     slug: 'shyftgrid',
     name: 'ShyftGrid',
-    from: 129,
-    unit: 'per location / month',
-    includes: [
-      'Scheduling, shift marketplace, time & attendance',
-      'Labor cost projection and overtime controls',
-      'Availability and time-off workflows',
-      'Payroll export',
-    ],
+    priceCents: 7900,
+    summary: 'Scheduling, shift swaps, clock in/out, time cards and payroll export.',
+    href: '/products/shyftgrid',
   },
   {
     slug: 'commerce-ops',
     name: 'Commerce Ops',
-    from: 199,
-    unit: 'per location / month',
-    includes: [
-      'Unified catalog and order pipeline',
-      'Payments, refunds, and reconciliation',
-      'Customer profiles and loyalty',
-      'Revenue and product-mix reporting',
-    ],
+    priceCents: 9900,
+    summary: 'Point of sale, card-present payments, refunds, order queues and sales reporting.',
+    href: '/products/commerce-ops',
   },
   {
     slug: 'inventory-ops',
     name: 'Inventory Ops',
-    from: 149,
-    unit: 'per location / month',
-    includes: [
-      'Live stock levels and counts',
-      'Purchasing, receiving, and transfers',
-      'Cost of goods and margin reporting',
-      'Waste and shrinkage tracking',
-    ],
+    priceCents: 5900,
+    summary: 'Stock levels, vendors, receiving, reorder approvals and cost of goods.',
+    href: '/products/inventory-ops',
   },
+  {
+    slug: 'facility-ops',
+    name: 'Facility Ops',
+    priceCents: null,
+    comingSoon: true,
+    summary: 'Environmental monitoring and control — telemetry, setpoints, calibration and alerts.',
+    href: '/products/facility-ops',
+  },
+  {
+    slug: 'inspections',
+    name: 'Inspections',
+    priceCents: null,
+    comingSoon: true,
+    summary: 'Structured inspection rounds, checklists, and evidence capture with a retained record.',
+  },
+];
+
+export const STANDALONE_BY_SLUG: Record<string, StandalonePrice> = Object.fromEntries(
+  STANDALONE_PRICING.map((p) => [p.slug, p])
+);
+
+/* -------------------------------------------------------------- */
+/* Device software — per device / month                           */
+/* -------------------------------------------------------------- */
+
+export interface DevicePrice {
+  slug: string;
+  name: string;
+  /** Integer cents per device per month at list. */
+  priceCents: number;
+  unit: string;
+  /** Licenses included per location on the Complete bundle. */
+  includedWithComplete: number;
+  /** Integer cents per device per month for customers on Complete. */
+  completeCents: number;
+  /** How the Complete rate should be described. */
+  completeNote: string;
+  summary: string;
+  href: string;
+}
+
+export const DEVICE_PRICING: DevicePrice[] = [
   {
     slug: 'vexafront',
     name: 'VexaFront',
-    from: 89,
-    unit: 'per kiosk / month',
-    includes: [
-      'Vertical-configured self-service experience',
-      'Branded customer interface',
-      'Queue, booking, and check-in flows',
-      'Remote device management',
-    ],
+    priceCents: 4900,
+    unit: 'per device / month',
+    includedWithComplete: 0,
+    completeCents: 3900,
+    completeNote: `${'$39'}/device/mo with VexaOS Complete`,
+    summary: 'Customer-facing kiosk and reception software — check-in, directory, bookings and self-service.',
+    href: '/products/vexafront',
   },
   {
     slug: 'touchboard',
     name: 'TouchBoard',
-    from: 59,
-    unit: 'per board / month',
-    includes: [
-      'Live shift board and touch clock-in',
-      'Checklists and task accountability',
-      'Announcements and dashboards',
-      'Kiosk lockdown and monitoring',
-    ],
+    priceCents: 2900,
+    unit: 'per device / month',
+    includedWithComplete: 1,
+    completeCents: 1900,
+    completeNote: 'VexaOS Complete includes 1 TouchBoard license per location; additional boards $19/device/mo',
+    summary: 'Employee wall display — open shifts, pending swaps, announcements and POS modes.',
+    href: '/products/touchboard',
   },
 ];
+
+export const DEVICE_BY_SLUG: Record<string, DevicePrice> = Object.fromEntries(
+  DEVICE_PRICING.map((p) => [p.slug, p])
+);
+
+/** Canonical TouchBoard pricing sentence — reused verbatim on /pricing and the product page. */
+export const TOUCHBOARD_PRICING_STATEMENT =
+  'Software $29/device/mo. VexaOS Complete includes 1 TouchBoard license per location; additional boards $19/device/mo. Hardware sold separately.';
+
+export const VEXAFRONT_PRICING_STATEMENT =
+  'Software $49/device/mo, or $39/device/mo with VexaOS Complete. Hardware sold separately.';
+
+/* -------------------------------------------------------------- */
+/* Founding Customer offer                                        */
+/* -------------------------------------------------------------- */
+
+export const FOUNDING_OFFER = {
+  limit: 25,
+  termMonths: 12,
+  name: 'Founding Customer',
+  blurb:
+    'The first 25 organizations on VexaOS lock founding rates for 12 months. Same platform, same products, same support — priced for the people who back it early.',
+  terms: [
+    'Limited to the first 25 organizations',
+    'Founding rate held for 12 months from activation',
+    'Applies to bundle pricing; device software and hardware are separate',
+    'Reverts to list pricing at renewal',
+  ],
+} as const;
+
+/* -------------------------------------------------------------- */
+/* How you buy                                                    */
+/* -------------------------------------------------------------- */
 
 export interface PlanTier {
   key: string;
@@ -895,14 +1081,14 @@ export const PLAN_TIERS: PlanTier[] = [
   {
     key: 'single',
     name: 'Single Location',
-    priceNote: 'From $278/mo',
-    blurb: 'One site, the platform plus the products you actually need.',
+    priceNote: 'List pricing',
+    blurb: 'One site, on the bundle that fits how you operate.',
     bullets: [
-      'VexaOS Platform included',
-      'Add any product, à la carte',
+      'Any bundle or standalone product',
       'Unlimited staff accounts',
+      'The VexaOS platform included — identity, roles, data, devices',
       'Standard onboarding and email support',
-      'Hardware purchased or leased separately',
+      'Device software and hardware billed separately',
     ],
     cta: { label: 'Book a demo', href: '/demo' },
   },
@@ -914,7 +1100,7 @@ export const PLAN_TIERS: PlanTier[] = [
     bullets: [
       'Everything in Single Location',
       'Per-location volume discounts',
-      'Cross-location reporting and transfers',
+      'Cross-location reporting and stock transfers',
       'Regional roles and delegated administration',
       'Guided onboarding and priority support',
     ],
@@ -942,7 +1128,7 @@ export const PLAN_TIERS: PlanTier[] = [
 /* ============================================================== */
 
 export const HOME_STATS = [
-  { value: '5', label: 'products on one platform' },
+  { value: '6', label: 'products on one platform' },
   { value: '1', label: 'identity, org model, and data layer' },
   { value: '15"–86"', label: 'managed touchscreen hardware' },
   { value: '8', label: 'configured industry verticals' },

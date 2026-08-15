@@ -5,6 +5,8 @@ import { ArrowRight, ArrowUpRight, Check, X, Link2 } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
+import ScreenshotFrame from '@/components/site/ScreenshotFrame';
+import { SCREENS, PRODUCT_SCREENS } from '@/lib/screens';
 import {
   Section,
   SectionHeading,
@@ -18,7 +20,9 @@ import {
   PRODUCTS,
   PRODUCTS_BY_SLUG,
   VERTICALS_BY_SLUG,
-  PRODUCT_PRICING,
+  STANDALONE_BY_SLUG,
+  DEVICE_BY_SLUG,
+  usd,
   SITE_URL,
 } from '@/lib/vexaos';
 
@@ -45,8 +49,11 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const product = PRODUCTS_BY_SLUG[params.slug];
   if (!product) notFound();
 
-  const price = PRODUCT_PRICING.find((p) => p.slug === product.slug);
+  const standalone = STANDALONE_BY_SLUG[product.slug];
+  const device = DEVICE_BY_SLUG[product.slug];
   const others = PRODUCTS.filter((p) => p.slug !== product.slug);
+  const screenKey = PRODUCT_SCREENS[product.slug];
+  const productShot = screenKey ? SCREENS[screenKey] : null;
 
   return (
     <>
@@ -144,27 +151,85 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                     </li>
                   ))}
                 </ul>
-                {price && (
+                {(standalone || device) && (
                   <div className="mt-7 pt-6 border-t border-white/10">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-                      Starting at
-                    </p>
-                    <p className="mt-2 text-3xl font-bold text-white">
-                      ${price.from}
-                      <span className="text-base font-medium text-gray-400"> {price.unit}</span>
-                    </p>
-                    <Link
-                      href="/pricing"
-                      className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
-                    >
-                      Full pricing
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    {/* Not yet priced — never substitute a number. */}
+                    {standalone?.comingSoon ? (
+                      <>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+                          Pricing
+                        </p>
+                        <p className="mt-2 text-2xl font-bold text-white">Coming soon</p>
+                        <p className="mt-1.5 text-sm text-gray-400 leading-relaxed">
+                          {product.name} is in beta and not yet priced. Talk to us about including
+                          it in your deployment.
+                        </p>
+                        <Link
+                          href="/contact"
+                          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
+                        >
+                          Contact us
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </>
+                    ) : device ? (
+                      <>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+                          Device software
+                        </p>
+                        <p className="mt-2 text-3xl font-bold text-white">
+                          {usd(device.priceCents)}
+                          <span className="text-base font-medium text-gray-400">
+                            {' '}
+                            {device.unit}
+                          </span>
+                        </p>
+                        <p className="mt-2.5 text-sm text-gray-400 leading-relaxed">
+                          {device.completeNote}. Hardware sold separately.
+                        </p>
+                        <Link
+                          href="/pricing"
+                          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
+                        >
+                          Full pricing
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </>
+                    ) : standalone?.priceCents !== null && standalone !== undefined ? (
+                      <>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+                          Standalone
+                        </p>
+                        <p className="mt-2 text-3xl font-bold text-white">
+                          {usd(standalone.priceCents as number)}
+                          <span className="text-base font-medium text-gray-400">
+                            {' '}
+                            per location / month
+                          </span>
+                        </p>
+                        <p className="mt-2.5 text-sm text-gray-400 leading-relaxed">
+                          Included in VexaOS bundles from $79 per location / month.
+                        </p>
+                        <Link
+                          href="/pricing"
+                          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
+                        >
+                          Full pricing
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </>
+                    ) : null}
                   </div>
                 )}
               </div>
             </div>
           </div>
+
+          {productShot && (
+            <div className="mt-14">
+              <ScreenshotFrame shot={productShot} sizes="(min-width: 1024px) 65vw, 100vw" />
+            </div>
+          )}
         </Section>
 
         {/* ---- Capabilities ---- */}
@@ -220,6 +285,14 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 ))}
               </ul>
             </div>
+          </div>
+
+          <div className="mt-14">
+            <ScreenshotFrame
+              shot={SCREENS.vexaosHome}
+              sizes="(min-width: 1024px) 65vw, 100vw"
+              className="max-w-4xl mx-auto"
+            />
           </div>
         </Section>
 

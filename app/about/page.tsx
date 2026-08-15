@@ -70,7 +70,7 @@ const TIMELINE = [
   },
   {
     period: 'Today',
-    title: 'Five products, one system',
+    title: 'Six products, one system',
     detail:
       'ShyftGrid, Commerce Ops, Inventory Ops, VexaFront, and TouchBoard — sold separately, running on the same platform, with hardware managed end to end.',
   },
@@ -89,7 +89,7 @@ export default function AboutPage() {
               <span className="gradient-text">underneath the business.</span>
             </>
           }
-          subtitle="VexaOS exists because operators were being asked to be their own systems integrators. One platform, five products, and the hardware they run on — from a single vendor that is accountable for all of it."
+          subtitle="VexaOS exists because operators were being asked to be their own systems integrators. One platform, six products, and the hardware they run on — from a single vendor that is accountable for all of it."
         >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <PrimaryButton href="/demo">

@@ -5,6 +5,8 @@ import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
 import EcosystemDiagram from '@/components/site/EcosystemDiagram';
+import ScreenshotFrame from '@/components/site/ScreenshotFrame';
+import { SCREENS } from '@/lib/screens';
 import {
   Section,
   SectionHeading,
@@ -17,9 +19,9 @@ import {
 import { PRODUCTS, VERTICALS_BY_SLUG, SITE_URL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'Products — ShyftGrid, Commerce Ops, Inventory Ops, VexaFront, TouchBoard',
+  title: 'Products — ShyftGrid, Commerce Ops, Inventory Ops, VexaFront, TouchBoard, Facility Ops',
   description:
-    'The five VexaOS products: ShyftGrid for workforce, Commerce Ops for orders and payments, Inventory Ops for stock and cost, VexaFront for customer-facing kiosks, and TouchBoard for employee displays. Sold separately, built on one platform.',
+    'The six VexaOS products: ShyftGrid for workforce, Commerce Ops for orders and payments, Inventory Ops for stock and cost, VexaFront for customer-facing kiosks and reception, TouchBoard for employee displays, and Facility Ops for environmental monitoring. Sold separately, built on one platform.',
   alternates: { canonical: `${SITE_URL}/products` },
 };
 
@@ -32,7 +34,7 @@ export default function ProductsPage() {
           eyebrow="Products"
           title={
             <>
-              Five products, sold separately.{' '}
+              Six products, sold separately.{' '}
               <span className="gradient-text">One platform underneath.</span>
             </>
           }
@@ -50,6 +52,22 @@ export default function ProductsPage() {
         {/* Ecosystem */}
         <Section className="pt-8">
           <EcosystemDiagram />
+        </Section>
+
+        {/* Product proof */}
+        <Section className="border-t border-white/10">
+          <SectionHeading
+            eyebrow="In the control center"
+            title="Everything you hold, and everything you do not."
+            subtitle="Products you own open from here. Products you have not switched on say so plainly, with the price — no hidden surface area, no sales call needed to find out what exists."
+          />
+          <div className="grid gap-6 lg:grid-cols-2">
+            <ScreenshotFrame shot={SCREENS.vexaosHome} sizes="(min-width: 1024px) 48vw, 100vw" />
+            <ScreenshotFrame
+              shot={SCREENS.productSwitcher}
+              sizes="(min-width: 1024px) 48vw, 100vw"
+            />
+          </div>
         </Section>
 
         {/* Product detail cards */}

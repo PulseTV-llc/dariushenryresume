@@ -5,6 +5,7 @@ import HomeHero from '@/components/home/HomeHero';
 import { CTABand } from '@/components/site/Section';
 import {
   ProblemSection,
+  ControlCenterSection,
   ProductsSection,
   PlatformSection,
   OutcomesSection,
@@ -36,6 +37,7 @@ export default function Home() {
       <main className="min-h-screen bg-[#04070e]">
         <HomeHero />
         <ProblemSection />
+        <ControlCenterSection />
         <ProductsSection />
         <PlatformSection />
         <OutcomesSection />
