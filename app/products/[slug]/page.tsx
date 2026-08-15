@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowRight, ArrowUpRight, Check, X, Link2 } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, X, Link2, Hand, MonitorPlay } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
 import ScreenshotFrame, { PendingScreenshotSlot } from '@/components/site/ScreenshotFrame';
+import TouchBoardVideo from '@/components/touchboard/TouchBoardShowcase';
 import { SCREENS, PRODUCT_SCREENS, PENDING_PRODUCT_SCREENS } from '@/lib/screens';
 import {
   Section,
@@ -102,6 +103,11 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               {product.proof ? (
                 <SecondaryButton href={product.proof.href} className="w-full sm:w-auto">
                   {product.proof.label}
+                </SecondaryButton>
+              ) : product.slug === 'touchboard' ? (
+                <SecondaryButton href="/products/touchboard/demo" className="w-full sm:w-auto">
+                  <Hand className="w-4 h-4" />
+                  Try the interactive demo
                 </SecondaryButton>
               ) : (
                 <SecondaryButton href="/pricing" className="w-full sm:w-auto">
@@ -341,6 +347,60 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
             ))}
           </div>
         </Section>
+
+        {/* ---- TouchBoard only: the hardware, and the live demo ---- */}
+        {product.slug === 'touchboard' && (
+          <Section className="border-t border-white/10">
+            <SectionHeading
+              eyebrow="The hardware"
+              title="The board itself."
+              subtitle="A commercial-grade panel on a wall mount or a rolling floor stand — this is the unit the software above runs on."
+            />
+            <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
+              <div className="lg:col-span-5">
+                <TouchBoardVideo
+                  src="/touchboard-demo.mp4"
+                  poster="/screens/touchboard-demo-poster.webp"
+                  label="A TouchBoard display rotating on a mobile floor stand"
+                />
+              </div>
+              <div className="lg:col-span-7">
+                <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight text-balance">
+                  Want to see the software working, not just the box?
+                </h3>
+                <p className="mt-4 text-lg text-gray-400 leading-relaxed">
+                  We built a working TouchBoard you can drive in your browser. Claim an open shift
+                  and watch it land on the schedule. Approve a swap and watch the badge clear.
+                  Clock in with a PIN. It is the real interface on mock data — no sign-up, and
+                  nothing leaves your browser.
+                </p>
+                <ul className="mt-6 space-y-2.5">
+                  {[
+                    'Seven navigable screens, exactly as they sit on the wall',
+                    'Working claim, approve/decline, and PIN clock-in flows',
+                    'Live staffing health that reacts to what you do',
+                  ].map((t) => (
+                    <li key={t} className="flex items-start gap-3 text-[15px] text-gray-400">
+                      <Check className="w-4 h-4 mt-1 shrink-0 text-emerald-400" />
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                  <PrimaryButton href="/products/touchboard/demo" className="w-full sm:w-auto">
+                    <Hand className="w-4 h-4" />
+                    Try the interactive demo
+                    <ArrowRight className="w-4 h-4" />
+                  </PrimaryButton>
+                  <SecondaryButton href="/hardware" className="w-full sm:w-auto">
+                    <MonitorPlay className="w-4 h-4" />
+                    Sizes &amp; pricing
+                  </SecondaryButton>
+                </div>
+              </div>
+            </div>
+          </Section>
+        )}
 
         {/* ---- Integration with VexaOS ---- */}
         <Section className="bg-[#03060c] border-t border-white/10">

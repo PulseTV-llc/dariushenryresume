@@ -1,0 +1,165 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowLeft, ArrowRight, Hand, MonitorPlay } from 'lucide-react';
+import SiteNav from '@/components/site/SiteNav';
+import SiteFooter from '@/components/site/SiteFooter';
+import TouchBoardEmulator from '@/components/touchboard/TouchBoardEmulator';
+import {
+  Section,
+  SectionHeading,
+  CTABand,
+  Eyebrow,
+  PrimaryButton,
+  SecondaryButton,
+} from '@/components/site/Section';
+import { SITE_URL, TOUCHBOARD_PRICING_STATEMENT } from '@/lib/vexaos';
+
+export const metadata: Metadata = {
+  title: 'TouchBoard interactive demo — try the employee display',
+  description:
+    'Try a working TouchBoard in your browser: claim an open shift, approve a swap, clock in with a PIN, and see the staffing board react. No sign-up, nothing sent anywhere.',
+  alternates: { canonical: `${SITE_URL}/products/touchboard/demo` },
+  openGraph: {
+    title: 'TouchBoard interactive demo — Powered by VexaOS',
+    description:
+      'A working TouchBoard employee display you can drive in the browser: open shifts, swaps, time off, announcements, and PIN clock-in.',
+    url: `${SITE_URL}/products/touchboard/demo`,
+  },
+};
+
+const TRY_THESE = [
+  {
+    title: 'Claim an open shift',
+    detail:
+      'Open Shifts → Claim. It leaves the open list, lands on today’s schedule, and the staffing health ring climbs.',
+  },
+  {
+    title: 'Approve a swap',
+    detail:
+      'Swaps → Approve or Decline. The pending badge on the nav clears as you work through them.',
+  },
+  {
+    title: 'Clock in with a PIN',
+    detail:
+      'Clock In → enter 2468. A wrong PIN is rejected the way the real board rejects it. Your entry lands on the live timeline.',
+  },
+  {
+    title: 'Read the board',
+    detail:
+      'Board → Announcements and Recognition, the two things staff actually stop to look at.',
+  },
+];
+
+export default function TouchBoardDemoPage() {
+  return (
+    <>
+      <SiteNav />
+      <main className="min-h-screen bg-[#04070e]">
+        {/* Hero */}
+        <section className="relative pt-32 sm:pt-36 pb-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
+          <div className="absolute inset-0 grid-background opacity-40 pointer-events-none" />
+          <div
+            className="absolute -top-24 left-1/2 -translate-x-1/2 w-[46rem] h-[28rem] rounded-full blur-3xl pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(closest-side, rgba(16,185,129,0.14), rgba(16,185,129,0))',
+            }}
+          />
+          <div className="relative max-w-4xl mx-auto text-center">
+            <Link
+              href="/products/touchboard"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              TouchBoard
+            </Link>
+            <div className="mt-5">
+              <Eyebrow>Interactive demo</Eyebrow>
+            </div>
+            <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.05] text-balance">
+              Drive a TouchBoard{' '}
+              <span className="gradient-text">right here.</span>
+            </h1>
+            <p className="mt-6 text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed text-balance">
+              This is a working employee display running on mock data. Claim a shift, approve a
+              swap, clock in — the board reacts exactly as it does on the wall. No sign-up, and
+              nothing leaves your browser.
+            </p>
+          </div>
+        </section>
+
+        {/* The device */}
+        <section className="px-4 sm:px-6 lg:px-8 pb-4">
+          <div className="max-w-6xl mx-auto">
+            <TouchBoardEmulator />
+          </div>
+        </section>
+
+        {/* Things to try */}
+        <Section className="border-t border-white/10 mt-10">
+          <SectionHeading
+            eyebrow="Try these"
+            title="Four things worth tapping."
+            subtitle="Every one of them changes real state — the counters, the badges, and the timeline all respond."
+          />
+          <div className="grid gap-4 sm:grid-cols-2">
+            {TRY_THESE.map((t, i) => (
+              <div
+                key={t.title}
+                className="flex gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6"
+              >
+                <span className="inline-flex w-9 h-9 shrink-0 rounded-full bg-emerald-500/10 border border-emerald-400/25 items-center justify-center text-xs font-bold text-emerald-300">
+                  {i + 1}
+                </span>
+                <div>
+                  <h3 className="text-base font-semibold text-white">{t.title}</h3>
+                  <p className="mt-2 text-sm text-gray-400 leading-relaxed">{t.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-5 max-w-3xl mx-auto">
+            <div className="flex items-start gap-3.5">
+              <Hand className="w-5 h-5 text-sky-300 shrink-0 mt-0.5" />
+              <p className="text-sm text-gray-400 leading-relaxed">
+                On a real deployment this runs full-screen on a wall-mounted panel in locked-down
+                kiosk mode, signed in to your location, against your live roster.{' '}
+                {TOUCHBOARD_PRICING_STATEMENT}
+              </p>
+            </div>
+          </div>
+        </Section>
+
+        {/* Next steps */}
+        <Section className="bg-[#03060c] border-t border-white/10">
+          <div className="max-w-3xl mx-auto text-center">
+            <SectionHeading
+              eyebrow="Next"
+              title="See it on your own roster."
+              subtitle="The demo runs on invented staff. A walkthrough runs on yours — your locations, your shifts, your coverage gaps."
+            />
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <PrimaryButton href="/demo">
+                Book a demo
+                <ArrowRight className="w-4 h-4" />
+              </PrimaryButton>
+              <SecondaryButton href="/products/touchboard">
+                <MonitorPlay className="w-4 h-4" />
+                Back to TouchBoard
+              </SecondaryButton>
+            </div>
+          </div>
+        </Section>
+
+        <CTABand
+          title="Put this on your wall."
+          subtitle="Hardware, software, and the platform underneath — from one vendor that is accountable for all of it."
+          primary={{ label: 'Request a quote', href: '/contact' }}
+          secondary={{ label: 'See hardware', href: '/hardware' }}
+        />
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
