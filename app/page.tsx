@@ -2,40 +2,31 @@ import type { Metadata } from 'next';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import HomeHero from '@/components/home/HomeHero';
+import { CTABand } from '@/components/site/Section';
 import {
   ProblemSection,
-  SolutionSection,
-  DeviceEcosystemSection,
-  IndustryExamplesSection,
-  ShyftGridProofSection,
-  FeatureModulesSection,
-  ProcessSection,
-  PricingPreviewSection,
-  InternationalSection,
-  FinalCTASection,
+  ControlCenterSection,
+  ProductsSection,
+  PlatformSection,
+  OutcomesSection,
+  IndustriesSection,
+  HardwareSection,
+  ProofSection,
 } from '@/components/home/HomeSections';
+import { SITE_URL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'VexaOS — Custom Web, Mobile & Touchscreen Business Systems | Darius Henry',
+    absolute: 'VexaOS — One Operating System for Your Entire Business',
   },
   description:
-    'VexaOS by Darius Henry builds custom connected business systems across web apps, iOS, Android, touchscreen kiosks, dashboards, staff tools, customer portals, scheduling, payments, and real-time operations.',
-  alternates: { canonical: 'https://www.vexaos.io' },
+    'VexaOS connects your workforce, commerce, inventory, customer experiences, and business hardware through one platform. ShyftGrid, Commerce Ops, Inventory Ops, VexaFront, and TouchBoard on one identity and one data layer.',
+  alternates: { canonical: SITE_URL },
   openGraph: {
-    title: 'VexaOS — Custom Connected Business Systems for Web, Mobile & Touchscreen',
+    title: 'VexaOS — One Operating System for Your Entire Business',
     description:
-      'Premium custom software systems for salons, restaurants, stores, clinics, field teams, and modern businesses that need web dashboards, mobile apps, touchscreen tools, and real-time operations.',
-    url: 'https://www.vexaos.io',
-    images: [
-      {
-        url: 'https://www.vexaos.io/og-vexaos.png',
-        width: 1200,
-        height: 630,
-        alt: 'VexaOS — Connected Business Systems by Darius Henry',
-        type: 'image/png',
-      },
-    ],
+      'Connect your workforce, commerce, inventory, customer experiences, and business hardware through one platform.',
+    url: SITE_URL,
   },
 };
 
@@ -43,18 +34,20 @@ export default function Home() {
   return (
     <>
       <SiteNav />
-      <main className="min-h-screen bg-black">
+      <main className="min-h-screen bg-[#04070e]">
         <HomeHero />
         <ProblemSection />
-        <SolutionSection />
-        <DeviceEcosystemSection />
-        <IndustryExamplesSection />
-        <ShyftGridProofSection />
-        <FeatureModulesSection />
-        <ProcessSection />
-        <PricingPreviewSection />
-        <InternationalSection />
-        <FinalCTASection />
+        <ControlCenterSection />
+        <ProductsSection />
+        <PlatformSection />
+        <OutcomesSection />
+        <IndustriesSection />
+        <HardwareSection />
+        <ProofSection />
+        <CTABand
+          title="See VexaOS running your business."
+          subtitle="A 30-minute walkthrough against your actual operation — your locations, your products, your shifts."
+        />
       </main>
       <SiteFooter />
     </>

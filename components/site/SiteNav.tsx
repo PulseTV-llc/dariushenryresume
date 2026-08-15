@@ -1,16 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ArrowRight } from 'lucide-react';
-import { NAV_LINKS } from '@/lib/business-data';
+import { Menu, X, ChevronDown, ArrowUpRight } from 'lucide-react';
+import { PRIMARY_NAV, PRODUCT_NAV, APP_URL } from '@/lib/vexaos';
 import VexaLogo from './VexaLogo';
 
 export default function SiteNav() {
   const [open, setOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -19,54 +21,126 @@ export default function SiteNav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close the mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setOpen(false);
+    setProductsOpen(false);
   }, [pathname]);
+
+  useEffect(() => () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+  }, []);
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href);
 
+  const openProducts = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setProductsOpen(true);
+  };
+  const scheduleCloseProducts = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setProductsOpen(false), 120);
+  };
+
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-black/80 backdrop-blur-xl border-b border-white/10'
+      className={`fixed top-0 inset-x-0 z-50 transition-colors duration-300 ${
+        scrolled || open
+          ? 'bg-[#04070e]/90 backdrop-blur-xl border-b border-white/10'
           : 'bg-transparent border-b border-transparent'
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Brand */}
-          <Link href="/" className="flex items-center group" aria-label="VexaOS — Connected Business Systems, Home">
+          <Link href="/" className="flex items-center" aria-label="VexaOS — home">
             <VexaLogo markSize={30} />
           </Link>
 
-          {/* Desktop links */}
-          <div className="hidden lg:flex items-center gap-1">
-            {NAV_LINKS.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive(l.href)
-                    ? 'text-white bg-white/10'
-                    : 'text-gray-300 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                {l.label}
-              </Link>
-            ))}
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center gap-0.5">
+            {PRIMARY_NAV.map((l) =>
+              l.href === '/products' ? (
+                <div
+                  key={l.href}
+                  className="relative"
+                  onMouseEnter={openProducts}
+                  onMouseLeave={scheduleCloseProducts}
+                >
+                  <Link
+                    href="/products"
+                    onFocus={openProducts}
+                    aria-expanded={productsOpen}
+                    className={`inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive(l.href)
+                        ? 'text-white bg-white/10'
+                        : 'text-gray-300 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {l.label}
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform ${productsOpen ? 'rotate-180' : ''}`}
+                    />
+                  </Link>
+
+                  {productsOpen && (
+                    <div className="absolute left-0 top-full pt-2 w-[22rem]">
+                      <div className="rounded-2xl border border-white/10 bg-[#070b14]/98 backdrop-blur-xl shadow-2xl shadow-black/60 p-2">
+                        {PRODUCT_NAV.map((p) => (
+                          <Link
+                            key={p.href}
+                            href={p.href}
+                            className="block px-3 py-2.5 rounded-xl hover:bg-white/[0.06] transition-colors"
+                          >
+                            <span className="block text-sm font-semibold text-white">
+                              {p.label}
+                            </span>
+                            <span className="block text-xs text-gray-400 mt-0.5">
+                              {p.description}
+                            </span>
+                          </Link>
+                        ))}
+                        <Link
+                          href="/products"
+                          className="mt-1 flex items-center justify-between px-3 py-2.5 rounded-xl border-t border-white/10 text-sm font-medium text-sky-300 hover:bg-white/[0.06] transition-colors"
+                        >
+                          Compare all products
+                          <ArrowUpRight className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isActive(l.href)
+                      ? 'text-white bg-white/10'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              )
+            )}
           </div>
 
-          {/* CTA + mobile toggle */}
+          {/* Right side */}
           <div className="flex items-center gap-2">
-            <Link
-              href="/contact"
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
+            <a
+              href={APP_URL}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-200 hover:text-white hover:bg-white/5 transition-colors"
             >
-              Build My System
-              <ArrowRight className="w-4 h-4" />
+              Log in
+              <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
+            </a>
+            <Link
+              href="/demo"
+              className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-sky-500 to-blue-600 text-white text-sm font-semibold hover:from-sky-400 hover:to-blue-500 transition-colors"
+            >
+              Book a demo
             </Link>
             <button
               type="button"
@@ -83,13 +157,30 @@ export default function SiteNav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden bg-black/95 backdrop-blur-xl border-t border-white/10">
+        <div className="lg:hidden max-h-[calc(100vh-4rem)] overflow-y-auto bg-[#04070e]/98 backdrop-blur-xl border-t border-white/10">
           <div className="px-4 py-4 space-y-1">
-            {NAV_LINKS.map((l) => (
+            <p className="px-4 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+              Products
+            </p>
+            {PRODUCT_NAV.map((p) => (
+              <Link
+                key={p.href}
+                href={p.href}
+                className="block px-4 py-2.5 rounded-lg text-gray-200 hover:bg-white/5 transition-colors"
+              >
+                <span className="block text-[15px] font-medium">{p.label}</span>
+                <span className="block text-xs text-gray-500">{p.description}</span>
+              </Link>
+            ))}
+
+            <p className="px-4 pt-4 pb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+              Explore
+            </p>
+            {PRIMARY_NAV.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
+                className={`block px-4 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${
                   isActive(l.href)
                     ? 'text-white bg-white/10'
                     : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -100,11 +191,26 @@ export default function SiteNav() {
             ))}
             <Link
               href="/contact"
-              className="mt-2 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold"
+              className="block px-4 py-2.5 rounded-lg text-[15px] font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
             >
-              Build My System
-              <ArrowRight className="w-4 h-4" />
+              Contact
             </Link>
+
+            <div className="pt-3 space-y-2">
+              <Link
+                href="/demo"
+                className="flex items-center justify-center px-4 py-3 rounded-lg bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
+              >
+                Book a demo
+              </Link>
+              <a
+                href={APP_URL}
+                className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-lg border border-white/15 text-white font-medium"
+              >
+                Log in to VexaOS
+                <ArrowUpRight className="w-4 h-4 opacity-70" />
+              </a>
+            </div>
           </div>
         </div>
       )}

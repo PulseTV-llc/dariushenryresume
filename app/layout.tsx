@@ -1,20 +1,7 @@
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { generateMetadata } from './metadata';
-import {
-  organizationSchema,
-  personSchema,
-  professionalServiceSchema,
-  websiteSchema,
-  webPageSchema,
-  serviceSchemas,
-  serviceCatalogSchema,
-  aggregateOfferSchema,
-  industriesItemListSchema,
-  howToSchema,
-  faqSchema,
-  breadcrumbSchema,
-} from '@/lib/structured-data';
+import { vexaosSchemas } from '@/lib/structured-data-vexaos';
 import './globals.css';
 
 const inter = Inter({
@@ -26,26 +13,11 @@ const inter = Inter({
 export const metadata = generateMetadata();
 
 export const viewport = {
-  themeColor: '#0ea5e9',
+  themeColor: '#04070e',
   colorScheme: 'dark',
   width: 'device-width',
   initialScale: 1,
 };
-
-const schemas = [
-  organizationSchema,
-  personSchema,
-  professionalServiceSchema,
-  websiteSchema,
-  webPageSchema,
-  serviceCatalogSchema,
-  aggregateOfferSchema,
-  industriesItemListSchema,
-  howToSchema,
-  faqSchema,
-  breadcrumbSchema,
-  ...serviceSchemas,
-];
 
 export default function RootLayout({
   children,
@@ -59,10 +31,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
         <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
+        <link rel="dns-prefetch" href="https://app.vexaos.io" />
       </head>
       <body className={inter.className}>
-        {/* JSON-LD Structured Data — emit one <script> per schema */}
-        {schemas.map((schema, i) => (
+        {/* JSON-LD structured data — one <script> per schema */}
+        {vexaosSchemas.map((schema, i) => (
           <script
             key={`schema-${i}`}
             type="application/ld+json"

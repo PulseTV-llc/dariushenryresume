@@ -1,83 +1,95 @@
 import type { Metadata } from 'next';
-import { Clock, MessageSquare, ShieldCheck, Mail } from 'lucide-react';
+import Link from 'next/link';
+import { Mail, Building2, Cpu, ArrowUpRight } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
-import BusinessContactForm from '@/components/business/BusinessContactForm';
+import VexaContactForm from '@/components/site/VexaContactForm';
+import { PageHero } from '@/components/site/Section';
+import { SITE_URL, APP_URL, CONTACT_EMAIL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'Contact | Request a Business System Blueprint',
+  title: 'Contact — Sales, quotes, and enterprise enquiries',
   description:
-    'Tell Darius Henry about your business and get a custom connected system plan and quote — web dashboards, iOS and Android apps, touchscreen tools, and real-time operations built around your workflow.',
-  alternates: { canonical: 'https://www.vexaos.io/contact' },
+    'Talk to VexaOS about pricing, multi-location deployments, hardware quotes, or enterprise and franchise requirements.',
+  alternates: { canonical: `${SITE_URL}/contact` },
 };
-
-const assurances = [
-  { icon: MessageSquare, title: 'A real plan, not a sales pitch', detail: 'You get a system plan and clear quote shaped around your actual business.' },
-  { icon: Clock, title: 'Fast, thoughtful reply', detail: 'Every message gets a real reply from our team with clear next steps.' },
-  { icon: ShieldCheck, title: 'Your details stay private', detail: 'Used only to prepare your quote — never shared or sold.' },
-];
 
 export default function ContactPage() {
   return (
     <>
       <SiteNav />
-      <main className="min-h-screen bg-black">
-        <section className="relative pt-36 pb-8 px-4 sm:px-6 lg:px-8 grid-background overflow-hidden">
-          <div className="absolute top-10 left-1/3 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/25 mb-5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-              <span className="text-xs font-semibold tracking-wider uppercase text-cyan-200">
-                Let's build it
-              </span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.05] text-balance">
-              Tell us about your business.
-            </h1>
-            <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Share a few details and we'll come back with a VexaOS system plan and a clear quote —
-              built around the way your business actually works.
-            </p>
-          </div>
-        </section>
+      <main className="min-h-screen bg-[#04070e]">
+        <PageHero
+          eyebrow="Contact"
+          title="Talk to us about your operation."
+          subtitle="Pricing, multi-location rollouts, hardware quotes, or an enterprise agreement — you will get a real answer from someone who knows the platform."
+        />
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10">
-          <div className="grid lg:grid-cols-3 gap-10">
-            {/* Assurances */}
-            <aside className="lg:col-span-1 space-y-5">
-              {assurances.map(({ icon: I, title, detail }) => (
-                <div key={title} className="p-6 rounded-2xl bg-white/[0.03] border border-white/10">
-                  <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-white/10 items-center justify-center mb-4">
-                    <I className="w-5 h-5 text-cyan-300" />
-                  </span>
-                  <h3 className="text-white font-semibold mb-1.5">{title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{detail}</p>
-                </div>
-              ))}
-
-              {/* Prefer email? */}
-              <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10">
-                <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-white/10 items-center justify-center mb-4">
-                  <Mail className="w-5 h-5 text-cyan-300" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-4">
+          <div className="grid gap-10 lg:grid-cols-12">
+            <aside className="lg:col-span-5 space-y-4">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
+                <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
+                  <Building2 className="w-5 h-5 text-sky-300" />
                 </span>
-                <h3 className="text-white font-semibold mb-1.5">Prefer email?</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <h2 className="mt-5 text-base font-semibold text-white">Sales &amp; pricing</h2>
+                <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+                  Quotes for single sites, multi-location groups, franchise networks, and
+                  enterprise agreements — including volume and custom terms.
+                </p>
+                <Link
+                  href="/pricing"
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
+                >
+                  See standard pricing first
+                </Link>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
+                <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
+                  <Cpu className="w-5 h-5 text-sky-300" />
+                </span>
+                <h2 className="mt-5 text-base font-semibold text-white">Hardware quotes</h2>
+                <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+                  Tell us your floor plan and traffic and we will size the kiosks and boards, then
+                  quote purchase or lease terms.
+                </p>
+                <Link
+                  href="/hardware"
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
+                >
+                  Hardware and sizes
+                </Link>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
+                <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
+                  <Mail className="w-5 h-5 text-sky-300" />
+                </span>
+                <h2 className="mt-5 text-base font-semibold text-white">Prefer email?</h2>
+                <p className="mt-2 text-sm text-gray-400 leading-relaxed">
                   Reach us directly at{' '}
                   <a
-                    href="mailto:support@vexaos.io"
-                    className="text-cyan-300 hover:text-cyan-200 underline underline-offset-2"
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="text-sky-300 hover:text-sky-200 underline underline-offset-2"
                   >
-                    support@vexaos.io
+                    {CONTACT_EMAIL}
                   </a>
                   .
                 </p>
+                <a
+                  href={APP_URL}
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
+                >
+                  Existing customer? Log in
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
               </div>
             </aside>
 
-            {/* Form */}
-            <div className="lg:col-span-2">
-              <div className="rounded-3xl bg-white/[0.02] border border-white/10 p-6 sm:p-10">
-                <BusinessContactForm />
+            <div className="lg:col-span-7">
+              <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 sm:p-10">
+                <VexaContactForm variant="contact" />
               </div>
             </div>
           </div>
