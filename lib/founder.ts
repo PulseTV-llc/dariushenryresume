@@ -27,7 +27,7 @@ export const FOUNDER_STATS = [
   { value: '27+', label: 'Production applications shipped' },
   { value: '6+', label: 'SaaS platforms built end to end' },
   { value: '15+', label: 'Years across web, mobile, and media' },
-  { value: '6', label: 'Products now running on VexaOS' },
+  { value: '7', label: 'Products now running on VexaOS' },
 ] as const;
 
 /** Preserved from the original Skills section, regrouped for a company page. */
@@ -112,7 +112,7 @@ export const FOUNDER_PRINCIPLES = [
     icon: 'Layers',
     title: 'Build the foundation once',
     detail:
-      'Identity, permissions, and the data model are not per-product concerns. Getting them right once is why six products behave like one system.',
+      'Identity, permissions, and the data model are not per-product concerns. Getting them right once is why seven products behave like one system.',
   },
   {
     icon: 'Users',

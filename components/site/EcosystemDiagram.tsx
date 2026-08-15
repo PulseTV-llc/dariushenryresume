@@ -17,7 +17,7 @@ const COLUMNS: { domain: ProductDomain; ring: string; dot: string }[] = [
 ];
 
 /**
- * The VexaOS ecosystem: the platform layer on top, the six products grouped
+ * The VexaOS ecosystem: the platform layer on top, the seven products grouped
  * into their three domains beneath it. Built from flex/grid rather than a fixed
  * SVG so it reflows cleanly from phone to desktop.
  */

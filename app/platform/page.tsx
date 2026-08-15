@@ -61,7 +61,7 @@ export default function PlatformPage() {
           title={
             <>
               The reason it is one system,{' '}
-              <span className="gradient-text">not six subscriptions.</span>
+              <span className="gradient-text">not seven subscriptions.</span>
             </>
           }
           subtitle="VexaOS is the foundation the products are built on: one identity, one organization model, one data layer, and one device registry. Integration is not something you configure — it is the architecture."

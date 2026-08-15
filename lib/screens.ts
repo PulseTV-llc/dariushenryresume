@@ -1,13 +1,17 @@
 /**
  * Product imagery.
  *
- * Sources live outside the repo at ~/Documents/vexaos-docs/. The curated
- * `marketing-screens/` set is the intended source; until it lands, these are
- * optimized from `demo-screens/` (see SCREEN_SOURCES for provenance).
+ * Sources live outside the repo at ~/Documents/vexaos-docs/. Most captures now
+ * come from the curated `marketing-screens/` set; `location-switcher` is still
+ * from `demo-screens/` because that set has no replacement for it yet. See
+ * SCREEN_SOURCES for per-image provenance.
  *
- * Only screenshots that show the product working are wired in. Captures that
- * show error toasts, empty states, or un-gated internal views are deliberately
- * excluded — see the report in the session notes for which and why.
+ * Only screenshots that show the product working are wired in. Captures still
+ * showing error toasts or empty states are deliberately excluded — as of the
+ * latest marketing-screens drop that is 03-commerce-ops (empty "select a
+ * location" state plus an un-actioned Stripe activation banner) and
+ * 04-shyftgrid-schedule (the "We couldn't load your schedule" error). Both were
+ * recaptured but not reseeded, so they still cannot ship.
  */
 
 export interface Screenshot {
@@ -26,7 +30,7 @@ export const SCREENS = {
   vexaosHome: {
     src: '/screens/vexaos-home.webp',
     width: 1800,
-    height: 1250,
+    height: 1125,
     alt: 'The VexaOS control center showing an organization with three locations, the products it holds, and the products available to add.',
     caption:
       'The VexaOS control center — every product your organization holds, and the ones it does not, in one place.',
@@ -35,7 +39,7 @@ export const SCREENS = {
   productSwitcher: {
     src: '/screens/product-switcher.webp',
     width: 1800,
-    height: 1250,
+    height: 1125,
     alt: 'The VexaOS product switcher listing all six products, marked either Included or Upgrade.',
     caption:
       'Adding a product is a switch, not a migration — the platform already holds your people, locations and data.',
@@ -53,7 +57,7 @@ export const SCREENS = {
   unifiedSettings: {
     src: '/screens/unified-settings.webp',
     width: 1800,
-    height: 1250,
+    height: 1125,
     alt: 'VexaOS settings, split into platform settings that exist once and product settings shown only for products the organization holds.',
     caption:
       'Platform settings exist once, regardless of which products you hold. Product settings appear only for what you own.',
@@ -61,8 +65,8 @@ export const SCREENS = {
   },
   touchBoard: {
     src: '/screens/touchboard-board.webp',
-    width: 1330,
-    height: 850,
+    width: 1290,
+    height: 800,
     alt: 'A TouchBoard wall display showing who is on the floor, an uncovered open shift, a pending swap, and a staffing health score.',
     caption:
       'TouchBoard on the wall — who is in, who is late, what is uncovered, and how the shift is tracking.',
@@ -72,13 +76,14 @@ export const SCREENS = {
 
 export type ScreenKey = keyof typeof SCREENS;
 
-/** Provenance, so the curated set can be swapped in without guesswork. */
+/** Provenance, so a re-drop can be swapped in without guesswork. */
 export const SCREEN_SOURCES: Record<ScreenKey, string> = {
-  vexaosHome: 'demo-screens/01-vexaos-home.png',
-  productSwitcher: 'demo-screens/02-product-switcher.png',
-  locationSwitcher: 'demo-screens/04-location-switcher.png',
-  unifiedSettings: 'demo-screens/05-unified-settings.png',
-  touchBoard: 'demo-screens/08-touchboard.png (cropped to the board panel)',
+  vexaosHome: 'marketing-screens/01-vexaos-control-center.png',
+  productSwitcher: 'marketing-screens/02-product-switcher.png',
+  locationSwitcher: 'demo-screens/04-location-switcher.png (no marketing-screens equivalent yet)',
+  unifiedSettings: 'marketing-screens/05-unified-settings.png',
+  touchBoard:
+    'marketing-screens/07-touchboard-MARKETING-PAGE-landscape.png (cropped to the board panel)',
 };
 
 /**
@@ -87,6 +92,21 @@ export const SCREEN_SOURCES: Record<ScreenKey, string> = {
  */
 export const PRODUCT_SCREENS: Partial<Record<string, ScreenKey>> = {
   touchboard: 'touchBoard',
+  // facility-ops: awaiting the neutral cold-storage capture (walk-in coolers /
+  // freezers, temp + humidity). Drop it into marketing-screens/, optimize to
+  // /public/screens/facility-cold-storage.webp, add it to SCREENS, and point
+  // this key at it. Until then the page renders the reserved slot below.
+};
+
+/**
+ * Product slugs whose screenshot is commissioned but not yet delivered. These
+ * render a labelled reserved slot rather than nothing, so the gap is visible.
+ */
+export const PENDING_PRODUCT_SCREENS: Record<string, { label: string; hint: string }> = {
+  'facility-ops': {
+    label: 'Facility Ops — cold-storage monitoring',
+    hint: 'Walk-in coolers and freezers, temperature and humidity against setpoints',
+  },
 };
 
 /**

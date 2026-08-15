@@ -5,8 +5,8 @@ import { ArrowRight, ArrowUpRight, Check, X, Link2 } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
-import ScreenshotFrame from '@/components/site/ScreenshotFrame';
-import { SCREENS, PRODUCT_SCREENS } from '@/lib/screens';
+import ScreenshotFrame, { PendingScreenshotSlot } from '@/components/site/ScreenshotFrame';
+import { SCREENS, PRODUCT_SCREENS, PENDING_PRODUCT_SCREENS } from '@/lib/screens';
 import {
   Section,
   SectionHeading,
@@ -22,6 +22,7 @@ import {
   VERTICALS_BY_SLUG,
   STANDALONE_BY_SLUG,
   DEVICE_BY_SLUG,
+  PROPOSED_PRICE_NOTE,
   usd,
   SITE_URL,
 } from '@/lib/vexaos';
@@ -54,6 +55,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const others = PRODUCTS.filter((p) => p.slug !== product.slug);
   const screenKey = PRODUCT_SCREENS[product.slug];
   const productShot = screenKey ? SCREENS[screenKey] : null;
+  const pendingShot = productShot ? null : PENDING_PRODUCT_SCREENS[product.slug];
 
   return (
     <>
@@ -195,6 +197,34 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                           <ArrowRight className="w-4 h-4" />
                         </Link>
                       </>
+                    ) : standalone?.proposed && standalone.priceCents !== null ? (
+                      <>
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+                            Standalone
+                          </p>
+                          <span className="px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-400/30 text-[10px] font-semibold uppercase tracking-wider text-amber-200">
+                            Proposed
+                          </span>
+                        </div>
+                        <p className="mt-2 text-3xl font-bold text-white">
+                          {usd(standalone.priceCents)}
+                          <span className="text-base font-medium text-gray-400">
+                            {' '}
+                            per location / month
+                          </span>
+                        </p>
+                        <p className="mt-2.5 text-sm text-amber-200/80 leading-relaxed">
+                          {PROPOSED_PRICE_NOTE}
+                        </p>
+                        <Link
+                          href="/contact"
+                          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
+                        >
+                          Contact us
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </>
                     ) : standalone?.priceCents !== null && standalone !== undefined ? (
                       <>
                         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
@@ -230,7 +260,58 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               <ScreenshotFrame shot={productShot} sizes="(min-width: 1024px) 65vw, 100vw" />
             </div>
           )}
+          {pendingShot && (
+            <div className="mt-14 max-w-3xl mx-auto">
+              <PendingScreenshotSlot label={pendingShot.label} hint={pendingShot.hint} />
+            </div>
+          )}
         </Section>
+
+        {/* ---- Modes (configurable platforms only) ---- */}
+        {product.modes && (
+          <Section className="border-t border-white/10">
+            <SectionHeading
+              eyebrow="Modes"
+              title="One platform. Pick the mode."
+              subtitle={`Every mode below is the same ${product.name} platform, the same data, and the same managed devices — not separate products you buy and integrate.`}
+            />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {product.modes.map((m) => (
+                <div
+                  key={m.key}
+                  className={`rounded-2xl border p-6 transition-colors ${
+                    m.status === 'available'
+                      ? 'border-sky-400/30 bg-gradient-to-b from-sky-500/[0.08] to-transparent'
+                      : 'border-white/10 bg-white/[0.02] hover:border-white/20'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <span
+                      className={`inline-flex w-10 h-10 rounded-xl items-center justify-center ${
+                        m.status === 'available'
+                          ? 'bg-gradient-to-br from-sky-500/25 to-blue-600/25 border border-sky-400/25'
+                          : 'bg-white/[0.05] border border-white/10'
+                      }`}
+                    >
+                      <Icon name={m.icon} className="w-[18px] h-[18px] text-sky-300" />
+                    </span>
+                    {m.status === 'available' && (
+                      <span className="px-2 py-0.5 rounded-md bg-sky-500/15 border border-sky-400/25 text-[10px] font-semibold uppercase tracking-wider text-sky-200">
+                        Shipping today
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="mt-5 text-base font-semibold text-white">{m.name}</h3>
+                  <p className="mt-2 text-sm text-gray-400 leading-relaxed">{m.detail}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-8 text-center text-sm text-gray-500 max-w-2xl mx-auto leading-relaxed">
+              Change a screen from one mode to another from the control center. No new hardware,
+              no second vendor, no duplicate customer record.
+            </p>
+          </Section>
+        )}
 
         {/* ---- Capabilities ---- */}
         <Section className="border-t border-white/10">

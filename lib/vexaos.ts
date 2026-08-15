@@ -5,11 +5,15 @@
  * ecosystem, platform pillars, industries, hardware and pricing. Pages stay
  * thin and presentational; everything editable lives here.
  *
- * NOTE ON PRICING: subscription pricing (BUNDLES, STANDALONE_PRICING,
- * DEVICE_PRICING, FOUNDING_OFFER) is APPROVED and stored in integer cents.
- * Facility Ops and Inspections are deliberately unpriced — render them as
- * "Coming soon", never as a number. Hardware figures in `TOUCH_BOARDS`
- * (lib/quote-config.ts) and `HARDWARE_LEASE` are real.
+ * NOTE ON PRICING: bundle, standalone and device pricing is APPROVED (price
+ * book v1-2026-08) and stored in integer cents.
+ *   - Inspections is CONFIRMED at $49 (price book, 2026-08-15).
+ *   - Facility Ops stays `comingSoon`: the price book holds a PROPOSED $99 that
+ *     is explicitly not quotable, so no number is shown.
+ *   - The `proposed` flag stays available: set it on any line to render the
+ *     price with an amber badge and a "pending confirmation" footnote.
+ * Hardware figures in `TOUCH_BOARDS` (lib/quote-config.ts) and
+ * `HARDWARE_LEASE` are real.
  */
 
 export const APP_URL = 'https://app.vexaos.io';
@@ -30,9 +34,10 @@ export const PRODUCT_NAV: NavItem[] = [
   { href: '/products/shyftgrid', label: 'ShyftGrid', description: 'Workforce & scheduling' },
   { href: '/products/touchboard', label: 'TouchBoard', description: 'Employee display' },
   { href: '/products/commerce-ops', label: 'Commerce Ops', description: 'Orders, payments, loyalty' },
-  { href: '/products/vexafront', label: 'VexaFront', description: 'Customer-facing kiosks' },
+  { href: '/products/vexafront', label: 'VexaFront', description: 'Customer-facing platform' },
   { href: '/products/inventory-ops', label: 'Inventory Ops', description: 'Stock, supply & costing' },
   { href: '/products/facility-ops', label: 'Facility Ops', description: 'Environmental monitoring' },
+  { href: '/products/inspections', label: 'Inspections', description: 'Rounds, checklists & evidence' },
 ];
 
 export const PRIMARY_NAV: NavItem[] = [
@@ -82,6 +87,20 @@ export interface Capability {
   detail: string;
 }
 
+/**
+ * A selectable experience on a configurable product. `available` means the mode
+ * ships today; `mode` means it is a supported configuration of the same
+ * platform. Nothing here should imply a mode exists that does not.
+ */
+export interface ProductMode {
+  key: string;
+  name: string;
+  status: 'available' | 'mode';
+  detail: string;
+  /** Lucide icon name. */
+  icon: string;
+}
+
 export interface Product {
   slug: string;
   name: string;
@@ -108,6 +127,8 @@ export interface Product {
     body: string;
     surfaces: string[];
   };
+  /** Selectable modes, for products that are configurable platforms. */
+  modes?: ProductMode[];
   capabilities: Capability[];
   /** How it plugs into the rest of VexaOS. */
   integrations: string[];
@@ -274,48 +295,91 @@ export const PRODUCTS: Product[] = [
     slug: 'vexafront',
     name: 'VexaFront',
     domain: 'Commerce',
-    role: 'The customer-facing screen at the front of your business',
+    role: 'The configurable customer-facing platform',
     icon: 'Monitor',
     accent: 'from-fuchsia-400 to-pink-600',
     summary:
-      'Configurable self-service kiosks and displays — ordering, check-in, booking, queueing — tailored to your industry.',
+      'One customer-facing platform, configured into the mode your front of house needs — reception and check-in, self-order, checkout, booking, or queue.',
     intro:
-      'VexaFront is the customer-facing surface of VexaOS. It is a configurable kiosk and display system that adapts to what your industry needs at the front counter: ordering, check-in, booking, queue management, or signage.',
+      'VexaFront is the customer-facing surface of VexaOS: a single platform you configure rather than a fixed-purpose kiosk. Reception and check-in ships today; self-order, checkout, booking, and queue are modes of the same platform, running on the same data and the same devices.',
     problem: {
-      headline: 'The front counter is your bottleneck.',
+      headline: 'A kiosk that does one thing is a kiosk you replace.',
       points: [
-        'A queue at the counter while staff take orders one at a time.',
-        'Walk-in customers waiting for someone to look up from a screen.',
-        'Check-in on a clipboard, then typed into a system twice.',
-        'Off-the-shelf kiosks that only do one industry’s workflow.',
-        'A front-of-house experience that makes the business feel smaller than it is.',
+        'Vendors sell you an ordering kiosk, then a separate check-in tablet, then a separate queue screen.',
+        'Each one arrives with its own customer database and its own admin login.',
+        'The workflow you actually need sits between two products and belongs to neither.',
+        'When the business changes, the hardware is wrong — not just the configuration.',
+        'A front of house that makes the business feel smaller than it is.',
       ],
     },
     product: {
-      headline: 'One kiosk platform, configured per vertical.',
+      headline: 'One platform. Pick the mode. Change it later.',
       body:
-        'VexaFront ships as a single platform with vertical configurations. A restaurant gets self-order and pay. A salon gets check-in and stylist selection. A gym gets member check-in and class booking. An auto shop gets service intake and status. Same platform, same data, industry-appropriate experience.',
+        'VexaFront runs one codebase on one device registry, and you choose what a given screen does. Put it on the wall as reception, on the counter as self-order, in the lobby as a queue display — or change a location from one to another without new hardware, a new vendor, or a second customer record.',
       surfaces: [
         'Countertop kiosks, 15"–27"',
         'Freestanding and wall-mounted kiosks, 32"–43"',
         'Customer-facing displays and digital signage',
-        'Queue and order-status screens',
+        'Queue and status screens',
       ],
     },
+    /** Selectable experiences on the one platform. `status` gates the badge. */
+    modes: [
+      {
+        key: 'reception',
+        name: 'Reception & check-in',
+        status: 'available',
+        detail:
+          'Visitor check-in, a searchable staff and service directory, digital badge issue, and appointment bookings — captured straight into the shared VexaOS customer record.',
+        icon: 'UserCheck',
+      },
+      {
+        key: 'self-order',
+        name: 'Self-order',
+        status: 'mode',
+        detail:
+          'Browse, customize, and pay without waiting for staff, with the same catalog Commerce Ops sells from at the counter.',
+        icon: 'ShoppingCart',
+      },
+      {
+        key: 'checkout',
+        name: 'Checkout',
+        status: 'mode',
+        detail:
+          'Customer-facing payment, tipping, and receipt capture, reconciled through Commerce Ops like every other channel.',
+        icon: 'CreditCard',
+      },
+      {
+        key: 'booking',
+        name: 'Booking',
+        status: 'mode',
+        detail:
+          'Pick a service, a provider, and a time on-screen, written straight to the live calendar ShyftGrid staffs.',
+        icon: 'CalendarCheck',
+      },
+      {
+        key: 'queue',
+        name: 'Queue',
+        status: 'mode',
+        detail:
+          'Ticketing, waitlists, and order-ready displays that keep a lobby or a dining room moving without anyone calling names.',
+        icon: 'ListOrdered',
+      },
+    ],
     capabilities: [
-      { title: 'Self-service ordering', detail: 'Browse, customize, and pay without waiting for staff — with upsells built into the flow.' },
-      { title: 'Check-in & intake', detail: 'Appointments, walk-ins, memberships, and service intake captured directly into VexaOS.' },
-      { title: 'Booking & scheduling', detail: 'Pick a service, a provider, and a time on-screen, written straight to the live calendar.' },
-      { title: 'Queue management', detail: 'Ticketing, waitlists, and order-ready displays that keep the lobby moving.' },
-      { title: 'Vertical configurations', detail: 'Industry presets for restaurant, salon, retail, gym, auto service, and hospitality.' },
+      { title: 'Mode configuration', detail: 'Choose what each screen does from the control center, and change it later without touching the hardware.' },
+      { title: 'Visitor check-in & directory', detail: 'Self check-in, a searchable directory, and digital badges — the reception mode, shipping today.' },
+      { title: 'Bookings', detail: 'Appointments taken on-screen against the same live calendar your staff are scheduled on.' },
+      { title: 'Self-service transactions', detail: 'Ordering, checkout, tipping, and receipts running on the shared Commerce Ops catalog.' },
+      { title: 'Queue & status', detail: 'Waitlists, ticketing, and order-ready displays for the lobby, counter, or floor.' },
       { title: 'Branded experience', detail: 'Your logo, colors, imagery, and language — the screen looks like your business, not ours.' },
     ],
     integrations: [
+      'Creates or matches the shared VexaOS customer record at check-in — one customer, not one per screen.',
       'Sends every order and payment through Commerce Ops.',
       'Books against the same calendar ShyftGrid staffs.',
       'Checks live availability from Inventory Ops before offering an item.',
-      'Creates or matches the shared VexaOS customer record at check-in.',
-      'Managed remotely through the VexaOS device registry.',
+      'Enrolled and mode-switched remotely through the VexaOS device registry.',
     ],
     industries: ['restaurant', 'salon', 'retail', 'gym', 'auto-service', 'hospitality', 'healthcare'],
     cta: { label: 'Configure a VexaFront', href: '/hardware' },
@@ -419,6 +483,56 @@ export const PRODUCTS: Product[] = [
     ],
     industries: ['restaurant', 'retail', 'hospitality', 'healthcare', 'gym', 'field-service'],
     cta: { label: 'Talk to us about Facility Ops', href: '/contact' },
+  },
+  {
+    slug: 'inspections',
+    name: 'Inspections',
+    domain: 'Operations',
+    role: 'Rounds, checklists and evidence on the record',
+    icon: 'ClipboardCheck',
+    accent: 'from-lime-400 to-emerald-600',
+    summary:
+      'Structured inspection rounds with checklists, photo evidence, and a retained record you can produce on demand.',
+    intro:
+      'Inspections is the accountability layer of VexaOS. It turns the walkthroughs, opening checks, and compliance rounds your team already does into scheduled work with evidence attached and a record that survives staff turnover.',
+    problem: {
+      headline: 'The check happened. Proving it is another matter.',
+      points: [
+        'Opening and closing checks ticked on a laminated sheet nobody files.',
+        'Compliance rounds remembered rather than scheduled.',
+        'Photo evidence sitting in a manager’s camera roll.',
+        'A failed item raised verbally, then lost between shifts.',
+        'An auditor asks for six months of records and the search starts from nothing.',
+      ],
+    },
+    product: {
+      headline: 'Scheduled rounds, captured evidence, a record that holds up.',
+      body:
+        'Build the checklist once, schedule the round, and assign it to whoever is on shift. Staff complete it on a phone or a TouchBoard, attach photos and notes to any item, and a failure opens follow-up work instead of evaporating. Every completed round is timestamped, attributed, and retained.',
+      surfaces: [
+        'Checklist and schedule builder in the control center',
+        'Round completion on mobile',
+        'Due and overdue rounds on TouchBoard',
+        'Exportable records for audits and insurers',
+      ],
+    },
+    capabilities: [
+      { title: 'Checklist templates', detail: 'Reusable templates per area, per shift, or per compliance regime, versioned as they change.' },
+      { title: 'Scheduled rounds', detail: 'Recurring assignments that appear as work rather than relying on someone remembering.' },
+      { title: 'Evidence capture', detail: 'Photos, notes, readings, and signatures attached to the individual item, not the whole form.' },
+      { title: 'Fail-to-follow-up', detail: 'A failed item raises assigned follow-up work with an owner and a due time.' },
+      { title: 'Attribution & timestamps', detail: 'Who completed what, when, and where — recorded against the VexaOS employee record.' },
+      { title: 'Retained records', detail: 'A searchable, exportable history for audits, insurers, and franchise reporting.' },
+    ],
+    integrations: [
+      'Assigns rounds to the staff ShyftGrid says are on shift, not to a name on a list.',
+      'Shows due and overdue rounds on TouchBoard so the floor can see them.',
+      'Raises stock and equipment issues against Inventory Ops records.',
+      'Pairs with Facility Ops so a sensor alarm and a physical check land in the same history.',
+      'Scoped by VexaOS locations and roles, with the same audit trail as everything else.',
+    ],
+    industries: ['restaurant', 'retail', 'hospitality', 'healthcare', 'gym', 'auto-service', 'field-service'],
+    cta: { label: 'Talk to us about Inspections', href: '/contact' },
   },
 ];
 
@@ -924,7 +1038,11 @@ export const BUNDLES: Bundle[] = [
     products: ['shyftgrid', 'commerce-ops', 'inventory-ops'],
     extras: [
       '1 TouchBoard license included per location',
-      'Premium platform features',
+      'Advanced analytics',
+      'Cross-product reporting',
+      'Device management',
+      'Advanced permissions',
+      'Priority support',
       'Discounted VexaFront and additional TouchBoard licenses',
     ],
     highlight: true,
@@ -941,10 +1059,20 @@ export interface StandalonePrice {
   /** Integer cents per location per month. Null when not yet priced. */
   priceCents: number | null;
   comingSoon?: boolean;
+  /**
+   * The number is a proposal, not signed off. It renders with a visible
+   * "Proposed" badge and a footnote. Flip to false (or delete) once confirmed;
+   * this is the ONLY place the value lives.
+   */
+  proposed?: boolean;
   summary: string;
   /** Product page, when one exists. */
   href?: string;
 }
+
+/** Footnote rendered wherever a `proposed` price appears. */
+export const PROPOSED_PRICE_NOTE =
+  'Proposed pricing, pending final confirmation. Not yet bookable — talk to us and we will confirm the rate before anything is signed.';
 
 export const STANDALONE_PRICING: StandalonePrice[] = [
   {
@@ -969,6 +1097,11 @@ export const STANDALONE_PRICING: StandalonePrice[] = [
     href: '/products/inventory-ops',
   },
   {
+    // Price book v1-2026-08 records a PROPOSED $99 (9900) for Facility Ops,
+    // status `proposed`: excluded from quotableStandalone(), no billing path.
+    // Kept off the site as "Coming soon" until it is promoted to `available`.
+    // To surface it as a flagged proposal instead: set priceCents: 9900,
+    // proposed: true, and drop comingSoon.
     slug: 'facility-ops',
     name: 'Facility Ops',
     priceCents: null,
@@ -977,11 +1110,12 @@ export const STANDALONE_PRICING: StandalonePrice[] = [
     href: '/products/facility-ops',
   },
   {
+    // CONFIRMED 2026-08-15 (price book v1-2026-08). Change here only.
     slug: 'inspections',
     name: 'Inspections',
-    priceCents: null,
-    comingSoon: true,
+    priceCents: 4900,
     summary: 'Structured inspection rounds, checklists, and evidence capture with a retained record.',
+    href: '/products/inspections',
   },
 ];
 
@@ -1058,7 +1192,8 @@ export const FOUNDING_OFFER = {
   terms: [
     'Limited to the first 25 organizations',
     'Founding rate held for 12 months from activation',
-    'Applies to bundle pricing; device software and hardware are separate',
+    'Applies to bundle pricing only — founding never discounts device software',
+    'Founding Complete still includes exactly one TouchBoard per location; additional boards stay at $19',
     'Reverts to list pricing at renewal',
   ],
 } as const;
@@ -1095,11 +1230,12 @@ export const PLAN_TIERS: PlanTier[] = [
   {
     key: 'multi',
     name: 'Multi-Location',
-    priceNote: 'Volume pricing',
+    priceNote: '20% off locations 2–5',
     blurb: 'Two or more sites under one organization, with rollup reporting.',
     bullets: [
       'Everything in Single Location',
-      'Per-location volume discounts',
+      'Locations 2–5 bill at 80% of the bundle rate',
+      '6–20 locations quoted individually',
       'Cross-location reporting and stock transfers',
       'Regional roles and delegated administration',
       'Guided onboarding and priority support',
@@ -1128,7 +1264,7 @@ export const PLAN_TIERS: PlanTier[] = [
 /* ============================================================== */
 
 export const HOME_STATS = [
-  { value: '6', label: 'products on one platform' },
+  { value: '7', label: 'products on one platform' },
   { value: '1', label: 'identity, org model, and data layer' },
   { value: '15"–86"', label: 'managed touchscreen hardware' },
   { value: '8', label: 'configured industry verticals' },

@@ -102,7 +102,7 @@ export function ProductsSection() {
     <Section id="products" className="bg-gradient-to-b from-transparent to-[#03060c]">
       <SectionHeading
         eyebrow="The products"
-        title="Six products. One platform underneath."
+        title="Seven products. One platform underneath."
         subtitle="Each product is sold separately and runs on its own. Together they share the same customers, employees, catalog, and devices — with nothing to integrate."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -159,7 +159,7 @@ export function PlatformSection() {
     <Section className="border-t border-white/10">
       <SectionHeading
         eyebrow="The platform"
-        title="What makes them one system instead of six."
+        title="What makes them one system instead of seven."
         subtitle="VexaOS is not a bundle. It is a shared foundation the products are built on — which is why data never has to be synced between them."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

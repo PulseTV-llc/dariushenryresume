@@ -203,7 +203,7 @@ export const faqSchema = {
       name: 'What products make up VexaOS?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Six products: ShyftGrid for workforce and scheduling, TouchBoard for employee displays, Commerce Ops for orders and payments, VexaFront for customer-facing kiosks and reception, Inventory Ops for stock and cost, and Facility Ops for environmental monitoring — all on the VexaOS platform.',
+        text: 'Seven products: ShyftGrid for workforce and scheduling, TouchBoard for employee displays, Commerce Ops for orders and payments, VexaFront as the configurable customer-facing platform, Inventory Ops for stock and cost, Facility Ops for environmental monitoring, and Inspections for rounds and evidence — all on the VexaOS platform.',
       },
     },
     {

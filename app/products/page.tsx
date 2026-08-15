@@ -19,9 +19,9 @@ import {
 import { PRODUCTS, VERTICALS_BY_SLUG, SITE_URL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'Products — ShyftGrid, Commerce Ops, Inventory Ops, VexaFront, TouchBoard, Facility Ops',
+  title: 'Products — ShyftGrid, Commerce Ops, Inventory Ops, VexaFront, TouchBoard, Facility Ops, Inspections',
   description:
-    'The six VexaOS products: ShyftGrid for workforce, Commerce Ops for orders and payments, Inventory Ops for stock and cost, VexaFront for customer-facing kiosks and reception, TouchBoard for employee displays, and Facility Ops for environmental monitoring. Sold separately, built on one platform.',
+    'The seven VexaOS products: ShyftGrid for workforce, Commerce Ops for orders and payments, Inventory Ops for stock and cost, VexaFront as the configurable customer-facing platform, TouchBoard for employee displays, Facility Ops for environmental monitoring, and Inspections for rounds and evidence. Sold separately, built on one platform.',
   alternates: { canonical: `${SITE_URL}/products` },
 };
 
@@ -34,7 +34,7 @@ export default function ProductsPage() {
           eyebrow="Products"
           title={
             <>
-              Six products, sold separately.{' '}
+              Seven products, sold separately.{' '}
               <span className="gradient-text">One platform underneath.</span>
             </>
           }

@@ -19,6 +19,7 @@ import {
   FOUNDING_OFFER,
   PLAN_TIERS,
   PRICING_DISCLAIMER,
+  PROPOSED_PRICE_NOTE,
   TOUCHBOARD_PRICING_STATEMENT,
   PRODUCTS_BY_SLUG,
   HARDWARE_LEASE,
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
 const FAQ = [
   {
     q: 'Do I have to buy a bundle?',
-    a: 'No. ShyftGrid, Commerce Ops, and Inventory Ops can each be bought standalone. Bundles exist because most operators end up wanting more than one, and the bundle costs less than the parts.',
+    a: 'No. ShyftGrid, Commerce Ops, Inventory Ops, and Inspections can each be bought standalone. Bundles exist because most operators end up wanting more than one, and the bundle costs less than the parts.',
   },
   {
     q: 'Is the platform an extra charge?',
@@ -43,7 +44,7 @@ const FAQ = [
   },
   {
     q: 'How is a "location" counted?',
-    a: 'A location is a physical site operating under your organization. Multi-location operators get volume pricing, and rollup reporting across sites is included at that level.',
+    a: 'A location is a physical site operating under your organization. Locations 2–5 bill at 80% of the bundle rate; 6–20 and 21+ are quoted individually. Device software never takes the multi-location discount, and rollup reporting across sites is included.',
   },
   {
     q: 'Are staff accounts charged per seat?',
@@ -51,7 +52,7 @@ const FAQ = [
   },
   {
     q: 'What about Facility Ops and Inspections?',
-    a: 'Both are in beta and not yet priced. Talk to us if you want them in your deployment and we will work out commercial terms directly rather than guess at a list price.',
+    a: 'Both are in beta. Inspections is priced at $49 per location per month. Facility Ops does not have confirmed commercial terms yet, so we do not publish a rate for it — talk to us and we will work them out directly rather than put a number on the page we cannot stand behind.',
   },
   {
     q: 'Is hardware included?',
@@ -226,6 +227,11 @@ export default function PricingPage() {
                         Coming soon
                       </span>
                     )}
+                    {p.proposed && (
+                      <span className="px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-400/30 text-[10px] font-semibold uppercase tracking-wider text-amber-200">
+                        Proposed
+                      </span>
+                    )}
                   </div>
                   <p className="mt-1.5 text-sm text-gray-400 leading-relaxed">{p.summary}</p>
                 </div>
@@ -240,16 +246,37 @@ export default function PricingPage() {
                     </Link>
                   ) : (
                     <>
-                      <p className="text-2xl font-bold text-white tracking-tight">
+                      <p
+                        className={`text-2xl font-bold tracking-tight ${
+                          p.proposed ? 'text-amber-100' : 'text-white'
+                        }`}
+                      >
                         {usd(p.priceCents)}
                       </p>
                       <p className="mt-0.5 text-xs text-gray-500">per location / month</p>
+                      {p.proposed && (
+                        <Link
+                          href="/contact"
+                          className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-200 hover:text-amber-100 transition-colors"
+                        >
+                          Confirm this rate
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      )}
                     </>
                   )}
                 </div>
               </div>
             ))}
           </div>
+          {STANDALONE_PRICING.some((p) => p.proposed) && (
+            <p className="mt-6 max-w-4xl mx-auto flex items-start gap-2.5 rounded-xl border border-amber-400/25 bg-amber-500/[0.06] px-5 py-4 text-sm text-amber-100/90 leading-relaxed">
+              <span className="mt-0.5 px-1.5 py-0.5 rounded bg-amber-500/15 border border-amber-400/30 text-[10px] font-semibold uppercase tracking-wider text-amber-200 shrink-0">
+                Proposed
+              </span>
+              {PROPOSED_PRICE_NOTE}
+            </p>
+          )}
         </Section>
 
         {/* ---- Device software ---- */}
