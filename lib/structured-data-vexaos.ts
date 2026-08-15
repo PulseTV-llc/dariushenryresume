@@ -104,10 +104,12 @@ export const platformSchema = {
 export const productSchemas = PRODUCTS.map((p) => {
   const standalone = STANDALONE_BY_SLUG[p.slug];
   const device = DEVICE_BY_SLUG[p.slug];
-  // Cents → dollars only at the schema edge. Unpriced products emit no offer.
+  // Cents → dollars only at the schema edge. Unpriced products emit no offer,
+  // and neither do PROPOSED prices — an unconfirmed number must never become a
+  // machine-readable Offer that search engines quote back as real.
   const priceCents = device
     ? device.priceCents
-    : standalone && !standalone.comingSoon
+    : standalone && !standalone.comingSoon && !standalone.proposed
       ? standalone.priceCents
       : null;
   const unitText = device ? device.unit : 'per location per month';

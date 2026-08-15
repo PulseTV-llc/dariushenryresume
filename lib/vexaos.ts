@@ -8,10 +8,11 @@
  * NOTE ON PRICING: bundle, standalone and device pricing is APPROVED (price
  * book v1-2026-08) and stored in integer cents.
  *   - Inspections is CONFIRMED at $49 (price book, 2026-08-15).
- *   - Facility Ops stays `comingSoon`: the price book holds a PROPOSED $99 that
- *     is explicitly not quotable, so no number is shown.
- *   - The `proposed` flag stays available: set it on any line to render the
- *     price with an amber badge and a "pending confirmation" footnote.
+ *   - Facility Ops is PROPOSED at $99 pending final confirmation. It renders
+ *     with an amber badge and a "pending confirmation" footnote, and emits no
+ *     JSON-LD offer — a proposal must not become a machine-readable price.
+ *   - `proposed: true` on any STANDALONE_PRICING line produces that treatment.
+ *     `comingSoon: true` shows no number at all. Nothing currently uses it.
  * Hardware figures in `TOUCH_BOARDS` (lib/quote-config.ts) and
  * `HARDWARE_LEASE` are real.
  */
@@ -965,9 +966,13 @@ export const HARDWARE_INCLUDED = [
  * formatted through `usd()` at the edge. List prices are per location per month
  * unless the unit says otherwise.
  *
- * Products without approved pricing (Facility Ops, Inspections) carry
- * `comingSoon: true` and must render as "Coming soon / Contact us". Never
- * substitute a number for them.
+ * Two flags control how a standalone line renders:
+ *   `proposed: true`   — a real number, not yet signed off. Amber badge, a
+ *                        "Confirm this rate" link, a pending-confirmation
+ *                        footnote, and NO JSON-LD offer. Facility Ops today.
+ *   `comingSoon: true` — no number at all, "Contact us" instead. Currently
+ *                        unused; kept for the next unpriced product.
+ * Never substitute a number for a product that has neither.
  */
 
 /** Format integer cents as USD, dropping `.00` on whole dollars. */
@@ -1097,15 +1102,15 @@ export const STANDALONE_PRICING: StandalonePrice[] = [
     href: '/products/inventory-ops',
   },
   {
-    // Price book v1-2026-08 records a PROPOSED $99 (9900) for Facility Ops,
-    // status `proposed`: excluded from quotableStandalone(), no billing path.
-    // Kept off the site as "Coming soon" until it is promoted to `available`.
-    // To surface it as a flagged proposal instead: set priceCents: 9900,
-    // proposed: true, and drop comingSoon.
+    // PROPOSED — $99/location/month, pending final confirmation. The premium
+    // control/telemetry tier, priced above the rest of the lineup. Renders with
+    // an amber "Proposed" badge and the pending-confirmation footnote, and is
+    // deliberately excluded from JSON-LD offers. Change here only; drop
+    // `proposed` to promote it to a confirmed price.
     slug: 'facility-ops',
     name: 'Facility Ops',
-    priceCents: null,
-    comingSoon: true,
+    priceCents: 9900,
+    proposed: true,
     summary: 'Environmental monitoring and control — telemetry, setpoints, calibration and alerts.',
     href: '/products/facility-ops',
   },
