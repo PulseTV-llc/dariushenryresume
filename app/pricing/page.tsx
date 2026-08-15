@@ -52,7 +52,7 @@ const FAQ = [
   },
   {
     q: 'What about Facility Ops and Inspections?',
-    a: 'Both are in beta, and both are priced. Inspections is $49 per location per month. Facility Ops is $99 per location per month as a proposed rate — the premium control and telemetry tier — which we are showing so you can plan around it, but we will confirm it with you before anything is signed.',
+    a: 'Both are priced and available to buy. Inspections is $49 per location per month. Facility Ops is $99 per location per month — the premium control and telemetry tier, priced above the rest of the lineup because it takes on the physical conditions the whole operation depends on.',
   },
   {
     q: 'Is hardware included?',

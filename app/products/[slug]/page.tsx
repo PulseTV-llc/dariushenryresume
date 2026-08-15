@@ -22,6 +22,7 @@ import {
   VERTICALS_BY_SLUG,
   STANDALONE_BY_SLUG,
   DEVICE_BY_SLUG,
+  BUNDLES,
   PROPOSED_PRICE_NOTE,
   usd,
   SITE_URL,
@@ -53,6 +54,12 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const standalone = STANDALONE_BY_SLUG[product.slug];
   const device = DEVICE_BY_SLUG[product.slug];
   const others = PRODUCTS.filter((p) => p.slug !== product.slug);
+  // Only claim bundle inclusion for products a bundle actually contains —
+  // Facility Ops and Inspections are standalone-only.
+  const inBundles = BUNDLES.filter((b) => b.products.includes(product.slug));
+  const cheapestBundle = inBundles.length
+    ? inBundles.reduce((a, b) => (b.priceCents < a.priceCents ? b : a))
+    : null;
   const screenKey = PRODUCT_SCREENS[product.slug];
   const productShot = screenKey ? SCREENS[screenKey] : null;
   const pendingShot = productShot ? null : PENDING_PRODUCT_SCREENS[product.slug];
@@ -238,7 +245,9 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                           </span>
                         </p>
                         <p className="mt-2.5 text-sm text-gray-400 leading-relaxed">
-                          Included in VexaOS bundles from $79 per location / month.
+                          {cheapestBundle
+                            ? `Included in VexaOS bundles from ${usd(cheapestBundle.priceCents)} per location / month.`
+                            : 'Sold standalone — not part of a bundle.'}
                         </p>
                         <Link
                           href="/pricing"

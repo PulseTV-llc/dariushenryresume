@@ -7,12 +7,12 @@
  *
  * NOTE ON PRICING: bundle, standalone and device pricing is APPROVED (price
  * book v1-2026-08) and stored in integer cents.
- *   - Inspections is CONFIRMED at $49 (price book, 2026-08-15).
- *   - Facility Ops is PROPOSED at $99 pending final confirmation. It renders
- *     with an amber badge and a "pending confirmation" footnote, and emits no
- *     JSON-LD offer — a proposal must not become a machine-readable price.
- *   - `proposed: true` on any STANDALONE_PRICING line produces that treatment.
- *     `comingSoon: true` shows no number at all. Nothing currently uses it.
+ *   - Inspections is CONFIRMED at $49 and Facility Ops at $99. Every product
+ *     on the site now carries a real, published price.
+ *   - Two flags remain available and are currently unused:
+ *     `proposed: true` renders an amber badge, a "Confirm this rate" link and a
+ *     pending-confirmation footnote, and suppresses the JSON-LD offer;
+ *     `comingSoon: true` shows no number at all.
  * Hardware figures in `TOUCH_BOARDS` (lib/quote-config.ts) and
  * `HARDWARE_LEASE` are real.
  */
@@ -966,12 +966,12 @@ export const HARDWARE_INCLUDED = [
  * formatted through `usd()` at the edge. List prices are per location per month
  * unless the unit says otherwise.
  *
- * Two flags control how a standalone line renders:
+ * All standalone prices are confirmed. Two flags remain for future use, both
+ * currently unused:
  *   `proposed: true`   — a real number, not yet signed off. Amber badge, a
  *                        "Confirm this rate" link, a pending-confirmation
- *                        footnote, and NO JSON-LD offer. Facility Ops today.
- *   `comingSoon: true` — no number at all, "Contact us" instead. Currently
- *                        unused; kept for the next unpriced product.
+ *                        footnote, and NO JSON-LD offer.
+ *   `comingSoon: true` — no number at all, "Contact us" instead.
  * Never substitute a number for a product that has neither.
  */
 
@@ -1102,15 +1102,11 @@ export const STANDALONE_PRICING: StandalonePrice[] = [
     href: '/products/inventory-ops',
   },
   {
-    // PROPOSED — $99/location/month, pending final confirmation. The premium
-    // control/telemetry tier, priced above the rest of the lineup. Renders with
-    // an amber "Proposed" badge and the pending-confirmation footnote, and is
-    // deliberately excluded from JSON-LD offers. Change here only; drop
-    // `proposed` to promote it to a confirmed price.
+    // CONFIRMED — $99/location/month. The premium control and telemetry tier,
+    // priced above the rest of the lineup. Change here only.
     slug: 'facility-ops',
     name: 'Facility Ops',
     priceCents: 9900,
-    proposed: true,
     summary: 'Environmental monitoring and control — telemetry, setpoints, calibration and alerts.',
     href: '/products/facility-ops',
   },
