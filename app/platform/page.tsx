@@ -149,11 +149,14 @@ export default function PlatformPage() {
             </div>
           </div>
 
-          <div className="mt-14">
+          <div className="mt-14 grid gap-8 lg:grid-cols-2">
             <ScreenshotFrame
               shot={SCREENS.locationSwitcher}
-              sizes="(min-width: 1024px) 65vw, 100vw"
-              className="max-w-4xl mx-auto"
+              sizes="(min-width: 1024px) 48vw, 100vw"
+            />
+            <ScreenshotFrame
+              shot={SCREENS.deviceFleet}
+              sizes="(min-width: 1024px) 48vw, 100vw"
             />
           </div>
         </Section>

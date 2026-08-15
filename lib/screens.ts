@@ -6,12 +6,14 @@
  * from `demo-screens/` because that set has no replacement for it yet. See
  * SCREEN_SOURCES for per-image provenance.
  *
- * Only screenshots that show the product working are wired in. Captures still
- * showing error toasts or empty states are deliberately excluded — as of the
- * latest marketing-screens drop that is 03-commerce-ops (empty "select a
- * location" state plus an un-actioned Stripe activation banner) and
- * 04-shyftgrid-schedule (the "We couldn't load your schedule" error). Both were
- * recaptured but not reseeded, so they still cannot ship.
+ * Only screenshots that show the product working are wired in. Still excluded
+ * from the latest reseed:
+ *   - 04-commerce-ops: reseeded, but every metric reads $0.00 / 0 with an
+ *     un-actioned "Activate payments with Stripe" banner and "No sales in this
+ *     period". A zeroed dashboard reads as "nobody uses this".
+ *   - 05-inventory-ops: has real items, but every row shows the literal string
+ *     "undefined units" and every status is Inactive.
+ * Both need seeded transactions/stock before they can ship.
  */
 
 export interface Screenshot {
@@ -64,13 +66,40 @@ export const SCREENS = {
     frame: 'browser',
   },
   touchBoard: {
-    src: '/screens/touchboard-board.webp',
-    width: 1290,
-    height: 800,
-    alt: 'A TouchBoard wall display showing who is on the floor, an uncovered open shift, a pending swap, and a staffing health score.',
+    src: '/screens/touchboard-wall.webp',
+    width: 1600,
+    height: 900,
+    alt: 'A TouchBoard employee wall display showing a staffing health score of 95, who is on the floor now, a live clock-in timeline, and a full-width Clock In button.',
     caption:
-      'TouchBoard on the wall — who is in, who is late, what is uncovered, and how the shift is tracking.',
+      'The real TouchBoard employee display — staffing health, who is on the floor, the live timeline, and clock-in, on the wall.',
     frame: 'device',
+  },
+  deviceFleet: {
+    src: '/screens/device-fleet.webp',
+    width: 1800,
+    height: 1125,
+    alt: 'The VexaOS device registry listing a fleet of six paired boards across two locations, five online, each assigned a different mode.',
+    caption:
+      'The device registry — every board, where it is, what it runs, and when it was last seen. Change a mode and it reaches the device in seconds.',
+    frame: 'browser',
+  },
+  facilityColdStorage: {
+    src: '/screens/facility-cold-storage.webp',
+    width: 1800,
+    height: 1125,
+    alt: 'Facility Ops monitoring a cold storage site with three cold rooms, showing control mode, cloud link, field device status, and active temperature alarms on walk-in coolers, a freezer, and the receiving dock.',
+    caption:
+      'Facility Ops on a cold-chain site — walk-in coolers, a freezer, and the receiving dock, each held against its own limit, with drift raised the moment it happens.',
+    frame: 'browser',
+  },
+  shyftgridSchedule: {
+    src: '/screens/shyftgrid-schedule.webp',
+    width: 1800,
+    height: 1125,
+    alt: 'A published ShyftGrid weekly schedule for one location, showing eleven shifts across the week, staff rows with assigned hours, and two open shifts flagged as needing coverage.',
+    caption:
+      'A published week in ShyftGrid — assigned shifts, hours per person, and the open shifts still needing coverage.',
+    frame: 'browser',
   },
 } satisfies Record<string, Screenshot>;
 
@@ -81,9 +110,11 @@ export const SCREEN_SOURCES: Record<ScreenKey, string> = {
   vexaosHome: 'marketing-screens/01-vexaos-control-center.png',
   productSwitcher: 'marketing-screens/02-product-switcher.png',
   locationSwitcher: 'demo-screens/04-location-switcher.png (no marketing-screens equivalent yet)',
-  unifiedSettings: 'marketing-screens/05-unified-settings.png',
-  touchBoard:
-    'marketing-screens/07-touchboard-MARKETING-PAGE-landscape.png (cropped to the board panel)',
+  unifiedSettings: 'marketing-screens/07-unified-settings.png',
+  touchBoard: 'marketing-screens/09-touchboard-employee-wall.png (real native board, uncropped)',
+  deviceFleet: 'marketing-screens/06-device-fleet.png',
+  facilityColdStorage: 'marketing-screens/08-facilityops-cold-storage.png',
+  shyftgridSchedule: 'marketing-screens/03-shyftgrid-schedule.png',
 };
 
 /**
@@ -92,10 +123,10 @@ export const SCREEN_SOURCES: Record<ScreenKey, string> = {
  */
 export const PRODUCT_SCREENS: Partial<Record<string, ScreenKey>> = {
   touchboard: 'touchBoard',
-  // facility-ops: awaiting the neutral cold-storage capture (walk-in coolers /
-  // freezers, temp + humidity). Drop it into marketing-screens/, optimize to
-  // /public/screens/facility-cold-storage.webp, add it to SCREENS, and point
-  // this key at it. Until then the page renders the reserved slot below.
+  'facility-ops': 'facilityColdStorage',
+  shyftgrid: 'shyftgridSchedule',
+  // commerce-ops and inventory-ops still have no shippable capture — see the
+  // exclusions at the top of this file.
 };
 
 /**
@@ -103,9 +134,13 @@ export const PRODUCT_SCREENS: Partial<Record<string, ScreenKey>> = {
  * render a labelled reserved slot rather than nothing, so the gap is visible.
  */
 export const PENDING_PRODUCT_SCREENS: Record<string, { label: string; hint: string }> = {
-  'facility-ops': {
-    label: 'Facility Ops — cold-storage monitoring',
-    hint: 'Walk-in coolers and freezers, temperature and humidity against setpoints',
+  'commerce-ops': {
+    label: 'Commerce Ops — a trading day',
+    hint: 'Sales summary with real transactions, and payments already activated',
+  },
+  'inventory-ops': {
+    label: 'Inventory Ops — live stock',
+    hint: 'Items with real quantities and units, active status, and recent scans',
   },
 };
 

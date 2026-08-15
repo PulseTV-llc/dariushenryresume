@@ -106,6 +106,13 @@ export default function HardwarePage() {
             className="max-w-3xl mx-auto"
           />
 
+          <div className="mt-14 max-w-4xl mx-auto">
+            <ScreenshotFrame
+              shot={SCREENS.deviceFleet}
+              sizes="(min-width: 1024px) 65vw, 100vw"
+            />
+          </div>
+
           <div className="mt-16">
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 mb-6">
               Hardware in situ
