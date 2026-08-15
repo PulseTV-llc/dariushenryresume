@@ -1,90 +1,117 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Check, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
-import { Section, SectionHeading } from '@/components/site/Section';
-import { INDUSTRIES } from '@/lib/business-data';
+import {
+  Section,
+  SectionHeading,
+  PageHero,
+  CTABand,
+  PrimaryButton,
+  SecondaryButton,
+} from '@/components/site/Section';
+import { VERTICALS, PRODUCTS_BY_SLUG, SITE_URL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'Industries We Build For | Connected Business Systems',
+  title: 'Industries — Restaurants, salons, retail, gyms, auto service, hospitality',
   description:
-    'Custom connected systems for salons, restaurants, retail, field workforce, cleaning, security, clinics, med spas, gyms, and repair shops — web dashboards, mobile apps, and touchscreen tools built around your workflow.',
-  alternates: { canonical: 'https://www.vexaos.io/industries' },
+    'VexaOS ships with vertical configurations for restaurants, barbershops and salons, retail, gyms, auto service, hospitality, clinics, and field service — the same platform, shaped to how each industry actually operates.',
+  alternates: { canonical: `${SITE_URL}/industries` },
 };
 
 export default function IndustriesPage() {
   return (
     <>
       <SiteNav />
-      <main className="min-h-screen bg-black">
-        {/* Hero */}
-        <section className="relative pt-36 pb-8 px-4 sm:px-6 lg:px-8 grid-background overflow-hidden">
-          <div className="absolute top-10 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/25 mb-5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-              <span className="text-xs font-semibold tracking-wider uppercase text-cyan-200">
-                Industries
-              </span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.05] text-balance">
-              A connected system shaped around{' '}
-              <span className="gradient-text">how your industry runs.</span>
-            </h1>
-            <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Not a template forced onto your business. Each VexaOS system below is built around the
-              real workflow of that industry — from the front desk to the field.
-            </p>
+      <main className="min-h-screen bg-[#04070e]">
+        <PageHero
+          eyebrow="Industries"
+          title={
+            <>
+              One platform,{' '}
+              <span className="gradient-text">configured for your vertical.</span>
+            </>
+          }
+          subtitle="A restaurant counter and a service bay need different screens, different workflows, and different reports. VexaOS ships vertical configurations rather than asking you to bend your operation around generic software."
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <PrimaryButton href="/demo">
+              Book a demo for your industry
+              <ArrowRight className="w-4 h-4" />
+            </PrimaryButton>
+            <SecondaryButton href="/products">See the products</SecondaryButton>
           </div>
-        </section>
+        </PageHero>
 
-        <Section className="pt-12">
-          <div className="grid gap-6 lg:grid-cols-2">
-            {INDUSTRIES.map((ind) => (
-              <div
-                key={ind.slug}
-                className="group relative p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:border-cyan-500/30 transition-all duration-300"
+        <Section className="pt-8">
+          <div className="grid gap-4 md:grid-cols-2">
+            {VERTICALS.map((v) => (
+              <Link
+                key={v.slug}
+                href={`/industries/${v.slug}`}
+                className="group rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8 hover:border-sky-400/30 hover:bg-white/[0.04] transition-colors"
               >
-                <div className="flex items-start gap-4 mb-6">
-                  <span className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center">
-                    <Icon name={ind.icon} className="w-7 h-7 text-cyan-300" />
+                <div className="flex items-start gap-4">
+                  <span className="inline-flex w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
+                    <Icon name={v.icon} className="w-5 h-5 text-sky-300" />
                   </span>
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">{ind.name}</h2>
-                    <p className="text-gray-400 mt-1">{ind.tagline}</p>
+                  <div className="min-w-0">
+                    <h2 className="text-lg font-semibold text-white group-hover:text-sky-200 transition-colors">
+                      {v.name}
+                    </h2>
+                    <p className="mt-1.5 text-sm text-gray-400 leading-relaxed">{v.tagline}</p>
                   </div>
                 </div>
-                <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3">
-                  {ind.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-sm text-gray-300">
-                      <Check className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+
+                <div className="mt-6 pt-5 border-t border-white/10">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 mb-3">
+                    Typical stack
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {v.stack.map((slug) => {
+                      const p = PRODUCTS_BY_SLUG[slug];
+                      if (!p) return null;
+                      return (
+                        <span
+                          key={slug}
+                          className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[11px] text-gray-400"
+                        >
+                          {p.name}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 group-hover:gap-2.5 transition-all">
+                  See the {v.name.toLowerCase()} setup
+                  <ArrowRight className="w-4 h-4" />
+                </span>
+              </Link>
             ))}
           </div>
+        </Section>
 
-          {/* Not listed note */}
-          <div className="mt-12 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent p-8 sm:p-10 text-center">
-            <h3 className="text-2xl font-bold text-white mb-3">Don't see your business?</h3>
-            <p className="text-gray-400 max-w-2xl mx-auto mb-7">
-              These are examples, not limits. If your business runs on staff, customers, scheduling,
-              locations, or devices that should talk to each other — it can run on a connected system.
-              Spas, med spas, delivery companies, warehouses, and international operations all fit.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
-            >
-              Tell us about your business
+        <Section className="bg-[#03060c] border-t border-white/10">
+          <SectionHeading
+            eyebrow="Not listed?"
+            title="The verticals are configuration, not hard-coded products."
+            subtitle="VexaFront, Commerce Ops, and the rest are driven by configuration — catalogs, workflows, roles, and screens. If your operation looks like one of these with different words on it, it is a configuration conversation, not a custom build."
+          />
+          <div className="flex justify-center">
+            <PrimaryButton href="/contact">
+              Tell us how your business runs
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </PrimaryButton>
           </div>
         </Section>
+
+        <CTABand
+          title="See your industry configuration."
+          subtitle="We will walk the demo through your workflow — your services, your roles, your front counter."
+        />
       </main>
       <SiteFooter />
     </>
