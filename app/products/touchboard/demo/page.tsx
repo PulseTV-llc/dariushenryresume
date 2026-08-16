@@ -17,36 +17,36 @@ import { SITE_URL, TOUCHBOARD_PRICING_STATEMENT } from '@/lib/vexaos';
 export const metadata: Metadata = {
   title: 'TouchBoard interactive demo — try the employee display',
   description:
-    'Try a working TouchBoard in your browser: claim an open shift, approve a swap, clock in with a PIN, and see the staffing board react. No sign-up, nothing sent anywhere.',
+    'Try a working TouchBoard in your browser: the Workforce Wall Board plus five more device modes, faithful to the real Android app. No sign-up, nothing sent anywhere.',
   alternates: { canonical: `${SITE_URL}/products/touchboard/demo` },
   openGraph: {
     title: 'TouchBoard interactive demo — Powered by VexaOS',
     description:
-      'A working TouchBoard employee display you can drive in the browser: open shifts, swaps, time off, announcements, and PIN clock-in.',
+      'A working TouchBoard you can drive in the browser: the Standings Board, its read-only drill-ins, and five more device modes.',
     url: `${SITE_URL}/products/touchboard/demo`,
   },
 };
 
 const TRY_THESE = [
   {
-    title: 'Claim an open shift',
+    title: 'Switch the device mode',
     detail:
-      'Open Shifts → Claim. It leaves the open list, lands on today’s schedule, and the staffing health ring climbs.',
+      'The left rail is the real device-mode list. One board runs the Workforce Wall, the Owner’s Command Center, a Kitchen Display, an Inspection Wall, a Register, or a Custom Wall — set remotely from the dashboard.',
   },
   {
-    title: 'Approve a swap',
+    title: 'Drill into the wall',
     detail:
-      'Swaps → Approve or Decline. The pending badge on the nav clears as you work through them.',
+      'On the flagship, tap Open, Swaps, On the floor, or Shoutout. Each opens a read-only detail screen whose only control is Back — and after 30 seconds the wall heals itself back Home, exactly as the kiosk does.',
   },
   {
-    title: 'Clock in with a PIN',
+    title: 'Flip the right-hand panel',
     detail:
-      'Clock In → enter 2468. A wrong PIN is rejected the way the real board rejects it. Your entry lands on the live timeline.',
+      'Live timeline, Swaps, and Recognition share one panel, with Day / Week / Month on the schedule — the same flip panel the real board uses.',
   },
   {
-    title: 'Read the board',
+    title: 'Tap Clock In',
     detail:
-      'Board → Announcements and Recognition, the two things staff actually stop to look at.',
+      'It shows a QR, not a keypad. Clocking in happens in the employee’s phone app; the board is a display surface and stays read-only.',
   },
 ];
 
@@ -81,9 +81,9 @@ export default function TouchBoardDemoPage() {
               <span className="gradient-text">right here.</span>
             </h1>
             <p className="mt-6 text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed text-balance">
-              This is a working employee display running on mock data. Claim a shift, approve a
-              swap, clock in — the board reacts exactly as it does on the wall. No sign-up, and
-              nothing leaves your browser.
+              A faithful rebuild of the real Android TouchBoard, running on mock data. Switch
+              device modes, drill into the wall, and watch it heal itself back Home. No sign-up,
+              and nothing leaves your browser.
             </p>
           </div>
         </section>
@@ -99,8 +99,8 @@ export default function TouchBoardDemoPage() {
         <Section className="border-t border-white/10 mt-10">
           <SectionHeading
             eyebrow="Try these"
-            title="Four things worth tapping."
-            subtitle="Every one of them changes real state — the counters, the badges, and the timeline all respond."
+            title="Four things worth trying."
+            subtitle="The board is a display surface. It reports the operation; it never runs it — so what you can tap here is what you can tap on the wall."
           />
           <div className="grid gap-4 sm:grid-cols-2">
             {TRY_THESE.map((t, i) => (
@@ -124,7 +124,8 @@ export default function TouchBoardDemoPage() {
               <Hand className="w-5 h-5 text-sky-300 shrink-0 mt-0.5" />
               <p className="text-sm text-gray-400 leading-relaxed">
                 On a real deployment this runs full-screen on a wall-mounted panel in locked-down
-                kiosk mode, signed in to your location, against your live roster.{' '}
+                kiosk mode, signed in to your location, against your live data. The mode is set
+                remotely from the VexaOS device registry — the board never picks its own.{' '}
                 {TOUCHBOARD_PRICING_STATEMENT}
               </p>
             </div>
@@ -137,7 +138,7 @@ export default function TouchBoardDemoPage() {
             <SectionHeading
               eyebrow="Next"
               title="See it on your own roster."
-              subtitle="The demo runs on invented staff. A walkthrough runs on yours — your locations, your shifts, your coverage gaps."
+              subtitle="The demo runs on invented data. A walkthrough runs on yours — your locations, your shifts, your coverage gaps."
             />
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <PrimaryButton href="/demo">

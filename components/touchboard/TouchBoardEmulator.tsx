@@ -10,882 +10,1224 @@ import {
   useState,
 } from 'react';
 import {
-  Home,
-  CalendarDays,
+  ArrowLeft,
   Zap,
-  Repeat2,
-  Plane,
-  Megaphone,
-  Fingerprint,
+  Users,
   MapPin,
-  Check,
-  X,
-  Star,
-  Delete,
   RotateCcw,
   Clock3,
   MonitorPlay,
+  QrCode,
+  Trophy,
+  Repeat2,
+  TrendingUp,
+  ChefHat,
+  ClipboardCheck,
+  CreditCard,
+  LayoutDashboard,
+  LayoutGrid,
+  Sparkles,
+  AlertTriangle,
 } from 'lucide-react';
 import {
   DEMO_LOCATION,
-  DEMO_ME,
-  DEMO_PIN,
-  EMPLOYEE_BY_ID,
-  SHIFTS,
-  OPEN_SHIFTS,
-  SWAPS,
-  TIME_OFF,
-  ANNOUNCEMENTS,
+  BOARD_MODES,
+  ON_FLOOR,
+  UP_FOR_GRABS,
+  SCHEDULE_TODAY,
+  PENDING_SWAPS,
   RECOGNITION,
-  TIMELINE,
-  type Shift,
-  type OpenShift,
-  type SwapRequest,
-  type TimelineEntry,
+  scoreStaffingHealth,
+  COMMAND_CENTER,
+  KITCHEN_TICKETS,
+  INSPECTION_WALL,
+  POS_PRODUCTS,
+  POS_CART,
+  POS_TOTALS,
+  CUSTOM_WALL,
+  GRAB_QR_TARGET,
 } from '@/lib/touchboard-demo-data';
 
-/**
- * useLayoutEffect warns when React renders on the server. The board needs a
- * pre-paint measurement to avoid a flash at full size, so use the layout effect
- * in the browser and fall back to useEffect during SSR.
- */
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+/* ==============================================================
+   Palette — TouchColors from ui/theme/Theme.kt, verbatim.
+   ============================================================== */
+const C = {
+  bg: '#06080F',
+  surface: '#111729',
+  surfaceAlt: '#161E33',
+  onSurface: '#F6F8FD',
+  muted: '#8C97B6',
+  faint: '#59648A',
+  hairline: 'rgba(255,255,255,0.08)',
+  shyftBlue: '#2E9BF0',
+  gridGreen: '#74BD43',
+  openAccent: '#38BDF8',
+  urgent: '#FB7185',
+  interest: '#C084FC',
+  inProgress: '#FBBF24',
+  resolved: '#34D399',
+  brand: '#6366F1',
+  brandBright: '#818CF8',
+} as const;
 
-/* ============================================================== */
-/* State                                                          */
-/* ============================================================== */
+/* ==============================================================
+   State
+   ============================================================== */
 
-type ScreenKey =
-  | 'home'
-  | 'schedule'
-  | 'open'
-  | 'swaps'
-  | 'timeoff'
-  | 'announcements'
-  | 'clock';
+type FlagshipRoute = 'home' | 'open' | 'swaps' | 'attendance' | 'recognition';
+type Face = 'timeline' | 'swaps' | 'recognition';
+type SchedTab = 'Day' | 'Week' | 'Month';
 
 interface State {
-  screen: ScreenKey;
-  shifts: Shift[];
-  open: OpenShift[];
-  swaps: (SwapRequest & { decision?: 'approved' | 'declined' })[];
-  timeline: TimelineEntry[];
-  /** Is the demo employee currently on the clock? */
-  onClock: boolean;
-  toast: { id: number; text: string; tone: 'ok' | 'warn' } | null;
-  /** Announcement currently expanded, if any. */
-  openAnnouncement: string | null;
-  announcementTab: 'announcements' | 'recognition';
+  modeId: string;
+  route: FlagshipRoute;
+  face: Face;
+  tab: SchedTab;
+  clockInOpen: boolean;
+  toast: { id: number; text: string } | null;
 }
 
 type Action =
-  | { type: 'go'; screen: ScreenKey }
-  | { type: 'claim'; id: string; at: string }
-  | { type: 'swap'; id: string; decision: 'approved' | 'declined' }
-  | { type: 'clock'; on: boolean; at: string }
-  | { type: 'toast'; text: string; tone?: 'ok' | 'warn' }
+  | { type: 'mode'; id: string }
+  | { type: 'route'; route: FlagshipRoute }
+  | { type: 'face'; face: Face }
+  | { type: 'tab'; tab: SchedTab }
+  | { type: 'clockIn'; open: boolean }
   | { type: 'dismissToast' }
-  | { type: 'toggleAnnouncement'; id: string }
-  | { type: 'announcementTab'; tab: 'announcements' | 'recognition' }
   | { type: 'reset' };
 
 const initialState: State = {
-  screen: 'home',
-  shifts: SHIFTS,
-  open: OPEN_SHIFTS,
-  swaps: SWAPS,
-  timeline: TIMELINE,
-  onClock: false,
+  modeId: 'workforce_wall_board',
+  route: 'home',
+  face: 'timeline',
+  tab: 'Day',
+  clockInOpen: false,
   toast: null,
-  openAnnouncement: ANNOUNCEMENTS[0].id,
-  announcementTab: 'announcements',
 };
 
 let toastSeq = 0;
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'go':
-      return { ...state, screen: action.screen };
-
-    case 'claim': {
-      const claimed = state.open.find((o) => o.id === action.id);
-      if (!claimed) return state;
-      const me = EMPLOYEE_BY_ID[DEMO_ME];
+    case 'mode': {
+      const mode = BOARD_MODES.find((m) => m.id === action.id);
       return {
         ...state,
-        open: state.open.filter((o) => o.id !== action.id),
-        // A claimed shift joins today's roster only when it is today's.
-        shifts:
-          claimed.day === 'Today'
-            ? [
-                ...state.shifts,
-                {
-                  id: `claimed-${claimed.id}`,
-                  employeeId: DEMO_ME,
-                  start: claimed.start,
-                  end: claimed.end,
-                  role: claimed.role,
-                  state: 'scheduled',
-                },
-              ]
-            : state.shifts,
-        timeline: [
-          { id: `tl-${claimed.id}`, employeeId: DEMO_ME, action: 'Claimed an open shift', at: action.at },
-          ...state.timeline,
-        ],
-        toast: {
-          id: ++toastSeq,
-          text: `${me.name} claimed ${claimed.day} ${claimed.start} · ${claimed.role}`,
-          tone: 'ok',
-        },
+        modeId: action.id,
+        route: 'home',
+        clockInOpen: false,
+        toast: mode ? { id: ++toastSeq, text: `Mode set to ${mode.label}` } : state.toast,
       };
     }
-
-    case 'swap': {
-      const swap = state.swaps.find((w) => w.id === action.id);
-      return {
-        ...state,
-        swaps: state.swaps.map((w) =>
-          w.id === action.id ? { ...w, decision: action.decision } : w
-        ),
-        toast: swap
-          ? {
-              id: ++toastSeq,
-              text:
-                action.decision === 'approved'
-                  ? `Swap approved — ${EMPLOYEE_BY_ID[swap.toId].name} now covers ${swap.day}`
-                  : `Swap declined — ${EMPLOYEE_BY_ID[swap.fromId].name} keeps ${swap.day}`,
-              tone: action.decision === 'approved' ? 'ok' : 'warn',
-            }
-          : state.toast,
-      };
-    }
-
-    case 'clock': {
-      const me = EMPLOYEE_BY_ID[DEMO_ME];
-      return {
-        ...state,
-        onClock: action.on,
-        shifts: state.shifts.map((s) =>
-          s.employeeId === DEMO_ME
-            ? { ...s, state: action.on ? 'clocked-in' : 'done' }
-            : s
-        ),
-        timeline: [
-          {
-            id: `tl-clock-${toastSeq + 1}`,
-            employeeId: DEMO_ME,
-            action: action.on ? 'Clocked in' : 'Clocked out',
-            at: action.at,
-          },
-          ...state.timeline,
-        ],
-        toast: {
-          id: ++toastSeq,
-          text: `${me.name} ${action.on ? 'clocked in' : 'clocked out'} at ${action.at}`,
-          tone: 'ok',
-        },
-      };
-    }
-
-    case 'toast':
-      return { ...state, toast: { id: ++toastSeq, text: action.text, tone: action.tone ?? 'ok' } };
-
+    case 'route':
+      return { ...state, route: action.route };
+    case 'face':
+      return { ...state, face: action.face };
+    case 'tab':
+      return { ...state, tab: action.tab };
+    case 'clockIn':
+      return { ...state, clockInOpen: action.open };
     case 'dismissToast':
       return { ...state, toast: null };
-
-    case 'toggleAnnouncement':
-      return {
-        ...state,
-        openAnnouncement: state.openAnnouncement === action.id ? null : action.id,
-      };
-
-    case 'announcementTab':
-      return { ...state, announcementTab: action.tab };
-
     case 'reset':
-      return { ...initialState, toast: { id: ++toastSeq, text: 'Demo reset', tone: 'ok' } };
-
+      return { ...initialState, toast: { id: ++toastSeq, text: 'Demo reset' } };
     default:
       return state;
   }
 }
 
-/* ============================================================== */
-/* Shared bits                                                    */
-/* ============================================================== */
-
-/**
- * The board renders on a FIXED 1280x720 canvas and is scaled to fit its
- * container. That is deliberate: a wall display must read as one landscape
- * screen at every viewport, never reflowing into a stacked phone layout. On a
- * narrow screen it simply becomes a smaller wall board, exactly as it would
- * look from across a room.
- */
+/* ==============================================================
+   Fixed board canvas — a wall display, scaled to fit
+   ============================================================== */
 const BOARD_W = 1280;
 const BOARD_H = 720;
 
-const NAV: { key: ScreenKey; label: string; icon: typeof Home }[] = [
-  { key: 'home', label: 'Overview', icon: Home },
-  { key: 'schedule', label: 'Schedule', icon: CalendarDays },
-  { key: 'open', label: 'Open Shifts', icon: Zap },
-  { key: 'swaps', label: 'Swaps', icon: Repeat2 },
-  { key: 'timeoff', label: 'Time Off', icon: Plane },
-  { key: 'announcements', label: 'Board', icon: Megaphone },
-];
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-function Avatar({ id, size = 'md' }: { id: string; size?: 'sm' | 'md' | 'lg' }) {
-  const e = EMPLOYEE_BY_ID[id];
-  if (!e) return null;
+const MODE_ICON: Record<string, typeof LayoutDashboard> = {
+  LayoutDashboard,
+  TrendingUp,
+  ChefHat,
+  ClipboardCheck,
+  CreditCard,
+  LayoutGrid,
+};
+
+/* ==============================================================
+   Small shared pieces
+   ============================================================== */
+
+function Avatar({
+  initials,
+  accent,
+  size = 'md',
+}: {
+  initials: string;
+  accent: string;
+  size?: 'sm' | 'md' | 'lg';
+}) {
   const cls =
-    size === 'lg' ? 'w-16 h-16 text-xl' : size === 'sm' ? 'w-10 h-10 text-sm' : 'w-12 h-12 text-base';
+    size === 'lg' ? 'w-14 h-14 text-lg' : size === 'sm' ? 'w-9 h-9 text-xs' : 'w-11 h-11 text-sm';
   return (
     <span
-      className={`${cls} shrink-0 rounded-full bg-gradient-to-br ${e.accent} flex items-center justify-center font-bold text-white shadow-lg`}
+      className={`${cls} shrink-0 rounded-full bg-gradient-to-br ${accent} flex items-center justify-center font-black text-white`}
       aria-hidden="true"
     >
-      {e.initials}
+      {initials}
     </span>
   );
 }
 
-function StatTile({
-  value,
-  label,
-  tone,
-}: {
-  value: number | string;
-  label: string;
-  tone: 'red' | 'blue' | 'amber';
-}) {
-  const colors = { red: 'text-rose-400', blue: 'text-sky-400', amber: 'text-amber-400' }[tone];
+/** Section eyebrow in the app's wall style: tiny, bold, wide-tracked. */
+function Eyebrow({ children, color = C.faint }: { children: React.ReactNode; color?: string }) {
   return (
-    <div className="rounded-2xl bg-white/[0.04] border border-white/10 px-4 py-5 text-center">
-      <p className={`text-5xl font-bold tabular-nums leading-none ${colors}`}>{value}</p>
-      <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-        {label}
-      </p>
-    </div>
+    <span className="text-[11px] font-bold uppercase" style={{ color, letterSpacing: '0.18em' }}>
+      {children}
+    </span>
   );
 }
 
-function ScreenTitle({ title, sub }: { title: string; sub?: string }) {
-  return (
-    <div className="mb-5">
-      <h3 className="text-3xl font-bold text-white tracking-tight">{title}</h3>
-      {sub && <p className="mt-1 text-base text-gray-500">{sub}</p>}
-    </div>
-  );
-}
-
-/** Large-format action button — sized for a hand at arm's length. */
-function TouchButton({
+function GlassCard({
   children,
-  onClick,
-  tone = 'neutral',
   className = '',
+  onClick,
   ariaLabel,
 }: {
   children: React.ReactNode;
-  onClick?: () => void;
-  tone?: 'neutral' | 'primary' | 'danger';
   className?: string;
+  onClick?: () => void;
   ariaLabel?: string;
 }) {
-  const tones = {
-    primary:
-      'bg-gradient-to-r from-emerald-500 to-sky-500 text-white hover:from-emerald-400 hover:to-sky-400 shadow-lg shadow-emerald-500/20',
-    danger: 'bg-rose-500/15 text-rose-200 border border-rose-400/30 hover:bg-rose-500/25',
-    neutral: 'bg-white/[0.06] text-white border border-white/15 hover:bg-white/[0.12]',
-  }[tone];
+  const style = { background: C.surface, borderColor: C.hairline };
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={ariaLabel}
+        className={`rounded-3xl border text-left transition-colors hover:brightness-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${className}`}
+        style={style}
+      >
+        {children}
+      </button>
+    );
+  }
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={ariaLabel}
-      className={`min-h-[56px] px-7 rounded-2xl text-lg font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${tones} ${className}`}
-    >
+    <div className={`rounded-3xl border ${className}`} style={style}>
       {children}
-    </button>
+    </div>
   );
 }
 
-/* ============================================================== */
-/* Screens — all sized for the fixed 1280x720 canvas              */
-/* ============================================================== */
+/** Deterministic faux QR. Self-contained — no encoder, no network. */
+function FauxQr({ size = 132, seed = 7 }: { size?: number; seed?: number }) {
+  const n = 21;
+  const cells = useMemo(() => {
+    const out: boolean[] = [];
+    let s = seed * 9301 + 49297;
+    for (let i = 0; i < n * n; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      out.push(s / 233280 > 0.5);
+    }
+    return out;
+  }, [seed]);
+  const isFinder = (r: number, c: number) =>
+    (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
+  const px = size / n;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true">
+      <rect width={size} height={size} fill="#fff" rx="6" />
+      {Array.from({ length: n * n }).map((_, i) => {
+        const r = Math.floor(i / n);
+        const c = i % n;
+        if (isFinder(r, c)) return null;
+        return cells[i] ? (
+          <rect key={i} x={c * px} y={r * px} width={px} height={px} fill="#06080F" />
+        ) : null;
+      })}
+      {[
+        [0, 0],
+        [0, n - 7],
+        [n - 7, 0],
+      ].map(([r, c], i) => (
+        <g key={i}>
+          <rect x={c * px} y={r * px} width={px * 7} height={px * 7} fill="#06080F" rx="3" />
+          <rect x={(c + 1) * px} y={(r + 1) * px} width={px * 5} height={px * 5} fill="#fff" rx="2" />
+          <rect x={(c + 2) * px} y={(r + 2) * px} width={px * 3} height={px * 3} fill="#06080F" rx="1" />
+        </g>
+      ))}
+    </svg>
+  );
+}
 
-function HomeScreen({ state, go }: { state: State; go: (s: ScreenKey) => void }) {
-  const onFloor = state.shifts.filter((s) => s.state === 'clocked-in');
-  const openCount = state.open.length;
-  const pendingSwaps = state.swaps.filter((w) => !w.decision).length;
-  const urgent = state.open.filter((o) => o.urgent).length;
+/* ==============================================================
+   FLAGSHIP — Workforce Wall Board (WallStandingsBoard.kt)
+   ============================================================== */
 
-  const health = Math.max(40, 100 - urgent * 12 - openCount * 4 - pendingSwaps * 3);
-  const circumference = 2 * Math.PI * 64;
-  const dash = (health / 100) * circumference;
+function StandingsBoardHome({
+  state,
+  go,
+  setFace,
+  setTab,
+  openClockIn,
+}: {
+  state: State;
+  go: (r: FlagshipRoute) => void;
+  setFace: (f: Face) => void;
+  setTab: (t: SchedTab) => void;
+  openClockIn: () => void;
+}) {
+  const grabs = UP_FOR_GRABS;
+  const late = ON_FLOOR.filter((c) => c.state === 'late').length;
+  const here = ON_FLOOR.filter((c) => c.state === 'in').length;
+  const health = scoreStaffingHealth(grabs.length, PENDING_SWAPS.length, late);
   const healthy = health >= 85;
+  const ring = 2 * Math.PI * 58;
 
   return (
-    <div className="grid grid-cols-2 gap-5 h-full">
-      <div className="rounded-3xl bg-white/[0.03] border border-white/10 p-6 flex flex-col">
+    <div className="h-full flex flex-col">
+      <div className="flex gap-[18px] flex-1 min-h-0">
+        {/* Left column — weight 1.05 in Compose */}
+        <div className="flex flex-col min-h-0" style={{ flex: '1.05' }}>
+          {/* ScoreboardHero */}
+          <GlassCard className="p-4 shrink-0">
+            <div className="flex items-center gap-5">
+              <div className="relative shrink-0">
+                <svg width="118" height="118" viewBox="0 0 136 136" className="-rotate-90">
+                  <circle cx="68" cy="68" r="58" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="12" />
+                  <circle
+                    cx="68"
+                    cy="68"
+                    r="58"
+                    fill="none"
+                    stroke={healthy ? C.resolved : C.inProgress}
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    strokeDasharray={`${(health / 100) * ring} ${ring}`}
+                    className="transition-all duration-700"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span
+                    className="text-[36px] font-black leading-none tabular-nums"
+                    style={{ color: C.onSurface }}
+                  >
+                    {health}
+                  </span>
+                  <span
+                    className="mt-0.5 text-[9px] font-bold uppercase"
+                    style={{ color: C.faint, letterSpacing: '0.18em' }}
+                  >
+                    Health
+                  </span>
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <Eyebrow>Staffing health</Eyebrow>
+                <p
+                  className="mt-1 text-[30px] font-black leading-none tracking-tight"
+                  style={{ color: healthy ? C.resolved : C.inProgress }}
+                >
+                  {healthy ? 'Fully staffed' : 'Needs coverage'}
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => go('open')}
+                    className="rounded-2xl border px-4 py-2.5 text-left transition-colors hover:brightness-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                    style={{ background: C.surfaceAlt, borderColor: C.hairline }}
+                  >
+                    <p
+                      className="text-3xl font-black tabular-nums leading-none"
+                      style={{ color: C.openAccent }}
+                    >
+                      {grabs.length}
+                    </p>
+                    <p
+                      className="mt-1 text-[10px] font-bold uppercase"
+                      style={{ color: C.faint, letterSpacing: '0.14em' }}
+                    >
+                      Open
+                    </p>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => go('swaps')}
+                    className="rounded-2xl border px-4 py-2.5 text-left transition-colors hover:brightness-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                    style={{ background: C.surfaceAlt, borderColor: C.hairline }}
+                  >
+                    <p
+                      className="text-3xl font-black tabular-nums leading-none"
+                      style={{ color: C.inProgress }}
+                    >
+                      {PENDING_SWAPS.length}
+                    </p>
+                    <p
+                      className="mt-1 text-[10px] font-bold uppercase"
+                      style={{ color: C.faint, letterSpacing: '0.14em' }}
+                    >
+                      Swaps
+                    </p>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* OnFloorAvatars */}
+          <GlassCard
+            className="mt-3 p-4 shrink-0 w-full"
+            onClick={() => go('attendance')}
+            ariaLabel="On the floor now — open detail"
+          >
+            <div className="flex items-baseline gap-2.5">
+              <Eyebrow>On the floor now</Eyebrow>
+              <span className="text-[13px] font-bold" style={{ color: C.resolved }}>
+                {here} here
+              </span>
+              {late > 0 && (
+                <span className="text-[13px] font-bold" style={{ color: C.urgent }}>
+                  · {late} late/no-show
+                </span>
+              )}
+            </div>
+            <div className="mt-3 flex gap-2 overflow-hidden">
+              {ON_FLOOR.map((c) => (
+                <div
+                  key={c.id}
+                  className="flex items-center gap-2 rounded-full border pl-1 pr-3 py-1 shrink-0"
+                  style={{
+                    background: C.surfaceAlt,
+                    borderColor: c.state === 'late' ? 'rgba(251,113,133,0.35)' : C.hairline,
+                  }}
+                >
+                  <Avatar initials={c.initials} accent={c.accent} size="sm" />
+                  <span className="text-[13px] font-bold" style={{ color: C.onSurface }}>
+                    {c.name.split(' ')[0]}
+                  </span>
+                  {c.state === 'late' && (
+                    <span className="text-[10px] font-black uppercase" style={{ color: C.urgent }}>
+                      Late
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </GlassCard>
+
+          {/* GrabTiles */}
+          <GlassCard className="mt-3 p-4 flex-1 min-h-0 flex flex-col">
+            <div className="flex items-center gap-2.5 shrink-0">
+              <Eyebrow>Up for grabs</Eyebrow>
+              <span className="text-[14px] font-black" style={{ color: C.openAccent }}>
+                {grabs.length}
+              </span>
+              <span
+                className="ml-auto inline-flex items-center gap-1.5 text-[11px] font-bold"
+                style={{ color: C.faint }}
+              >
+                <QrCode className="w-3.5 h-3.5" />
+                Scan to grab
+              </span>
+            </div>
+            {/* GrabTile — date/time + countdown, as WallStandingsBoard.kt renders
+                it. The per-shift QR lives on the Employee Control Center pickup
+                card and in the Open Shifts drill-in, not on this tile. */}
+            <div className="mt-3 flex gap-2.5 flex-1 min-h-0">
+              {grabs.slice(0, 3).map((g) => (
+                <div
+                  key={g.id}
+                  className="rounded-2xl border p-3.5 flex-1 min-w-0 flex flex-col justify-center"
+                  style={{
+                    background: C.surfaceAlt,
+                    borderColor: g.uncovered ? 'rgba(251,113,133,0.4)' : 'rgba(56,189,248,0.28)',
+                  }}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span
+                      className="text-[10px] font-black uppercase"
+                      style={{
+                        color: g.uncovered ? C.urgent : C.openAccent,
+                        letterSpacing: '0.12em',
+                      }}
+                    >
+                      {g.uncovered ? 'Uncovered' : 'Open'}
+                    </span>
+                    <span className="text-[11px] font-bold tabular-nums" style={{ color: C.muted }}>
+                      in {g.startsInMin < 60 ? `${g.startsInMin}m` : `${Math.round(g.startsInMin / 60)}h`}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-[15px] font-bold leading-tight" style={{ color: C.onSurface }}>
+                    {g.dateLabel}
+                  </p>
+                  <p className="mt-0.5 text-[13px] tabular-nums leading-tight" style={{ color: C.muted }}>
+                    {g.timeLabel}
+                  </p>
+                  <p className="mt-1.5 text-[11px] font-bold" style={{ color: C.faint }}>
+                    {g.role}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </GlassCard>
+        </div>
+
+        {/* Right column — FlipPanel */}
+        <div className="flex flex-col min-h-0" style={{ flex: '1' }}>
+          <GlassCard className="p-[18px] flex-1 min-h-0 flex flex-col">
+            <div className="flex gap-2 shrink-0">
+              {(
+                [
+                  ['timeline', 'Live timeline'],
+                  ['swaps', 'Swaps'],
+                  ['recognition', 'Recognition'],
+                ] as const
+              ).map(([f, label]) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setFace(f)}
+                  className="px-3.5 py-2 rounded-full text-[11px] font-black uppercase transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                  style={{
+                    letterSpacing: '0.14em',
+                    background: state.face === f ? C.brand : 'rgba(255,255,255,0.05)',
+                    color: state.face === f ? '#fff' : C.muted,
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-3.5 flex-1 min-h-0 flex flex-col">
+              {state.face === 'timeline' && (
+                <>
+                  <div className="flex gap-1 p-1 rounded-xl shrink-0" style={{ background: C.surfaceAlt }}>
+                    {(['Day', 'Week', 'Month'] as const).map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setTab(t)}
+                        className="flex-1 py-2 rounded-lg text-[13px] font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                        style={{
+                          background: state.tab === t ? C.brand : 'transparent',
+                          color: state.tab === t ? '#fff' : C.muted,
+                        }}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-3 space-y-2 overflow-y-auto flex-1 pr-1">
+                    {SCHEDULE_TODAY.map((s) => (
+                      <div
+                        key={s.id}
+                        className="flex items-center gap-3 rounded-2xl border px-4 py-3"
+                        style={{ background: C.surfaceAlt, borderColor: C.hairline }}
+                      >
+                        <Avatar initials={s.initials} accent={s.accent} size="sm" />
+                        <div className="min-w-0 flex-1">
+                          <p
+                            className="text-[15px] font-bold leading-tight truncate"
+                            style={{ color: C.onSurface }}
+                          >
+                            {s.name}
+                          </p>
+                          <p className="text-[12px]" style={{ color: C.faint }}>
+                            {s.role}
+                          </p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className="text-[13px] font-bold tabular-nums" style={{ color: C.muted }}>
+                            {s.time}
+                          </p>
+                          <p
+                            className="text-[10px] font-black uppercase"
+                            style={{
+                              letterSpacing: '0.1em',
+                              color:
+                                s.state === 'Clocked in'
+                                  ? C.resolved
+                                  : s.state === 'Scheduled'
+                                    ? C.openAccent
+                                    : C.faint,
+                            }}
+                          >
+                            {s.state}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {state.face === 'swaps' && (
+                <div className="space-y-2.5 overflow-y-auto flex-1 pr-1">
+                  <div className="flex items-center gap-2.5">
+                    <Eyebrow>Pending swaps</Eyebrow>
+                    <span className="text-[14px] font-black" style={{ color: C.inProgress }}>
+                      {PENDING_SWAPS.length}
+                    </span>
+                  </div>
+                  {PENDING_SWAPS.map((w) => (
+                    <div
+                      key={w.id}
+                      className="rounded-2xl border px-4 py-3.5"
+                      style={{ background: C.surfaceAlt, borderColor: C.hairline }}
+                    >
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[15px] font-bold" style={{ color: C.onSurface }}>
+                          {w.from}
+                        </span>
+                        <Repeat2 className="w-4 h-4" style={{ color: C.faint }} />
+                        <span className="text-[15px] font-bold" style={{ color: C.onSurface }}>
+                          {w.to}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-[13px] tabular-nums" style={{ color: C.muted }}>
+                        {w.when}
+                      </p>
+                      <span
+                        className="mt-2 inline-block px-2.5 py-1 rounded-lg text-[10px] font-black uppercase"
+                        style={{
+                          letterSpacing: '0.1em',
+                          background: 'rgba(251,191,36,0.14)',
+                          color: C.inProgress,
+                        }}
+                      >
+                        {w.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {state.face === 'recognition' && (
+                <div className="space-y-2.5 overflow-y-auto flex-1 pr-1">
+                  <button
+                    type="button"
+                    onClick={() => go('recognition')}
+                    className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded-lg"
+                    aria-label="Recognition — open detail"
+                  >
+                    <Sparkles className="w-4 h-4" style={{ color: C.inProgress }} />
+                    <span
+                      className="text-[14px] font-black uppercase"
+                      style={{ color: C.inProgress, letterSpacing: '0.2em' }}
+                    >
+                      Shoutout
+                    </span>
+                  </button>
+                  {RECOGNITION.map((r) => (
+                    <div
+                      key={r.id}
+                      className="rounded-2xl border px-4 py-3.5"
+                      style={{ background: C.surfaceAlt, borderColor: C.hairline }}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Avatar initials={r.initials} accent={r.accent} size="sm" />
+                        <div className="min-w-0">
+                          <p className="text-[15px] font-bold" style={{ color: C.onSurface }}>
+                            {r.name}
+                          </p>
+                          <p className="mt-1 text-[13px] leading-snug" style={{ color: C.muted }}>
+                            “{r.note}”
+                          </p>
+                          <p className="mt-1 text-[11px]" style={{ color: C.faint }}>
+                            {r.from}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </GlassCard>
+        </div>
+      </div>
+
+      {/* ClockInButton — opens the QR overlay, never a keypad */}
+      <button
+        type="button"
+        onClick={openClockIn}
+        className="mt-3 w-full shrink-0 h-[54px] rounded-2xl flex items-center justify-center gap-3 font-black text-white text-[19px] transition-all hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+        style={{ background: `linear-gradient(90deg, ${C.shyftBlue}, ${C.gridGreen})` }}
+      >
+        <QrCode className="w-6 h-6" />
+        Clock In
+      </button>
+    </div>
+  );
+}
+
+/** DetailScaffold from DetailScreens.kt — Back is the only control. */
+function DetailScaffold({
+  title,
+  count,
+  accent,
+  icon: Icon,
+  onBack,
+  children,
+}: {
+  title: string;
+  count: number;
+  accent: string;
+  icon: typeof Zap;
+  onBack: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="h-full flex flex-col">
+      <div className="flex items-center gap-4 shrink-0">
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold transition-colors hover:brightness-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+          style={{ background: C.surfaceAlt, borderColor: C.hairline, color: C.onSurface }}
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back
+        </button>
+        <div className="flex items-center gap-3">
+          <Icon className="w-7 h-7" style={{ color: accent }} />
+          <h3 className="text-[28px] font-black tracking-tight" style={{ color: C.onSurface }}>
+            {title}
+          </h3>
+          <span
+            className="px-3 py-1 rounded-full text-[15px] font-black tabular-nums"
+            style={{ background: 'rgba(255,255,255,0.06)', color: accent }}
+          >
+            {count}
+          </span>
+        </div>
+        <span
+          className="ml-auto text-[11px] font-bold uppercase"
+          style={{ color: C.faint, letterSpacing: '0.14em' }}
+        >
+          Display only
+        </span>
+      </div>
+      <div className="mt-5 flex-1 min-h-0 overflow-y-auto pr-1">{children}</div>
+    </div>
+  );
+}
+
+/* ==============================================================
+   Other featured modes
+   ============================================================== */
+
+function OwnerCommandCenter() {
+  const m = COMMAND_CENTER;
+  const maxHour = Math.max(...m.byHour);
+  return (
+    <div className="h-full flex flex-col gap-4">
+      <div className="flex gap-4 shrink-0">
+        <GlassCard className="p-5 flex-1">
+          <Eyebrow>Revenue today</Eyebrow>
+          <p
+            className="mt-1 text-[44px] font-black leading-none tabular-nums"
+            style={{ color: C.onSurface }}
+          >
+            {m.revenueToday}
+          </p>
+          <div className="mt-3 flex gap-4">
+            {m.micro.map((s) => (
+              <span key={s.label} className="text-[13px]">
+                <span style={{ color: C.faint }}>{s.label} </span>
+                <span className={`font-bold ${s.accent}`}>{s.value}</span>
+              </span>
+            ))}
+          </div>
+        </GlassCard>
+        <div className="grid grid-cols-4 gap-3" style={{ flex: '1.3' }}>
+          {m.kpis.map((k) => (
+            <GlassCard key={k.label} className="p-4 flex flex-col justify-center">
+              <p className={`text-[30px] font-black leading-none tabular-nums ${k.accent}`}>{k.value}</p>
+              <p
+                className="mt-1.5 text-[11px] font-bold uppercase"
+                style={{ color: C.faint, letterSpacing: '0.12em' }}
+              >
+                {k.label}
+              </p>
+            </GlassCard>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex gap-4 flex-1 min-h-0">
+        <GlassCard className="p-5 flex-1 min-h-0 flex flex-col">
+          <Eyebrow color={C.shyftBlue}>Locations</Eyebrow>
+          <div className="mt-3.5 space-y-3">
+            {m.locations.map((l) => (
+              <div key={l.name}>
+                <div className="flex justify-between text-[14px]">
+                  <span className="font-bold" style={{ color: C.onSurface }}>
+                    {l.name}
+                  </span>
+                  <span className="tabular-nums" style={{ color: C.muted }}>
+                    {l.value}
+                  </span>
+                </div>
+                <div
+                  className="mt-1.5 h-2.5 rounded-full overflow-hidden"
+                  style={{ background: C.surfaceAlt }}
+                >
+                  <div
+                    className="h-full rounded-full transition-all duration-700"
+                    style={{ width: `${l.fraction * 100}%`, background: C.shyftBlue }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 pt-4 border-t flex-1 min-h-0" style={{ borderColor: C.hairline }}>
+            <Eyebrow color={C.inProgress}>Revenue by hour</Eyebrow>
+            <div className="mt-3 flex items-end gap-1.5 h-[76px]">
+              {m.byHour.map((v, i) => (
+                <div
+                  key={i}
+                  className="flex-1 rounded-t transition-all duration-700"
+                  style={{
+                    height: `${(v / maxHour) * 100}%`,
+                    background: i === m.peakHour ? C.inProgress : 'rgba(129,140,248,0.5)',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </GlassCard>
+
+        <div className="flex flex-col gap-4" style={{ flex: '1' }}>
+          <GlassCard className="p-5 flex-1 min-h-0 flex flex-col">
+            <div className="flex items-center gap-2">
+              <Eyebrow color={C.resolved}>Live sales</Eyebrow>
+              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: C.resolved }} />
+            </div>
+            <div className="mt-3 space-y-2 overflow-y-auto flex-1 pr-1">
+              {m.liveSales.map((s) => (
+                <div
+                  key={s.id}
+                  className="flex items-center justify-between rounded-xl px-3.5 py-2.5"
+                  style={{ background: C.surfaceAlt }}
+                >
+                  <span className="text-[13px]" style={{ color: C.muted }}>
+                    {s.label}
+                  </span>
+                  <span
+                    className="text-[15px] font-black tabular-nums"
+                    style={{ color: C.resolved }}
+                  >
+                    {s.amount}
+                  </span>
+                  <span className="text-[11px] tabular-nums" style={{ color: C.faint }}>
+                    {s.ago}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </GlassCard>
+          <GlassCard className="p-5 shrink-0">
+            <Eyebrow color={C.urgent}>Alerts</Eyebrow>
+            <div className="mt-3 space-y-2">
+              {m.alerts.map((a) => (
+                <div key={a.id} className="flex items-start gap-2.5">
+                  <AlertTriangle
+                    className="w-4 h-4 mt-0.5 shrink-0"
+                    style={{ color: a.tone === 'urgent' ? C.urgent : C.inProgress }}
+                  />
+                  <span className="text-[13px] leading-snug" style={{ color: C.muted }}>
+                    {a.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </GlassCard>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function KitchenDisplay() {
+  const col: Record<string, string> = {
+    new: C.openAccent,
+    working: C.inProgress,
+    ready: C.resolved,
+  };
+  const label: Record<string, string> = { new: 'New', working: 'Working', ready: 'Ready' };
+  return (
+    <div className="h-full flex flex-col">
+      <div className="flex items-baseline gap-4 shrink-0">
+        <h3 className="text-[30px] font-black" style={{ color: C.onSurface }}>
+          Kitchen
+        </h3>
+        <span className="text-[15px]" style={{ color: C.muted }}>
+          {KITCHEN_TICKETS.length} active tickets
+        </span>
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-4 flex-1 min-h-0">
+        {KITCHEN_TICKETS.map((t) => (
+          <GlassCard key={t.id} className="p-5 flex flex-col min-h-0">
+            <div className="flex items-center justify-between shrink-0">
+              <span className="text-[24px] font-black tabular-nums" style={{ color: C.onSurface }}>
+                {t.order}
+              </span>
+              <span
+                className="px-3 py-1 rounded-lg text-[11px] font-black uppercase"
+                style={{
+                  letterSpacing: '0.1em',
+                  background: 'rgba(255,255,255,0.06)',
+                  color: col[t.state],
+                }}
+              >
+                {label[t.state]}
+              </span>
+            </div>
+            <div
+              className="mt-1.5 flex items-center gap-2 text-[13px] shrink-0"
+              style={{ color: C.faint }}
+            >
+              <span>{t.channel}</span>
+              <span>·</span>
+              <span className="tabular-nums" style={{ color: t.ageMin >= 8 ? C.urgent : C.faint }}>
+                {t.ageMin}m
+              </span>
+            </div>
+            <div className="mt-4 space-y-2.5 flex-1 overflow-y-auto pr-1">
+              {t.items.map((it, i) => (
+                <div key={i} className="flex gap-3">
+                  <span
+                    className="text-[19px] font-black tabular-nums shrink-0"
+                    style={{ color: col[t.state] }}
+                  >
+                    {it.qty}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[17px] font-bold leading-tight" style={{ color: C.onSurface }}>
+                      {it.name}
+                    </p>
+                    {it.note && (
+                      <p className="text-[13px] italic" style={{ color: C.inProgress }}>
+                        {it.note}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div
+              className="mt-4 h-11 rounded-xl flex items-center justify-center text-[14px] font-black shrink-0"
+              style={{ background: 'rgba(255,255,255,0.05)', color: C.muted }}
+            >
+              Bump
+            </div>
+          </GlassCard>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function InspectionWall() {
+  const w = INSPECTION_WALL;
+  const ring = 2 * Math.PI * 56;
+  const max = Math.max(...w.sparkline);
+  return (
+    <div className="h-full flex flex-col gap-4">
+      <GlassCard className="p-5 shrink-0">
         <div className="flex items-center gap-6">
           <div className="relative shrink-0">
-            <svg width="150" height="150" viewBox="0 0 150 150" className="-rotate-90">
-              <circle cx="75" cy="75" r="64" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="13" />
+            <svg width="132" height="132" viewBox="0 0 132 132" className="-rotate-90">
+              <circle cx="66" cy="66" r="56" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="11" />
               <circle
-                cx="75"
-                cy="75"
-                r="64"
+                cx="66"
+                cy="66"
+                r="56"
                 fill="none"
-                stroke={healthy ? '#34d399' : '#fbbf24'}
-                strokeWidth="13"
+                stroke={C.resolved}
+                strokeWidth="11"
                 strokeLinecap="round"
-                strokeDasharray={`${dash} ${circumference}`}
-                className="transition-all duration-700"
+                strokeDasharray={`${(w.scorePct / 100) * ring} ${ring}`}
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-5xl font-bold text-white tabular-nums leading-none">{health}</span>
-              <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-                Health
+              <span className="text-[36px] font-black leading-none" style={{ color: C.onSurface }}>
+                {w.grade}
+              </span>
+              <span className="text-[13px] font-bold tabular-nums" style={{ color: C.resolved }}>
+                {w.scorePct}%
               </span>
             </div>
           </div>
-          <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-              Staffing health
-            </p>
-            <p
-              className={`mt-1.5 text-4xl font-bold tracking-tight leading-none ${
-                healthy ? 'text-emerald-400' : 'text-amber-400'
-              }`}
-            >
-              {healthy ? 'Fully staffed' : 'Needs coverage'}
-            </p>
-            <p className="mt-2.5 text-lg text-gray-400">
-              {urgent} urgent · {openCount} open · {pendingSwaps} swaps pending
+          <div className="grid grid-cols-4 gap-4 flex-1">
+            {w.stats.map((s) => (
+              <div key={s.label}>
+                <p className={`text-[32px] font-black leading-none tabular-nums ${s.accent}`}>{s.value}</p>
+                <p
+                  className="mt-1 text-[11px] font-bold uppercase"
+                  style={{ color: C.faint, letterSpacing: '0.12em' }}
+                >
+                  {s.label}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="shrink-0 w-[150px]">
+            <div className="flex items-end gap-1 h-[54px]">
+              {w.sparkline.map((p, i) => (
+                <div
+                  key={i}
+                  className="flex-1 rounded-t"
+                  style={{
+                    height: `${(p / max) * 100}%`,
+                    background: C.resolved,
+                    opacity: 0.35 + (i / w.sparkline.length) * 0.65,
+                  }}
+                />
+              ))}
+            </div>
+            <p className="mt-1.5 text-[12px] font-bold" style={{ color: C.resolved }}>
+              {w.trendDelta} pts / 7d
             </p>
           </div>
         </div>
+      </GlassCard>
 
-        <div className="mt-6 grid grid-cols-3 gap-3">
-          <StatTile value={urgent} label="Urgent" tone="red" />
-          <StatTile value={openCount} label="Open" tone="blue" />
-          <StatTile value={pendingSwaps} label="Swaps" tone="amber" />
-        </div>
+      <div className="grid grid-cols-3 gap-4 flex-1 min-h-0">
+        <GlassCard className="p-5 flex flex-col min-h-0">
+          <Eyebrow color={C.inProgress}>On the floor now</Eyebrow>
+          <div className="mt-3.5 space-y-3 overflow-y-auto flex-1 pr-1">
+            {w.inFlight.map((f) => (
+              <div key={f.id}>
+                <p className="text-[15px] font-bold" style={{ color: C.onSurface }}>
+                  {f.template}
+                </p>
+                <p className="text-[12px]" style={{ color: C.faint }}>
+                  {f.who}
+                </p>
+                <div className="mt-2 h-2 rounded-full overflow-hidden" style={{ background: C.surfaceAlt }}>
+                  <div className="h-full rounded-full" style={{ width: `${f.pct}%`, background: C.inProgress }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </GlassCard>
 
-        <div className="mt-6 pt-6 border-t border-white/10 flex-1 min-h-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-            On the floor now <span className="text-emerald-400">{onFloor.length} here</span>
-          </p>
-          <div className="mt-3.5 flex flex-wrap gap-2.5">
-            {onFloor.map((s) => (
+        <GlassCard className="p-5 flex flex-col min-h-0">
+          <Eyebrow color={C.urgent}>Risk radar</Eyebrow>
+          <div className="mt-3.5 space-y-2.5 overflow-y-auto flex-1 pr-1">
+            {w.risks.map((r) => (
               <div
-                key={s.id}
-                className="flex items-center gap-3 rounded-full bg-white/[0.05] border border-white/10 pl-2 pr-5 py-2"
+                key={r.id}
+                className="flex items-center justify-between rounded-xl px-3.5 py-2.5"
+                style={{ background: C.surfaceAlt }}
               >
-                <Avatar id={s.employeeId} size="sm" />
-                <span className="text-lg text-gray-200 font-semibold">
-                  {EMPLOYEE_BY_ID[s.employeeId]?.name.split(' ')[0]}
+                <span className="text-[13px] min-w-0 truncate" style={{ color: C.onSurface }}>
+                  {r.item}
+                </span>
+                <span
+                  className="text-[15px] font-black tabular-nums shrink-0 ml-2"
+                  style={{ color: r.tone === 'urgent' ? C.urgent : C.inProgress }}
+                >
+                  ×{r.fails}
                 </span>
               </div>
             ))}
-            {onFloor.length === 0 && <p className="text-lg text-gray-600">Nobody clocked in yet.</p>}
           </div>
-        </div>
-      </div>
+        </GlassCard>
 
-      <div className="rounded-3xl bg-white/[0.03] border border-white/10 p-6 flex flex-col min-h-0">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-          Live timeline
-        </p>
-
-        <div className="mt-4 space-y-3 overflow-y-auto flex-1 pr-1">
-          {state.timeline.map((t) => (
-            <div
-              key={t.id}
-              className="flex items-center gap-4 rounded-2xl bg-white/[0.03] border border-white/[0.07] px-5 py-3.5"
-            >
-              <Avatar id={t.employeeId} size="sm" />
-              <div className="min-w-0 flex-1">
-                <p className="text-lg font-bold text-white truncate leading-tight">
-                  {EMPLOYEE_BY_ID[t.employeeId]?.name}
+        <GlassCard className="p-5 flex flex-col">
+          <Eyebrow color={C.openAccent}>Corrective work</Eyebrow>
+          <div className="mt-4 grid grid-cols-3 gap-3">
+            {w.corrective.map((c) => (
+              <div key={c.label}>
+                <p className={`text-[30px] font-black leading-none tabular-nums ${c.accent}`}>{c.value}</p>
+                <p
+                  className="mt-1 text-[10px] font-bold uppercase"
+                  style={{ color: C.faint, letterSpacing: '0.1em' }}
+                >
+                  {c.label}
                 </p>
-                <p className="text-sm text-gray-500">{t.action}</p>
               </div>
-              <span className="text-lg font-semibold text-gray-400 tabular-nums shrink-0">{t.at}</span>
-            </div>
-          ))}
-        </div>
-
-        {state.open.length > 0 && (
-          <button
-            type="button"
-            onClick={() => go('open')}
-            className="mt-4 w-full flex items-center justify-between gap-3 rounded-2xl bg-sky-500/10 border border-sky-400/30 px-5 py-4 text-left hover:bg-sky-500/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-          >
-            <span className="flex items-center gap-3">
-              <Zap className="w-6 h-6 text-sky-300" />
-              <span className="text-lg font-bold text-white">
-                {state.open.length} open shift{state.open.length === 1 ? '' : 's'} — tap to claim
-              </span>
-            </span>
-            <span className="text-sky-300 text-base font-bold">View</span>
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ScheduleScreen({ state }: { state: State }) {
-  const order: Record<string, number> = { 'clocked-in': 0, 'on-break': 1, scheduled: 2, done: 3 };
-  const sorted = [...state.shifts].sort((a, b) => order[a.state] - order[b.state]);
-  const badge = {
-    'clocked-in': 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30',
-    'on-break': 'bg-amber-500/15 text-amber-300 border-amber-400/30',
-    scheduled: 'bg-sky-500/15 text-sky-300 border-sky-400/30',
-    done: 'bg-white/[0.06] text-gray-400 border-white/15',
-  };
-  const label = {
-    'clocked-in': 'Clocked in',
-    'on-break': 'On break',
-    scheduled: 'Scheduled',
-    done: 'Done',
-  };
-
-  return (
-    <div className="h-full flex flex-col min-h-0">
-      <ScreenTitle title="Today’s schedule" sub={`${state.shifts.length} shifts · ${DEMO_LOCATION}`} />
-      <div className="grid grid-cols-2 gap-3 overflow-y-auto flex-1 pr-1 content-start">
-        {sorted.map((s) => {
-          const e = EMPLOYEE_BY_ID[s.employeeId];
-          return (
-            <div
-              key={s.id}
-              className="flex items-center gap-4 rounded-2xl bg-white/[0.03] border border-white/10 px-5 py-4"
-            >
-              <Avatar id={s.employeeId} />
-              <div className="min-w-0 flex-1">
-                <p className="text-xl font-bold text-white truncate leading-tight">{e?.name}</p>
-                <p className="text-base text-gray-500">{s.role}</p>
-              </div>
-              <div className="text-right shrink-0">
-                <p className="text-lg font-bold text-white tabular-nums whitespace-nowrap">
-                  {s.start} – {s.end}
-                </p>
-                <span
-                  className={`mt-1.5 inline-block px-2.5 py-1 rounded-md border text-[11px] font-bold uppercase tracking-wider ${badge[s.state]}`}
-                >
-                  {label[s.state]}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function OpenShiftsScreen({ state, onClaim }: { state: State; onClaim: (id: string) => void }) {
-  return (
-    <div className="h-full flex flex-col min-h-0">
-      <ScreenTitle
-        title="Open shifts"
-        sub={
-          state.open.length
-            ? 'Tap Claim to pick one up — it lands on the schedule instantly.'
-            : 'Everything is covered.'
-        }
-      />
-      <div className="space-y-3.5 overflow-y-auto flex-1 pr-1">
-        {state.open.map((o) => (
-          <div
-            key={o.id}
-            className={`rounded-2xl border px-6 py-5 ${
-              o.urgent ? 'bg-rose-500/[0.07] border-rose-400/30' : 'bg-white/[0.03] border-white/10'
-            }`}
-          >
-            <div className="flex items-center justify-between gap-5">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2">
-                  {o.urgent && (
-                    <span className="px-2.5 py-1 rounded-md bg-rose-500/20 border border-rose-400/40 text-[11px] font-bold uppercase tracking-wider text-rose-200">
-                      Urgent
-                    </span>
-                  )}
-                  <span className="text-2xl font-bold text-white">{o.day}</span>
-                  <span className="text-2xl font-semibold text-gray-300 tabular-nums">
-                    {o.start} – {o.end}
-                  </span>
-                  <span className="px-3 py-1 rounded-md bg-white/[0.06] border border-white/15 text-sm font-bold text-gray-300">
-                    {o.role}
-                  </span>
-                </div>
-                <p className="mt-2.5 text-base text-gray-500">{o.reason}</p>
-              </div>
-              <TouchButton
-                tone="primary"
-                onClick={() => onClaim(o.id)}
-                className="shrink-0"
-                ariaLabel={`Claim ${o.day} ${o.start} ${o.role} shift`}
-              >
-                Claim shift
-              </TouchButton>
-            </div>
+            ))}
           </div>
-        ))}
-
-        {state.open.length === 0 && (
-          <div className="rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.06] px-6 py-14 text-center">
-            <Check className="w-14 h-14 text-emerald-400 mx-auto" />
-            <p className="mt-5 text-3xl font-bold text-white">Fully covered</p>
-            <p className="mt-2 text-lg text-gray-400">
-              Every shift on the board has someone on it.
-            </p>
-          </div>
-        )}
+        </GlassCard>
       </div>
     </div>
   );
 }
 
-function SwapsScreen({
-  state,
-  onDecide,
-}: {
-  state: State;
-  onDecide: (id: string, decision: 'approved' | 'declined') => void;
-}) {
+function PosRegister() {
   return (
-    <div className="h-full flex flex-col min-h-0">
-      <ScreenTitle title="Pending swaps" sub="Approve or decline — both people are notified." />
-      <div className="space-y-3.5 overflow-y-auto flex-1 pr-1">
-        {state.swaps.map((w) => {
-          const from = EMPLOYEE_BY_ID[w.fromId];
-          const to = EMPLOYEE_BY_ID[w.toId];
-          return (
-            <div
-              key={w.id}
-              className={`rounded-2xl border px-6 py-5 transition-colors ${
-                w.decision === 'approved'
-                  ? 'bg-emerald-500/[0.07] border-emerald-400/30'
-                  : w.decision === 'declined'
-                    ? 'bg-white/[0.02] border-white/10 opacity-60'
-                    : 'bg-white/[0.03] border-white/10'
-              }`}
-            >
-              <div className="flex items-center justify-between gap-5">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-3.5 flex-wrap">
-                    <div className="flex items-center gap-3">
-                      <Avatar id={w.fromId} size="sm" />
-                      <span className="text-lg font-bold text-white">{from?.name}</span>
-                    </div>
-                    <Repeat2 className="w-5 h-5 text-gray-500" />
-                    <div className="flex items-center gap-3">
-                      <Avatar id={w.toId} size="sm" />
-                      <span className="text-lg font-bold text-white">{to?.name}</span>
-                    </div>
-                    <span className="text-lg font-semibold text-gray-300 tabular-nums whitespace-nowrap">
-                      {w.day} · {w.start} – {w.end}
-                    </span>
-                  </div>
-                  <p className="mt-2.5 text-base text-gray-500">{w.note}</p>
-                </div>
-
-                <div className="shrink-0">
-                  {w.decision ? (
-                    <span
-                      className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-base font-bold ${
-                        w.decision === 'approved'
-                          ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-400/30'
-                          : 'bg-white/[0.06] text-gray-400 border border-white/15'
-                      }`}
-                    >
-                      {w.decision === 'approved' ? <Check className="w-5 h-5" /> : <X className="w-5 h-5" />}
-                      {w.decision === 'approved' ? 'Approved' : 'Declined'}
-                    </span>
-                  ) : (
-                    <div className="flex gap-3">
-                      <TouchButton tone="primary" onClick={() => onDecide(w.id, 'approved')}>
-                        <span className="inline-flex items-center gap-2">
-                          <Check className="w-5 h-5" /> Approve
-                        </span>
-                      </TouchButton>
-                      <TouchButton tone="danger" onClick={() => onDecide(w.id, 'declined')}>
-                        <span className="inline-flex items-center gap-2">
-                          <X className="w-5 h-5" /> Decline
-                        </span>
-                      </TouchButton>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function TimeOffScreen() {
-  return (
-    <div className="h-full flex flex-col min-h-0">
-      <ScreenTitle title="Time off" sub="Who is out, and when." />
-      <div className="grid grid-cols-2 gap-3 overflow-y-auto flex-1 pr-1 content-start">
-        {TIME_OFF.map((t) => {
-          const e = EMPLOYEE_BY_ID[t.employeeId];
-          return (
-            <div
-              key={t.id}
-              className="flex items-center gap-4 rounded-2xl bg-white/[0.03] border border-white/10 px-5 py-4"
-            >
-              <Avatar id={t.employeeId} />
-              <div className="min-w-0 flex-1">
-                <p className="text-xl font-bold text-white truncate leading-tight">{e?.name}</p>
-                <p className="text-base text-gray-500">{t.kind}</p>
-              </div>
-              <div className="text-right shrink-0">
-                <p className="text-base font-bold text-white whitespace-nowrap">{t.range}</p>
-                <span
-                  className={`mt-1.5 inline-block px-2.5 py-1 rounded-md border text-[11px] font-bold uppercase tracking-wider ${
-                    t.status === 'Approved'
-                      ? 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30'
-                      : 'bg-amber-500/15 text-amber-300 border-amber-400/30'
-                  }`}
-                >
-                  {t.status}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function BoardScreen({
-  state,
-  onToggle,
-  onTab,
-}: {
-  state: State;
-  onToggle: (id: string) => void;
-  onTab: (t: 'announcements' | 'recognition') => void;
-}) {
-  return (
-    <div className="h-full flex flex-col min-h-0">
-      <div className="flex gap-3 mb-5">
-        {(['announcements', 'recognition'] as const).map((t) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => onTab(t)}
-            className={`px-6 py-3 rounded-xl text-base font-bold uppercase tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
-              state.announcementTab === t
-                ? 'bg-indigo-500 text-white'
-                : 'bg-white/[0.05] text-gray-400 hover:text-white'
-            }`}
-          >
-            {t === 'announcements' ? 'Announcements' : 'Recognition'}
-          </button>
-        ))}
-      </div>
-
-      <div className="space-y-3 overflow-y-auto flex-1 pr-1">
-        {state.announcementTab === 'announcements'
-          ? ANNOUNCEMENTS.map((a) => {
-              const isOpen = state.openAnnouncement === a.id;
-              return (
-                <button
-                  key={a.id}
-                  type="button"
-                  onClick={() => onToggle(a.id)}
-                  className="w-full text-left rounded-2xl bg-white/[0.03] border border-white/10 px-6 py-5 hover:border-white/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-                  aria-expanded={isOpen}
-                >
-                  <div className="flex items-start gap-3.5">
-                    {a.pinned && (
-                      <span className="mt-1 px-2.5 py-1 rounded-md bg-sky-500/20 border border-sky-400/40 text-[11px] font-bold uppercase tracking-wider text-sky-200 shrink-0">
-                        Pinned
-                      </span>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xl font-bold text-white">{a.title}</p>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {a.from} · {a.posted}
-                      </p>
-                      {isOpen && (
-                        <p className="mt-3 text-base text-gray-400 leading-relaxed">{a.body}</p>
-                      )}
-                    </div>
-                  </div>
-                </button>
-              );
-            })
-          : RECOGNITION.map((r) => {
-              const e = EMPLOYEE_BY_ID[r.employeeId];
-              return (
-                <div key={r.id} className="rounded-2xl bg-white/[0.03] border border-white/10 px-6 py-5">
-                  <div className="flex items-start gap-4">
-                    <Avatar id={r.employeeId} />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2.5">
-                        <p className="text-xl font-bold text-white">{e?.name}</p>
-                        <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
-                      </div>
-                      <p className="mt-2 text-base text-gray-400 leading-relaxed">“{r.note}”</p>
-                      <p className="mt-2 text-sm text-gray-600">
-                        {r.fromName} · {r.when}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-      </div>
-    </div>
-  );
-}
-
-function ClockScreen({
-  state,
-  onClock,
-  timeLabel,
-}: {
-  state: State;
-  onClock: (on: boolean) => void;
-  timeLabel: string;
-}) {
-  const [pin, setPin] = useState('');
-  const [error, setError] = useState(false);
-  const me = EMPLOYEE_BY_ID[DEMO_ME];
-
-  const press = (d: string) => {
-    setError(false);
-    setPin((p) => (p.length >= 4 ? p : p + d));
-  };
-
-  const submit = () => {
-    if (pin === DEMO_PIN) {
-      onClock(!state.onClock);
-      setPin('');
-    } else {
-      setError(true);
-      setPin('');
-    }
-  };
-
-  return (
-    <div className="h-full grid grid-cols-2 gap-5 min-h-0">
-      <div className="rounded-3xl bg-white/[0.03] border border-white/10 p-6 flex flex-col items-center justify-center text-center">
-        <Avatar id={DEMO_ME} size="lg" />
-        <p className="mt-5 text-3xl font-bold text-white">{me?.name}</p>
-        <p className="mt-1 text-lg text-gray-500">{me?.role}</p>
+    <div className="h-full flex gap-4">
+      <div className="flex-1 flex flex-col min-h-0">
         <div
-          className={`mt-6 px-6 py-3 rounded-xl border text-lg font-bold ${
-            state.onClock
-              ? 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30'
-              : 'bg-white/[0.05] text-gray-400 border-white/15'
-          }`}
+          className="h-12 rounded-xl border flex items-center px-4 text-[15px] shrink-0"
+          style={{ background: C.surfaceAlt, borderColor: C.hairline, color: C.faint }}
         >
-          {state.onClock ? `On the clock since ${timeLabel}` : 'Not clocked in'}
+          Search or scan an item…
         </div>
-        <p className="mt-7 text-sm text-gray-600 leading-relaxed max-w-[20rem]">
-          Demo PIN is <span className="font-mono text-gray-400">{DEMO_PIN}</span>. Anything else is
-          rejected, exactly as the real board would.
-        </p>
-      </div>
-
-      <div className="rounded-3xl bg-white/[0.03] border border-white/10 p-6 flex flex-col">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 text-center">
-          Enter your PIN to {state.onClock ? 'clock out' : 'clock in'}
-        </p>
-
-        <div className="mt-4 flex justify-center gap-4" aria-live="polite">
-          {[0, 1, 2, 3].map((i) => (
-            <span
-              key={i}
-              className={`w-5 h-5 rounded-full border-2 transition-colors ${
-                error
-                  ? 'border-rose-400 bg-rose-400/40'
-                  : pin.length > i
-                    ? 'border-emerald-400 bg-emerald-400'
-                    : 'border-white/25'
-              }`}
-            />
-          ))}
-        </div>
-        {error && (
-          <p className="mt-2 text-center text-base font-bold text-rose-300">
-            Incorrect PIN — try {DEMO_PIN}
-          </p>
-        )}
-
-        <div className="mt-4 grid grid-cols-3 gap-2.5 max-w-[19rem] mx-auto w-full flex-1 content-center">
-          {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
-            <button
-              key={d}
-              type="button"
-              onClick={() => press(d)}
-              className="min-h-[54px] rounded-2xl bg-white/[0.06] border border-white/10 text-2xl font-bold text-white hover:bg-white/[0.12] active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+        <div className="mt-3 grid grid-cols-3 gap-3 overflow-y-auto flex-1 pr-1 content-start">
+          {POS_PRODUCTS.map((p) => (
+            <div
+              key={p.id}
+              className="rounded-2xl border p-4"
+              style={{ background: C.surface, borderColor: C.hairline }}
             >
-              {d}
-            </button>
+              <p className="text-[15px] font-bold leading-tight" style={{ color: C.onSurface }}>
+                {p.name}
+              </p>
+              <p className="mt-2 text-[19px] font-black tabular-nums" style={{ color: C.openAccent }}>
+                {p.price}
+              </p>
+            </div>
           ))}
-          <button
-            type="button"
-            onClick={() => { setPin(''); setError(false); }}
-            aria-label="Clear PIN"
-            className="min-h-[54px] rounded-2xl bg-white/[0.03] border border-white/10 text-gray-400 hover:text-white hover:bg-white/[0.08] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-          >
-            <RotateCcw className="w-6 h-6" />
-          </button>
-          <button
-            type="button"
-            onClick={() => press('0')}
-            className="min-h-[54px] rounded-2xl bg-white/[0.06] border border-white/10 text-2xl font-bold text-white hover:bg-white/[0.12] active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-          >
-            0
-          </button>
-          <button
-            type="button"
-            onClick={() => { setPin((p) => p.slice(0, -1)); setError(false); }}
-            aria-label="Delete last digit"
-            className="min-h-[54px] rounded-2xl bg-white/[0.03] border border-white/10 text-gray-400 hover:text-white hover:bg-white/[0.08] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-          >
-            <Delete className="w-6 h-6" />
-          </button>
         </div>
-
-        <button
-          type="button"
-          onClick={submit}
-          disabled={pin.length < 4}
-          className={`mt-4 w-full min-h-[60px] rounded-2xl text-xl font-bold text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
-            state.onClock
-              ? 'bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400'
-              : 'bg-gradient-to-r from-sky-500 via-emerald-500 to-emerald-400 hover:brightness-110'
-          }`}
-        >
-          <span className="inline-flex items-center gap-3">
-            <Fingerprint className="w-7 h-7" />
-            {state.onClock ? 'Clock Out' : 'Clock In'}
-          </span>
-        </button>
       </div>
+
+      <GlassCard className="w-[350px] shrink-0 p-5 flex flex-col">
+        <div className="flex items-center justify-between shrink-0">
+          <Eyebrow>{POS_TOTALS.register}</Eyebrow>
+          <span
+            className="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase"
+            style={{ background: 'rgba(251,191,36,0.14)', color: C.inProgress }}
+          >
+            Test mode
+          </span>
+        </div>
+        <div className="mt-4 space-y-2 flex-1 min-h-0 overflow-y-auto pr-1">
+          {POS_CART.map((c) => (
+            <div
+              key={c.id}
+              className="flex items-center gap-3 rounded-xl px-3.5 py-3"
+              style={{ background: C.surfaceAlt }}
+            >
+              <span className="text-[16px] font-black tabular-nums" style={{ color: C.openAccent }}>
+                {c.qty}
+              </span>
+              <span className="text-[14px] flex-1 min-w-0 truncate" style={{ color: C.onSurface }}>
+                {c.name}
+              </span>
+              <span className="text-[14px] font-bold tabular-nums" style={{ color: C.muted }}>
+                {c.line}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 pt-4 border-t space-y-2 shrink-0" style={{ borderColor: C.hairline }}>
+          {[
+            ['Subtotal', POS_TOTALS.subtotal],
+            ['Tax', POS_TOTALS.tax],
+          ].map(([l, v]) => (
+            <div key={l} className="flex justify-between text-[14px]">
+              <span style={{ color: C.faint }}>{l}</span>
+              <span className="tabular-nums" style={{ color: C.muted }}>
+                {v}
+              </span>
+            </div>
+          ))}
+          <div className="flex justify-between text-[22px] font-black pt-1">
+            <span style={{ color: C.onSurface }}>Total</span>
+            <span className="tabular-nums" style={{ color: C.onSurface }}>
+              {POS_TOTALS.total}
+            </span>
+          </div>
+        </div>
+        <div
+          className="mt-4 h-[56px] rounded-2xl flex items-center justify-center text-[19px] font-black text-white shrink-0"
+          style={{ background: `linear-gradient(90deg, ${C.shyftBlue}, ${C.brand})` }}
+        >
+          Charge {POS_TOTALS.total}
+        </div>
+      </GlassCard>
     </div>
   );
 }
 
-/* ============================================================== */
-/* Device shell — landscape wall display, scaled to fit           */
-/* ============================================================== */
+function CustomWall() {
+  const w = CUSTOM_WALL;
+  return (
+    <div className="h-full grid grid-cols-3 grid-rows-2 gap-4">
+      <GlassCard className="p-5 flex flex-col justify-center">
+        <Eyebrow>{w.kpi.label}</Eyebrow>
+        <p className={`mt-2 text-[52px] font-black leading-none tabular-nums ${w.kpi.accent}`}>
+          {w.kpi.value}
+        </p>
+      </GlassCard>
+
+      <GlassCard className="p-5 flex flex-col justify-center">
+        <Eyebrow>{w.metricTarget.label}</Eyebrow>
+        <p className="mt-2 text-[40px] font-black leading-none tabular-nums" style={{ color: C.resolved }}>
+          {w.metricTarget.value}
+        </p>
+        <p className="mt-1.5 text-[12px] font-bold" style={{ color: C.faint }}>
+          {w.metricTarget.target} · in range
+        </p>
+      </GlassCard>
+
+      <GlassCard className="p-5">
+        <Eyebrow color={C.brandBright}>{w.leaderboard.label}</Eyebrow>
+        <div className="mt-3 space-y-2">
+          {w.leaderboard.rows.map((r, i) => (
+            <div key={r.name} className="flex items-center gap-3">
+              <span className="text-[12px] font-black w-4" style={{ color: C.faint }}>
+                {i + 1}
+              </span>
+              <span className="text-[14px] flex-1 min-w-0 truncate" style={{ color: C.onSurface }}>
+                {r.name}
+              </span>
+              <span className="text-[14px] font-black tabular-nums" style={{ color: C.brandBright }}>
+                {r.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </GlassCard>
+
+      <GlassCard className="p-5">
+        <Eyebrow color={C.urgent}>{w.alertList.label}</Eyebrow>
+        <div className="mt-3 space-y-2.5">
+          {w.alertList.rows.map((r) => (
+            <div key={r.text} className="flex items-start gap-2.5">
+              <span
+                className="mt-1.5 w-2 h-2 rounded-full shrink-0"
+                style={{ background: r.tone === 'urgent' ? C.urgent : C.inProgress }}
+              />
+              <span className="text-[13px] leading-snug" style={{ color: C.muted }}>
+                {r.text}
+              </span>
+            </div>
+          ))}
+        </div>
+      </GlassCard>
+
+      <GlassCard className="p-5 flex flex-col justify-center">
+        <Eyebrow color={C.openAccent}>{w.announcement.label}</Eyebrow>
+        <p className="mt-2.5 text-[20px] font-bold leading-snug" style={{ color: C.onSurface }}>
+          {w.announcement.text}
+        </p>
+      </GlassCard>
+
+      <GlassCard className="p-5 flex flex-col items-center justify-center">
+        <div className="rounded-lg bg-white p-2">
+          <FauxQr size={92} seed={19} />
+        </div>
+        <p className="mt-3 text-[13px] font-bold" style={{ color: C.onSurface }}>
+          {w.qr.label}
+        </p>
+        <p className="text-[11px]" style={{ color: C.faint }}>
+          {w.qr.caption}
+        </p>
+      </GlassCard>
+    </div>
+  );
+}
+
+/* ==============================================================
+   Device shell
+   ============================================================== */
 
 export default function TouchBoardEmulator() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -894,53 +1236,37 @@ export default function TouchBoardEmulator() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Mount-only clock so server and client markup match.
   useEffect(() => {
     setNow(new Date());
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
 
-  // Scale the fixed board canvas to whatever width we are given.
-  //
-  // Measured on layout, on window resize, and on orientation change rather than
-  // relying on ResizeObserver alone — RO is unavailable or silent in some
-  // embedded/webview browsers, and a board stuck at the wrong scale is a broken
-  // page. The container width here is driven purely by the viewport, so window
-  // resize is a complete signal; RO is kept as an extra when it does work.
+  // Scale the fixed board canvas to whatever width we are given. Measured on
+  // layout, on resize, via ResizeObserver, and via a poll — some embedded
+  // browsers resize without firing either event, which would strand the board
+  // at a stale scale. `measure` bails when unchanged, so a settled board never
+  // re-renders.
   useIsomorphicLayoutEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-
     const measure = () => {
       const w = el.clientWidth;
       if (w <= 0) return;
       const next = w / BOARD_W;
-      // Bail out when unchanged so the poll below never triggers a re-render.
       setScale((prev) => (Math.abs(prev - next) < 0.0005 ? prev : next));
     };
-
     measure();
-    // Re-measure once layout and webfonts have settled.
     const raf = requestAnimationFrame(measure);
     const settle = setTimeout(measure, 250);
-
     window.addEventListener('resize', measure);
     window.addEventListener('orientationchange', measure);
-
     let ro: ResizeObserver | undefined;
     if (typeof ResizeObserver !== 'undefined') {
       ro = new ResizeObserver(measure);
       ro.observe(el);
     }
-
-    // Safety net. Some embedded browsers and webviews resize the viewport
-    // without dispatching `resize` or notifying ResizeObserver, which would
-    // otherwise strand the board at a stale scale. `measure` only calls
-    // setState when the width actually changed, so a settled board re-renders
-    // never — this costs a width read every 400ms and nothing else.
     const poll = setInterval(measure, 400);
-
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(settle);
@@ -954,11 +1280,19 @@ export default function TouchBoardEmulator() {
   useEffect(() => {
     if (!state.toast) return;
     if (toastTimer.current) clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => dispatch({ type: 'dismissToast' }), 3200);
+    toastTimer.current = setTimeout(() => dispatch({ type: 'dismissToast' }), 2600);
     return () => {
       if (toastTimer.current) clearTimeout(toastTimer.current);
     };
   }, [state.toast]);
+
+  // Kiosk self-heal, exactly as TouchBoardScreen.kt does it: after 30s on any
+  // detail route the wall returns Home, even if nobody taps Back.
+  useEffect(() => {
+    if (state.route === 'home') return;
+    const t = setTimeout(() => dispatch({ type: 'route', route: 'home' }), 30_000);
+    return () => clearTimeout(t);
+  }, [state.route]);
 
   const timeLabel = useMemo(
     () => (now ? now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '--:--'),
@@ -970,184 +1304,367 @@ export default function TouchBoardEmulator() {
     [now]
   );
 
-  const go = useCallback((screen: ScreenKey) => dispatch({ type: 'go', screen }), []);
-  const claim = useCallback((id: string) => dispatch({ type: 'claim', id, at: timeLabel }), [timeLabel]);
-  const decide = useCallback(
-    (id: string, decision: 'approved' | 'declined') => dispatch({ type: 'swap', id, decision }),
-    []
-  );
-  const clock = useCallback((on: boolean) => dispatch({ type: 'clock', on, at: timeLabel }), [timeLabel]);
-
-  const screenTitle: Record<ScreenKey, string> = {
-    home: 'Standings Board',
-    schedule: 'Schedule',
-    open: 'Open Shifts',
-    swaps: 'Swaps',
-    timeoff: 'Time Off',
-    announcements: 'Board',
-    clock: 'Time Clock',
-  };
+  const mode = BOARD_MODES.find((m) => m.id === state.modeId) ?? BOARD_MODES[0];
+  const isFlagship = mode.id === 'workforce_wall_board';
+  const go = useCallback((route: FlagshipRoute) => dispatch({ type: 'route', route }), []);
 
   return (
     <div className="w-full">
-      {/* Wall mount: thin bezel around a 16:9 landscape panel */}
-      <div className="relative rounded-2xl bg-gradient-to-b from-[#23293a] via-[#12161f] to-[#0a0d14] p-1.5 sm:p-2 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.85)] border border-white/[0.14]">
+      <div
+        className="relative rounded-2xl p-1.5 sm:p-2 border shadow-[0_40px_80px_-20px_rgba(0,0,0,0.85)]"
+        style={{
+          background: 'linear-gradient(180deg,#23293a,#12161f 55%,#0a0d14)',
+          borderColor: 'rgba(255,255,255,0.14)',
+        }}
+      >
         <div
           ref={wrapRef}
-          className="relative overflow-hidden rounded-lg bg-[#070b14] border border-black/60"
-          style={{ height: BOARD_H * scale }}
+          className="relative overflow-hidden rounded-lg border"
+          style={{ height: BOARD_H * scale, background: C.bg, borderColor: 'rgba(0,0,0,0.6)' }}
         >
           <div
-            className="absolute top-0 left-0 origin-top-left flex flex-col"
+            className="absolute top-0 left-0 origin-top-left flex"
             style={{ width: BOARD_W, height: BOARD_H, transform: `scale(${scale})` }}
           >
-            {/* Accent hairline */}
-            <div className="h-1.5 w-full shrink-0 bg-gradient-to-r from-emerald-400 via-sky-400 to-indigo-500" />
+            {/* Left rail — MODE SWITCHER: one board, many modes */}
+            <nav
+              aria-label="Board modes"
+              className="w-[232px] shrink-0 flex flex-col py-4 px-3 border-r"
+              style={{ background: 'rgba(0,0,0,0.35)', borderColor: C.hairline }}
+            >
+              <div className="px-2 pb-3.5 mb-2 border-b" style={{ borderColor: C.hairline }}>
+                <p className="text-[22px] font-black tracking-tight leading-none">
+                  <span style={{ color: C.shyftBlue }}>Shyft</span>
+                  <span style={{ color: C.gridGreen }}>Grid</span>
+                </p>
+                <p
+                  className="mt-1 text-[9px] font-black uppercase"
+                  style={{ color: C.faint, letterSpacing: '0.22em' }}
+                >
+                  VexaOS Board
+                </p>
+              </div>
 
-            <div className="flex flex-1 min-h-0">
-              {/* Left rail — wall-display navigation, not phone tabs */}
-              <nav
-                aria-label="Board sections"
-                className="w-[212px] shrink-0 bg-black/40 border-r border-white/10 flex flex-col py-4 px-3"
+              <p
+                className="px-2 pb-2 text-[9px] font-black uppercase"
+                style={{ color: C.faint, letterSpacing: '0.18em' }}
               >
-                <div className="px-2 pb-4 mb-2 border-b border-white/10">
-                  <p className="text-2xl font-bold tracking-tight leading-none">
-                    <span className="text-sky-400">Shyft</span>
-                    <span className="text-emerald-400">Grid</span>
-                  </p>
-                  <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.22em] text-gray-500">
-                    VexaOS Board
-                  </p>
-                </div>
+                Device mode
+              </p>
 
-                <div className="space-y-1.5 flex-1">
-                  {NAV.map(({ key, label, icon: I }) => {
-                    const active = state.screen === key;
-                    const badge =
-                      key === 'open'
-                        ? state.open.length
-                        : key === 'swaps'
-                          ? state.swaps.filter((w) => !w.decision).length
-                          : 0;
-                    return (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => go(key)}
-                        aria-current={active ? 'page' : undefined}
-                        className={`relative w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
-                          active
-                            ? 'bg-white/[0.12] text-white'
-                            : 'text-gray-500 hover:text-gray-200 hover:bg-white/[0.05]'
-                        }`}
-                      >
-                        <I className="w-5 h-5 shrink-0" />
-                        <span className="text-base font-bold">{label}</span>
-                        {badge > 0 && (
-                          <span className="ml-auto min-w-[24px] h-6 px-1.5 rounded-full bg-rose-500 text-white text-sm font-bold flex items-center justify-center">
-                            {badge}
+              <div className="space-y-1 flex-1 overflow-y-auto">
+                {BOARD_MODES.map((m) => {
+                  const Icon = MODE_ICON[m.icon] ?? LayoutDashboard;
+                  const active = m.id === state.modeId;
+                  return (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => dispatch({ type: 'mode', id: m.id })}
+                      aria-current={active ? 'true' : undefined}
+                      className="w-full flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                      style={{
+                        background: active ? 'rgba(255,255,255,0.10)' : 'transparent',
+                        color: active ? C.onSurface : C.muted,
+                      }}
+                    >
+                      <Icon
+                        className="w-[18px] h-[18px] mt-0.5 shrink-0"
+                        style={{ color: active ? C.shyftBlue : C.faint }}
+                      />
+                      <span className="min-w-0">
+                        <span className="block text-[13px] font-bold leading-tight">{m.label}</span>
+                        {m.tag && (
+                          <span
+                            className="mt-1 inline-block px-1.5 py-0.5 rounded text-[8px] font-black uppercase"
+                            style={{
+                              letterSpacing: '0.1em',
+                              background: 'rgba(46,155,240,0.16)',
+                              color: C.shyftBlue,
+                            }}
+                          >
+                            {m.tag}
                           </span>
                         )}
-                      </button>
-                    );
-                  })}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div
+                className="mt-2 px-3 py-2.5 rounded-xl"
+                style={{ background: 'rgba(255,255,255,0.04)' }}
+              >
+                <p className="text-[10px] leading-snug" style={{ color: C.faint }}>
+                  {mode.readOnly
+                    ? 'Display only — this board reports, it never runs the operation.'
+                    : 'This mode accepts input on the device.'}
+                </p>
+              </div>
+            </nav>
+
+            {/* Right pane */}
+            <div className="flex-1 min-w-0 flex flex-col">
+              <header
+                className="flex items-center justify-between gap-6 px-6 py-3.5 border-b shrink-0"
+                style={{ borderColor: C.hairline }}
+              >
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 shrink-0" style={{ color: C.gridGreen }} />
+                    <span className="text-[19px] font-black truncate" style={{ color: C.onSurface }}>
+                      {DEMO_LOCATION}
+                    </span>
+                  </div>
+                  <p
+                    className="mt-0.5 text-[10px] font-black uppercase"
+                    style={{ color: C.faint, letterSpacing: '0.22em' }}
+                  >
+                    {isFlagship && state.route === 'home' ? 'Standings Board' : mode.label}
+                  </p>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => go('clock')}
-                  className={`mt-3 w-full flex items-center justify-center gap-2.5 min-h-[60px] rounded-2xl font-bold text-white transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
-                    state.screen === 'clock'
-                      ? 'bg-white/[0.12] border border-white/20'
-                      : state.onClock
-                        ? 'bg-gradient-to-r from-rose-500 to-orange-500 hover:brightness-110'
-                        : 'bg-gradient-to-r from-sky-500 via-emerald-500 to-emerald-400 hover:brightness-110'
-                  }`}
-                >
-                  <Fingerprint className="w-6 h-6" />
-                  <span className="text-lg">{state.onClock ? 'Clock Out' : 'Clock In'}</span>
-                </button>
-              </nav>
-
-              {/* Right pane */}
-              <div className="flex-1 min-w-0 flex flex-col">
-                {/* Header */}
-                <header className="flex items-center justify-between gap-6 px-7 py-4 border-b border-white/10 shrink-0">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span className="text-xl font-bold text-white truncate">{DEMO_LOCATION}</span>
-                    </div>
-                    <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.22em] text-gray-500">
-                      {screenTitle[state.screen]}
+                <div className="flex items-center gap-5 shrink-0">
+                  <span
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border"
+                    style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.3)' }}
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full animate-pulse"
+                      style={{ background: C.resolved }}
+                    />
+                    <span
+                      className="text-[10px] font-black uppercase"
+                      style={{ color: C.resolved, letterSpacing: '0.14em' }}
+                    >
+                      Live
+                    </span>
+                  </span>
+                  <div className="text-right">
+                    <p
+                      className="text-[34px] font-black tabular-nums leading-none"
+                      style={{ color: C.onSurface }}
+                    >
+                      {timeLabel}
+                    </p>
+                    <p className="mt-0.5 text-[13px]" style={{ color: C.faint }}>
+                      {dateLabel}
                     </p>
                   </div>
-                  <div className="flex items-center gap-5 shrink-0">
-                    <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-emerald-500/10 border border-emerald-400/30">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-emerald-300">
-                        Live
-                      </span>
-                    </span>
-                    <div className="text-right">
-                      <p className="text-4xl font-bold text-white tabular-nums leading-none">
-                        {timeLabel}
-                      </p>
-                      <p className="mt-1 text-sm text-gray-500">{dateLabel}</p>
-                    </div>
-                  </div>
-                </header>
-
-                {/* Body */}
-                <div className="relative flex-1 min-h-0 px-7 py-6">
-                  {state.screen === 'home' && <HomeScreen state={state} go={go} />}
-                  {state.screen === 'schedule' && <ScheduleScreen state={state} />}
-                  {state.screen === 'open' && <OpenShiftsScreen state={state} onClaim={claim} />}
-                  {state.screen === 'swaps' && <SwapsScreen state={state} onDecide={decide} />}
-                  {state.screen === 'timeoff' && <TimeOffScreen />}
-                  {state.screen === 'announcements' && (
-                    <BoardScreen
-                      state={state}
-                      onToggle={(id) => dispatch({ type: 'toggleAnnouncement', id })}
-                      onTab={(tab) => dispatch({ type: 'announcementTab', tab })}
-                    />
-                  )}
-                  {state.screen === 'clock' && (
-                    <ClockScreen state={state} onClock={clock} timeLabel={timeLabel} />
-                  )}
-
-                  {state.toast && (
-                    <div
-                      key={state.toast.id}
-                      role="status"
-                      className={`absolute left-1/2 -translate-x-1/2 bottom-7 z-20 flex items-center gap-3 px-7 py-4 rounded-2xl shadow-2xl border backdrop-blur-xl max-w-[90%] ${
-                        state.toast.tone === 'ok'
-                          ? 'bg-emerald-500/20 border-emerald-400/40 text-emerald-100'
-                          : 'bg-amber-500/20 border-amber-400/40 text-amber-100'
-                      }`}
-                    >
-                      <Check className="w-5 h-5 shrink-0" />
-                      <span className="text-lg font-bold">{state.toast.text}</span>
-                    </div>
-                  )}
                 </div>
+              </header>
+
+              <div className="relative flex-1 min-h-0 px-6 py-5">
+                {isFlagship && state.route === 'home' && (
+                  <StandingsBoardHome
+                    state={state}
+                    go={go}
+                    setFace={(face) => dispatch({ type: 'face', face })}
+                    setTab={(tab) => dispatch({ type: 'tab', tab })}
+                    openClockIn={() => dispatch({ type: 'clockIn', open: true })}
+                  />
+                )}
+
+                {isFlagship && state.route === 'open' && (
+                  <DetailScaffold
+                    title="Open Shifts Available"
+                    count={UP_FOR_GRABS.length}
+                    accent={C.openAccent}
+                    icon={Zap}
+                    onBack={() => go('home')}
+                  >
+                    <div className="grid grid-cols-3 gap-4">
+                      {UP_FOR_GRABS.map((g) => (
+                        <GlassCard key={g.id} className="p-5">
+                          <p className="text-[20px] font-black" style={{ color: C.onSurface }}>
+                            {g.dateLabel}
+                          </p>
+                          <p className="text-[16px] tabular-nums" style={{ color: C.muted }}>
+                            {g.timeLabel}
+                          </p>
+                          <p className="mt-1 text-[14px] font-bold" style={{ color: C.openAccent }}>
+                            {g.role}
+                          </p>
+                          <div className="mt-4 flex items-center gap-3">
+                            <div className="rounded bg-white p-1.5">
+                              <FauxQr size={72} seed={g.id.charCodeAt(1)} />
+                            </div>
+                            <p className="text-[12px] leading-snug" style={{ color: C.faint }}>
+                              Scan to grab.
+                              <br />
+                              Claim happens in the
+                              <br />
+                              employee&apos;s phone app.
+                            </p>
+                          </div>
+                        </GlassCard>
+                      ))}
+                    </div>
+                  </DetailScaffold>
+                )}
+
+                {isFlagship && state.route === 'swaps' && (
+                  <DetailScaffold
+                    title="Pending Shift Swaps"
+                    count={PENDING_SWAPS.length}
+                    accent={C.inProgress}
+                    icon={Repeat2}
+                    onBack={() => go('home')}
+                  >
+                    <div className="space-y-3">
+                      {PENDING_SWAPS.map((w) => (
+                        <GlassCard key={w.id} className="p-5 flex items-center gap-5">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[19px] font-black" style={{ color: C.onSurface }}>
+                              {w.from} → {w.to}
+                            </p>
+                            <p className="text-[15px] tabular-nums" style={{ color: C.muted }}>
+                              {w.when}
+                            </p>
+                          </div>
+                          <span
+                            className="px-3.5 py-2 rounded-xl text-[12px] font-black uppercase shrink-0"
+                            style={{
+                              letterSpacing: '0.1em',
+                              background: 'rgba(251,191,36,0.14)',
+                              color: C.inProgress,
+                            }}
+                          >
+                            {w.status}
+                          </span>
+                        </GlassCard>
+                      ))}
+                    </div>
+                  </DetailScaffold>
+                )}
+
+                {isFlagship && state.route === 'attendance' && (
+                  <DetailScaffold
+                    title="On the Floor"
+                    count={ON_FLOOR.length}
+                    accent={C.resolved}
+                    icon={Users}
+                    onBack={() => go('home')}
+                  >
+                    <div className="grid grid-cols-2 gap-3">
+                      {ON_FLOOR.map((c) => (
+                        <GlassCard key={c.id} className="p-5 flex items-center gap-4">
+                          <Avatar initials={c.initials} accent={c.accent} size="lg" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[19px] font-black" style={{ color: C.onSurface }}>
+                              {c.name}
+                            </p>
+                            <p className="text-[14px]" style={{ color: C.faint }}>
+                              {c.role}
+                            </p>
+                          </div>
+                          <span
+                            className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase shrink-0"
+                            style={{
+                              letterSpacing: '0.1em',
+                              background: 'rgba(255,255,255,0.06)',
+                              color: c.state === 'late' ? C.urgent : C.resolved,
+                            }}
+                          >
+                            {c.state === 'late' ? 'Late' : 'Clocked in'}
+                          </span>
+                        </GlassCard>
+                      ))}
+                    </div>
+                  </DetailScaffold>
+                )}
+
+                {isFlagship && state.route === 'recognition' && (
+                  <DetailScaffold
+                    title="Recognition"
+                    count={RECOGNITION.length}
+                    accent={C.interest}
+                    icon={Trophy}
+                    onBack={() => go('home')}
+                  >
+                    <div className="space-y-3">
+                      {RECOGNITION.map((r) => (
+                        <GlassCard key={r.id} className="p-5 flex items-start gap-4">
+                          <Avatar initials={r.initials} accent={r.accent} />
+                          <div className="min-w-0">
+                            <p className="text-[19px] font-black" style={{ color: C.onSurface }}>
+                              {r.name}
+                            </p>
+                            <p className="mt-1 text-[15px] leading-snug" style={{ color: C.muted }}>
+                              “{r.note}”
+                            </p>
+                            <p className="mt-1.5 text-[13px]" style={{ color: C.faint }}>
+                              {r.from}
+                            </p>
+                          </div>
+                        </GlassCard>
+                      ))}
+                    </div>
+                  </DetailScaffold>
+                )}
+
+                {mode.id === 'owner_command_center' && <OwnerCommandCenter />}
+                {mode.id === 'kitchen_display' && <KitchenDisplay />}
+                {mode.id === 'inspection_command_wall' && <InspectionWall />}
+                {mode.id === 'pos_checkout_station' && <PosRegister />}
+                {mode.id === 'custom_wall' && <CustomWall />}
+
+                {/* ClockInOverlay — a QR, exactly as ClockIn.kt renders it */}
+                {state.clockInOpen && (
+                  <div
+                    className="absolute inset-0 z-30 flex flex-col items-center justify-center"
+                    style={{ background: 'rgba(6,8,15,0.96)' }}
+                  >
+                    <p className="text-[32px] font-black" style={{ color: C.onSurface }}>
+                      Clock In
+                    </p>
+                    <div className="mt-5 rounded-2xl bg-white p-4">
+                      <FauxQr size={180} seed={3} />
+                    </div>
+                    <p className="mt-5 text-[17px]" style={{ color: C.muted }}>
+                      Scan with the Shyftgrid app to clock in
+                    </p>
+                    <p className="mt-1 text-[13px]" style={{ color: C.faint }}>
+                      {GRAB_QR_TARGET}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => dispatch({ type: 'clockIn', open: false })}
+                      className="mt-7 px-8 h-[50px] rounded-2xl border font-black text-[16px] transition-colors hover:brightness-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                      style={{ background: C.surfaceAlt, borderColor: C.hairline, color: C.onSurface }}
+                    >
+                      Done
+                    </button>
+                  </div>
+                )}
+
+                {state.toast && (
+                  <div
+                    key={state.toast.id}
+                    role="status"
+                    className="absolute left-1/2 -translate-x-1/2 bottom-5 z-20 px-6 py-3 rounded-2xl border backdrop-blur-xl"
+                    style={{ background: 'rgba(46,155,240,0.18)', borderColor: 'rgba(46,155,240,0.4)' }}
+                  >
+                    <span className="text-[15px] font-bold" style={{ color: C.onSurface }}>
+                      {state.toast.text}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
-
-        {/* Wall-mount bracket hint */}
-        <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-24 h-1 rounded-b-lg bg-[#23293a]" />
+        <div
+          className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-24 h-1 rounded-b-lg"
+          style={{ background: '#23293a' }}
+        />
       </div>
 
-      {/* Under-device controls */}
       <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
         <span className="inline-flex items-center gap-2 text-xs text-gray-500">
           <MonitorPlay className="w-3.5 h-3.5" />
           <span className="lg:hidden">Shown at wall scale — best viewed on a larger screen.</span>
-          <span className="hidden lg:inline">
-            A 43&quot; wall-mounted board, shown at scale.
-          </span>
+          <span className="hidden lg:inline">A 43&quot; wall-mounted board, shown at scale.</span>
         </span>
         <span className="inline-flex items-center gap-2 text-xs text-gray-500">
           <Clock3 className="w-3.5 h-3.5" />

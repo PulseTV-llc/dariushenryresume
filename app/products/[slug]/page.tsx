@@ -369,16 +369,16 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                   Want to see the software working, not just the box?
                 </h3>
                 <p className="mt-4 text-lg text-gray-400 leading-relaxed">
-                  We built a working TouchBoard you can drive in your browser. Claim an open shift
-                  and watch it land on the schedule. Approve a swap and watch the badge clear.
-                  Clock in with a PIN. It is the real interface on mock data — no sign-up, and
-                  nothing leaves your browser.
+                  We rebuilt the real Android board so you can drive it in your browser. Switch
+                  between the device modes one board can run, drill into the wall&apos;s detail
+                  screens, and watch it heal itself back Home. The real interface on mock data —
+                  no sign-up, and nothing leaves your browser.
                 </p>
                 <ul className="mt-6 space-y-2.5">
                   {[
-                    'Seven navigable screens, exactly as they sit on the wall',
-                    'Working claim, approve/decline, and PIN clock-in flows',
-                    'Live staffing health that reacts to what you do',
+                    'Six real device modes, using the app\u2019s own labels',
+                    'The flagship Standings Board and its read-only drill-ins',
+                    'Clock-in shows a QR, exactly as the real board does',
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-3 text-[15px] text-gray-400">
                       <Check className="w-4 h-4 mt-1 shrink-0 text-emerald-400" />
