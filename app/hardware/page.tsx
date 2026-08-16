@@ -115,7 +115,7 @@ export default function HardwarePage() {
 
           <div className="mt-16">
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 mb-2">
-              Hardware in situ
+              In the real world
             </p>
             <p className="text-center text-sm text-gray-500 mb-8 max-w-2xl mx-auto leading-relaxed">
               The same board, in three form factors — each running a different device mode.
