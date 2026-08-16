@@ -4,8 +4,8 @@ import { ArrowRight, Check } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
-import ScreenshotFrame, { HardwarePhotoSlot } from '@/components/site/ScreenshotFrame';
-import { SCREENS, HARDWARE_PHOTO_SLOTS } from '@/lib/screens';
+import ScreenshotFrame, { HardwarePhotoCard } from '@/components/site/ScreenshotFrame';
+import { SCREENS, HARDWARE_PHOTOS } from '@/lib/screens';
 import {
   Section,
   SectionHeading,
@@ -114,12 +114,19 @@ export default function HardwarePage() {
           </div>
 
           <div className="mt-16">
-            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 mb-6">
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 mb-2">
               Hardware in situ
             </p>
-            <div className="grid gap-4 sm:grid-cols-3 max-w-4xl mx-auto">
-              {HARDWARE_PHOTO_SLOTS.map((slot) => (
-                <HardwarePhotoSlot key={slot.key} slot={slot} />
+            <p className="text-center text-sm text-gray-500 mb-8 max-w-2xl mx-auto leading-relaxed">
+              The same board, in three form factors — each running a different device mode.
+            </p>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+              {HARDWARE_PHOTOS.map((photo) => (
+                <HardwarePhotoCard
+                  key={photo.key}
+                  photo={photo}
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                />
               ))}
             </div>
           </div>

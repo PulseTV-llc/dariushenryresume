@@ -5,9 +5,17 @@ import { ArrowRight, ArrowUpRight, Check, X, Link2, Hand, MonitorPlay } from 'lu
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
-import ScreenshotFrame, { PendingScreenshotSlot } from '@/components/site/ScreenshotFrame';
+import ScreenshotFrame, {
+  PendingScreenshotSlot,
+  HardwarePhotoCard,
+} from '@/components/site/ScreenshotFrame';
 import TouchBoardVideo from '@/components/touchboard/TouchBoardShowcase';
-import { SCREENS, PRODUCT_SCREENS, PENDING_PRODUCT_SCREENS } from '@/lib/screens';
+import {
+  SCREENS,
+  PRODUCT_SCREENS,
+  PENDING_PRODUCT_SCREENS,
+  HARDWARE_PHOTOS,
+} from '@/lib/screens';
 import {
   Section,
   SectionHeading,
@@ -397,6 +405,22 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                     Sizes &amp; pricing
                   </SecondaryButton>
                 </div>
+              </div>
+            </div>
+
+            {/* The same board in three real settings, each on a different mode. */}
+            <div className="mt-14">
+              <p className="text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 mb-8">
+                One board, three form factors
+              </p>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {HARDWARE_PHOTOS.map((photo) => (
+                  <HardwarePhotoCard
+                    key={photo.key}
+                    photo={photo}
+                    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                  />
+                ))}
               </div>
             </div>
           </Section>

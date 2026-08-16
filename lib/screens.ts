@@ -145,34 +145,50 @@ export const PENDING_PRODUCT_SCREENS: Record<string, { label: string; hint: stri
 };
 
 /**
- * Hardware photography slots. The user is supplying real board and kiosk
- * photos; until then these render as labelled placeholders rather than stock.
+ * Real TouchBoard product photography, replacing the reserved slots that stood
+ * here until the shots arrived. Sources were 1672x941 PNGs (~3MB each) in
+ * public/; optimized to 1200px WebP (~48-72KB each) and moved to
+ * public/photos/. All three are 16:9, so the slots share that ratio and no
+ * photo is cropped.
  */
-export interface HardwareSlot {
+export interface HardwarePhoto {
   key: string;
+  src: string;
+  width: number;
+  height: number;
+  /** Form factor this photo illustrates. */
   label: string;
-  hint: string;
-  /** Aspect ratio as a CSS aspect-ratio value. */
-  ratio: string;
+  /** What the board is running in the shot. */
+  running: string;
+  alt: string;
 }
 
-export const HARDWARE_PHOTO_SLOTS: HardwareSlot[] = [
+export const HARDWARE_PHOTOS: HardwarePhoto[] = [
   {
     key: 'board-wall',
-    label: 'TouchBoard, wall-mounted',
-    hint: 'Back-of-house board in situ, staff in frame',
-    ratio: '4 / 3',
+    src: '/photos/hardware-wall-mounted.webp',
+    width: 1200,
+    height: 675,
+    label: 'Wall-mounted board',
+    running: 'Workforce Wall Board',
+    alt: 'A TouchBoard wall-mounted on a warehouse wall, running the Workforce Wall Board: a staffing health score of 90, "Fully staffed", who is on the floor, a live timeline, and a full-width Clock In bar. Warehouse racking and a worker in a hi-vis vest are visible beyond it.',
   },
   {
     key: 'kiosk-floor',
-    label: 'VexaFront freestanding kiosk',
-    hint: 'Lobby or counter kiosk, customer using it',
-    ratio: '3 / 4',
+    src: '/photos/hardware-kiosk-freestanding.webp',
+    width: 1200,
+    height: 675,
+    label: 'Freestanding floor kiosk',
+    running: 'Employee Control Center',
+    alt: 'A TouchBoard on a freestanding floor stand in a staff break room, screen in portrait, running the Employee Control Center with "Tap to see your shifts", a Clock In button, and this week\u2019s schedule. Colleagues sit at tables in the background.',
   },
   {
     key: 'kiosk-counter',
-    label: 'VexaFront counter kiosk',
-    hint: 'Countertop unit at point of service',
-    ratio: '4 / 3',
+    src: '/photos/hardware-counter.webp',
+    width: 1200,
+    height: 675,
+    label: 'Counter station',
+    running: 'POS Checkout Station',
+    alt: 'A TouchBoard on a coffee-shop counter running the ShyftGrid POS register: a searchable product list with stock counts, a cart totalling $35.90, and a green Charge button. A barista works at the espresso machine behind it.',
   },
 ];

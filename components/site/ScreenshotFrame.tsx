@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ImageIcon } from 'lucide-react';
-import type { Screenshot, HardwareSlot } from '@/lib/screens';
+import type { Screenshot, HardwarePhoto } from '@/lib/screens';
 
 /**
  * Renders a product screenshot inside brand chrome. `browser` draws a window
@@ -92,24 +92,34 @@ export function PendingScreenshotSlot({
 }
 
 /**
- * Labelled placeholder for hardware photography that has not been supplied yet.
- * Deliberately obvious rather than stock imagery — it reads as a reserved slot,
- * not as a finished asset.
+ * A real TouchBoard product photo. Framed like the screenshot cards so the
+ * hardware section reads as one set, with the form factor and the mode the
+ * board is running captioned beneath.
  */
-export function HardwarePhotoSlot({ slot }: { slot: HardwareSlot }) {
+export function HardwarePhotoCard({
+  photo,
+  sizes = '(min-width: 1024px) 33vw, 100vw',
+}: {
+  photo: HardwarePhoto;
+  sizes?: string;
+}) {
   return (
-    <div
-      className="relative flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-center"
-      style={{ aspectRatio: slot.ratio }}
-    >
-      <span className="inline-flex w-11 h-11 rounded-xl bg-white/[0.04] border border-white/10 items-center justify-center">
-        <ImageIcon className="w-5 h-5 text-gray-600" />
-      </span>
-      <p className="mt-4 text-sm font-medium text-gray-400">{slot.label}</p>
-      <p className="mt-1 text-xs text-gray-600 leading-relaxed max-w-[16rem]">{slot.hint}</p>
-      <span className="mt-3 px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/10 text-[10px] font-semibold uppercase tracking-wider text-gray-600">
-        Photo pending
-      </span>
-    </div>
+    <figure>
+      <div className="overflow-hidden rounded-2xl border border-white/12 bg-[#070b14] shadow-xl shadow-black/40">
+        <Image
+          src={photo.src}
+          width={photo.width}
+          height={photo.height}
+          alt={photo.alt}
+          sizes={sizes}
+          loading="lazy"
+          className="w-full h-auto"
+        />
+      </div>
+      <figcaption className="mt-3">
+        <p className="text-sm font-semibold text-white">{photo.label}</p>
+        <p className="mt-0.5 text-xs text-gray-500">Running {photo.running}</p>
+      </figcaption>
+    </figure>
   );
 }
