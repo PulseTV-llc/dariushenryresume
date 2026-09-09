@@ -23,7 +23,7 @@ export function ControlCenterSection() {
         title="Every system we build comes with one view of the operation."
         subtitle="People, devices, locations, approvals, and analytics in real time — the control center for the custom system we build around your business. No spreadsheets to reconcile, no separate admin panel per tool."
       />
-      <ScreenshotFrame shot={SCREENS.vexaosHome} priority sizes="(min-width: 1024px) 70vw, 100vw" />
+      <ScreenshotFrame shot={SCREENS.shyftgridSchedule} priority sizes="(min-width: 1024px) 70vw, 100vw" />
     </Section>
   );
 }
