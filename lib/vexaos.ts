@@ -42,26 +42,29 @@ export const PRODUCT_NAV: NavItem[] = [
 ];
 
 export const PRIMARY_NAV: NavItem[] = [
-  { href: '/products', label: 'Products' },
-  { href: '/platform', label: 'Platform' },
+  { href: '/what-we-build', label: 'What We Build' },
+  { href: '/systems', label: 'Systems' },
+  { href: '/how-it-works', label: 'How It Works' },
   { href: '/industries', label: 'Industries' },
-  { href: '/hardware', label: 'Hardware' },
-  { href: '/pricing', label: 'Pricing' },
   { href: '/about', label: 'Company' },
 ];
 
 export const FOOTER_NAV: { title: string; links: NavItem[] }[] = [
   {
-    title: 'Products',
-    links: [{ href: '/products', label: 'All products' }, ...PRODUCT_NAV],
+    title: 'What we build',
+    links: [
+      { href: '/what-we-build', label: 'What we build' },
+      { href: '/systems', label: 'Systems' },
+      { href: '/how-it-works', label: 'How it works' },
+      { href: '/hardware', label: 'Connected hardware' },
+      { href: '/industries', label: 'Industries' },
+    ],
   },
   {
     title: 'Platform',
     links: [
       { href: '/platform', label: 'The VexaOS platform' },
-      { href: '/hardware', label: 'Hardware' },
-      { href: '/industries', label: 'Industries' },
-      { href: '/pricing', label: 'Pricing' },
+      { href: '/systems', label: 'System examples' },
       { href: '/case-study-shyftgrid', label: 'ShyftGrid case study' },
     ],
   },
@@ -71,7 +74,7 @@ export const FOOTER_NAV: { title: string; links: NavItem[] }[] = [
       { href: '/about', label: 'About VexaOS' },
       { href: '/about/founder', label: 'Founder' },
       { href: '/blog', label: 'Insights' },
-      { href: '/contact', label: 'Contact' },
+      { href: '/contact', label: 'Start a project' },
       { href: '/demo', label: 'Book a demo' },
     ],
   },

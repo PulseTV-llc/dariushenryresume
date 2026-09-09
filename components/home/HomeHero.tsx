@@ -20,29 +20,46 @@ export default function HomeHero() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
             <span className="text-[11px] font-semibold tracking-[0.16em] uppercase text-gray-300">
-              The business operating system
+              Custom business systems · built without borders
             </span>
           </div>
 
           <h1 className="mt-7 text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white tracking-tight leading-[1.04] text-balance">
-            One operating system for{' '}
-            <span className="gradient-text">your entire business.</span>
+            Your business isn&rsquo;t off-the-shelf.{' '}
+            <span className="gradient-text">Your software shouldn&rsquo;t be either.</span>
           </h1>
 
           <p className="mt-7 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed text-balance">
-            VexaOS connects your workforce, commerce, inventory, customer experiences, and
-            business hardware through one platform — one identity, one data layer, one
-            control center.
+            VexaOS designs and builds custom business systems that connect your people, devices,
+            workflows, and operations — built around how your business actually works, for
+            businesses around the world.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <PrimaryButton href="/demo" className="w-full sm:w-auto">
-              Book a demo
+            <PrimaryButton href="/contact" className="w-full sm:w-auto">
+              Build My System
               <ArrowRight className="w-4 h-4" />
             </PrimaryButton>
-            <SecondaryButton href="/products" className="w-full sm:w-auto">
-              Explore the products
+            <SecondaryButton href="/systems" className="w-full sm:w-auto">
+              See What We Build
             </SecondaryButton>
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 text-[13px] text-gray-500">
+            {['Android Apps', 'Business Dashboards', 'NFC', 'Kiosks', 'Automation', 'Connected Hardware'].map((x, i) => (
+              <span key={x} className="flex items-center gap-2.5">
+                <span>{x}</span>
+                {i < 5 && <span className="text-sky-500/60">•</span>}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-gray-300">
+            <span className="text-white">Detroit</span>
+            <span className="text-sky-400">→</span>
+            <span className="text-white">Bangkok</span>
+            <span className="text-sky-400">→</span>
+            <span className="gradient-text">Anywhere</span>
           </div>
 
           <p className="mt-5 text-sm text-gray-500">
@@ -73,9 +90,9 @@ export default function HomeHero() {
         </div>
 
         <p className="mt-6 text-center text-sm text-gray-500">
-          Built for multi-location operators.{' '}
-          <Link href="/platform" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 transition-colors">
-            See how the platform fits together
+          Custom systems, built on proven VexaOS infrastructure.{' '}
+          <Link href="/systems" className="text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20 transition-colors">
+            See what we build
           </Link>
           .
         </p>

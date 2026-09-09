@@ -17,15 +17,25 @@ import { SITE_URL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'VexaOS — One Operating System for Your Entire Business',
+    absolute: 'VexaOS — Custom Business Systems, Built Without Borders',
   },
   description:
-    'VexaOS connects your workforce, commerce, inventory, customer experiences, and business hardware through one platform. ShyftGrid, Commerce Ops, Inventory Ops, VexaFront, and TouchBoard on one identity and one data layer.',
+    'VexaOS designs and builds custom business systems that connect your people, devices, workflows, and operations — Android apps, NFC clock-in, kiosks, dashboards, and workflow automation. Built for businesses around the world.',
+  keywords: [
+    'custom business software',
+    'custom Android business apps',
+    'business operations software',
+    'Android kiosk development',
+    'NFC employee systems',
+    'custom management dashboards',
+    'business workflow automation',
+    'connected business systems',
+  ],
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: 'VexaOS — One Operating System for Your Entire Business',
+    title: 'VexaOS — We build the software your business actually needs',
     description:
-      'Connect your workforce, commerce, inventory, customer experiences, and business hardware through one platform.',
+      'Custom business systems that connect your people, devices, workflows, and operations. Detroit → Bangkok → Anywhere.',
     url: SITE_URL,
   },
 };
