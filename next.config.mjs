@@ -21,6 +21,19 @@ const nextConfig = {
     serverComponentsExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
   },
   // NO 'output: standalone' - This breaks Vercel routing!
+
+  // VexaOS repositioning: the site no longer sells products or plans.
+  // The old SKU/pricing/platform pages funnel into the custom-systems story.
+  // 307 (temporary) so this is reversible if any page is later repositioned
+  // rather than retired.
+  async redirects() {
+    return [
+      { source: '/pricing', destination: '/contact', permanent: false },
+      { source: '/products', destination: '/what-we-build', permanent: false },
+      { source: '/products/:path*', destination: '/what-we-build', permanent: false },
+      { source: '/platform', destination: '/how-it-works', permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -63,9 +63,9 @@ export const FOOTER_NAV: { title: string; links: NavItem[] }[] = [
   {
     title: 'Platform',
     links: [
-      { href: '/platform', label: 'The VexaOS platform' },
+      { href: '/how-it-works', label: 'Built on VexaOS' },
       { href: '/systems', label: 'System examples' },
-      { href: '/case-study-shyftgrid', label: 'ShyftGrid case study' },
+      { href: '/case-study-shyftgrid', label: 'Case study' },
     ],
   },
   {
