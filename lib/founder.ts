@@ -1,67 +1,91 @@
 /**
  * Founder credibility content — relocated from the original resume/portfolio
- * homepage (components/Skills.tsx, WhyMe.tsx, AboutSection.tsx, Hero.tsx).
+ * homepage (components/Skills.tsx, WhyMe.tsx, AboutSection.tsx, Hero.tsx) and
+ * reframed for the custom business operating system positioning.
  *
- * The homepage now represents VexaOS the company. This content was NOT deleted;
- * it lives on /about/founder, reframed as the founder's track record rather
- * than a personal job-seeking resume. Project detail continues to come from
- * data/projects.ts.
+ * RULE: no invented accomplishments, customers, revenue, certifications, or
+ * employees. FOUNDER_STATS are carried over verbatim from the original site's
+ * Skills section — confirm them before adding new ones. Project detail
+ * continues to come from data/projects.ts.
  */
 
 export const FOUNDER = {
   name: 'Darius Henry',
-  role: 'Founder & Chief Architect, VexaOS',
+  role: 'Founder & Chief Architect',
+  company: 'VexaOS',
   location: 'United States',
   linkedin: 'https://www.linkedin.com/in/darius-henry-292b21373/',
   github: 'https://github.com/PulseTV-llc',
   email: 'support@vexaos.io',
+  headline:
+    'A hands-on technical founder designing systems across software, mobile applications, connected hardware, business operations, media technology, and digital infrastructure.',
   bio: [
-    'Darius Henry founded VexaOS after a decade of building software for businesses that were drowning in disconnected tools. The pattern repeated in every engagement: a scheduling app that could not see the point of sale, an inventory sheet nobody trusted, and a front counter absorbing the cost of both.',
-    'The answer was never another integration. It was one platform underneath all of it — a single identity, a single data layer, and products built on top rather than bolted together. ShyftGrid was the first proof of that architecture; VexaOS is what it became.',
-    'He remains hands-on across the platform: architecture, data modeling, the device layer, and the product decisions that determine whether an operator actually uses the software on a busy Saturday.',
+    'Darius Henry is the founder and chief architect of VexaOS. He designs and builds across the whole stack a real operation depends on — web control centers, native mobile apps, Android devices and kiosks, data models, integrations, and the hardware on the wall.',
+    'The same problem kept appearing: businesses with genuinely complex operations, running on disconnected tools, without an internal software team to fix it. The answer was never another app. It was a reusable architecture underneath — identity, organizations, permissions, devices, data — and a custom system on top, designed around how each company actually works.',
+    'He remains hands-on in every VexaOS build: architecture, data modeling, native apps, the device layer, and the product decisions that determine whether a system holds up on the busiest day of the week.',
   ],
 } as const;
 
-/** Preserved from the original Skills section. */
+/** Carried over from the original Skills section. */
 export const FOUNDER_STATS = [
   { value: '27+', label: 'Production applications shipped' },
   { value: '6+', label: 'SaaS platforms built end to end' },
   { value: '15+', label: 'Years across web, mobile, and media' },
-  { value: '7', label: 'Products now running on VexaOS' },
 ] as const;
 
-/** Preserved from the original Skills section, regrouped for a company page. */
+/** Technology the founder builds with directly — rendered as chips. */
+export const FOUNDER_STACK = [
+  'Next.js',
+  'React',
+  'TypeScript',
+  'Supabase',
+  'PostgreSQL',
+  'Swift / SwiftUI',
+  'Kotlin',
+  'Android',
+  'React Native',
+  'Node.js',
+  'Firebase',
+  'APIs & webhooks',
+  'Hardware integration',
+  'NFC/RFID',
+  'IoT',
+  'AI',
+  'UI/UX',
+  'Business operations systems',
+] as const;
+
 export const FOUNDER_EXPERTISE = [
   {
     title: 'Platform & architecture',
     icon: 'Layers',
     items: [
       'Multi-tenant SaaS architecture',
+      'Row-level security and role-based access',
       'Real-time data modeling and sync',
-      'Role-based permission systems',
-      'Subscription and billing systems',
+      'Organization and location hierarchies',
       'Performance and scale optimization',
     ],
   },
   {
-    title: 'Web & control surfaces',
+    title: 'Web & control centers',
     icon: 'Code',
     items: [
-      'React 19 and Next.js',
+      'Next.js and React',
       'TypeScript',
-      'Tailwind CSS',
-      'Design systems and UI architecture',
-      'Dashboard and operator tooling',
+      'Tailwind CSS and design systems',
+      'Operator dashboards and command-center UI',
+      'UI/UX for high-pressure environments',
     ],
   },
   {
     title: 'Mobile & devices',
     icon: 'Smartphone',
     items: [
-      'SwiftUI and native iOS',
-      'Android touchscreen and kiosk deployment',
-      'StoreKit 2 and in-app purchase',
-      'AVFoundation and Vision',
+      'Swift and SwiftUI',
+      'Kotlin, Jetpack Compose, and Android',
+      'React Native',
+      'Android kiosk and wall-display deployment',
       'Offline-tolerant device workflows',
     ],
   },
@@ -69,50 +93,49 @@ export const FOUNDER_EXPERTISE = [
     title: 'Backend & data',
     icon: 'Server',
     items: [
-      'Node.js and Express',
+      'Node.js',
+      'Supabase and PostgreSQL',
       'Firebase Firestore and Cloud Functions',
-      'Security rules and access control',
-      'REST API design',
-      'Data migration and integration',
+      'REST APIs, webhooks, and integrations',
+      'Data migration',
     ],
   },
   {
-    title: 'AI & automation',
+    title: 'Hardware & IoT',
     icon: 'Cpu',
+    items: [
+      'NFC/RFID and QR identification',
+      'Barcode scanning workflows',
+      'Device registries and remote configuration',
+      'Sensors and environmental telemetry',
+      'Touchscreen and signage hardware',
+    ],
+  },
+  {
+    title: 'AI, automation & media',
+    icon: 'BrainCircuit',
     items: [
       'LLM integration in production systems',
       'Document intelligence and extraction',
-      'Speech recognition and vision',
       'Workflow automation',
-      'Private and on-premise AI deployment',
-    ],
-  },
-  {
-    title: 'Media & brand',
-    icon: 'Film',
-    items: [
-      'Video production and direction',
-      'Product and brand storytelling',
-      'Customer-facing content systems',
+      'Video production and product storytelling',
       'Digital signage and display media',
-      'Creative direction',
     ],
   },
 ] as const;
 
-/** Preserved from the original "Why me" section, reframed as operating principles. */
 export const FOUNDER_PRINCIPLES = [
   {
-    icon: 'Gauge',
-    title: 'Ship, then refine',
+    icon: 'Workflow',
+    title: 'Build around the operation',
     detail:
-      'Working software in front of real operators beats a longer specification. Every VexaOS product was used in a real business before it was sold to anyone.',
+      'Software should fit the business, not the other way around. The workflow is understood before a single screen is designed.',
   },
   {
     icon: 'Layers',
-    title: 'Build the foundation once',
+    title: 'Solve the foundation once',
     detail:
-      'Identity, permissions, and the data model are not per-product concerns. Getting them right once is why seven products behave like one system.',
+      'Identity, permissions, devices, and the data model are solved in the platform — so each client’s budget goes into what makes their operation different.',
   },
   {
     icon: 'Users',
@@ -124,6 +147,6 @@ export const FOUNDER_PRINCIPLES = [
     icon: 'ShieldCheck',
     title: 'Own the whole stack',
     detail:
-      'From the data layer to the touchscreen on the wall. When one vendor is accountable for all of it, the operator stops being the integrator.',
+      'From the database to the touchscreen on the wall. When one partner is accountable for all of it, the operator stops being the integrator.',
   },
 ] as const;

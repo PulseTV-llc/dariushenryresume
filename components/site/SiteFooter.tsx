@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Mail, Linkedin, ArrowUpRight } from 'lucide-react';
-import { FOOTER_NAV, APP_URL, CONTACT_EMAIL } from '@/lib/vexaos';
+import { Mail, Linkedin, ArrowUpRight, ArrowRight } from 'lucide-react';
+import { FOOTER_COLUMNS, APP_URL, CONTACT_EMAIL } from '@/lib/marketing/site';
 import VexaLogo from './VexaLogo';
 
 export default function SiteFooter() {
@@ -14,9 +14,10 @@ export default function SiteFooter() {
           <div className="lg:col-span-4">
             <VexaLogo markSize={34} showTagline />
             <p className="mt-5 text-sm text-gray-400 leading-relaxed max-w-xs">
-              One operating system for your entire business — workforce, commerce,
-              inventory, customer experiences, and the hardware they run on.
+              Custom business operating systems — web, mobile, and hardware on one architecture,
+              built around the way your company actually works.
             </p>
+            <p className="mt-4 mono-label text-gray-500">Built in America · Delivered worldwide</p>
             <div className="mt-6 space-y-3">
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
@@ -36,11 +37,18 @@ export default function SiteFooter() {
                 <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             </div>
+            <Link
+              href="/contact?intent=blueprint"
+              className="mt-7 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/[0.07] transition-colors"
+            >
+              Start a Business Blueprint
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
 
           {/* Link columns */}
-          <div className="lg:col-span-8 grid gap-10 sm:grid-cols-3">
-            {FOOTER_NAV.map((col) => (
+          <div className="lg:col-span-8 grid gap-10 grid-cols-2 sm:grid-cols-4">
+            {FOOTER_COLUMNS.map((col) => (
               <div key={col.title}>
                 <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500 mb-4">
                   {col.title}
@@ -48,10 +56,7 @@ export default function SiteFooter() {
                 <ul className="space-y-2.5">
                   {col.links.map((l) => (
                     <li key={l.href}>
-                      <Link
-                        href={l.href}
-                        className="text-sm text-gray-400 hover:text-white transition-colors"
-                      >
+                      <Link href={l.href} className="text-sm text-gray-400 hover:text-white transition-colors">
                         {l.label}
                       </Link>
                     </li>
@@ -63,21 +68,16 @@ export default function SiteFooter() {
         </div>
 
         <div className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <p className="text-sm text-gray-500">
-            © {year} VexaOS. All rights reserved.
-          </p>
-          <div className="flex items-center gap-5">
+          <p className="text-sm text-gray-500">© {year} VexaOS. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <a
               href={APP_URL}
               className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
             >
-              Log in to VexaOS
+              Client log in
               <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
             </a>
-            <Link
-              href="/about/founder"
-              className="text-sm text-gray-500 hover:text-white transition-colors"
-            >
+            <Link href="/about/founder" className="text-sm text-gray-500 hover:text-white transition-colors">
               Founded by Darius Henry
             </Link>
           </div>

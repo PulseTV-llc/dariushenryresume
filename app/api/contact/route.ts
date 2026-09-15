@@ -172,6 +172,16 @@ export async function POST(request: NextRequest) {
       currentWebsite,
       systemType,
       devices,
+      // System intake fields (optional, persisted additively)
+      phone,
+      locations,
+      employees,
+      existingSoftware,
+      replaceSystems,
+      mobilePlatform,
+      integrations,
+      intent,
+      source,
       // Legacy fields (backward compatibility)
       projectType,
       currentSituation,
@@ -301,6 +311,20 @@ export async function POST(request: NextRequest) {
       if (systemType) inquiry.systemType = String(systemType).slice(0, 200);
       if (Array.isArray(devices)) inquiry.devices = devices.slice(0, 20);
       if (budget) inquiry.budget = String(budget).slice(0, 100);
+
+      // System intake fields (only stored when provided)
+      const str = (v: unknown, max: number) => String(v).trim().slice(0, max);
+      const list = (v: unknown) =>
+        Array.isArray(v) ? v.slice(0, 20).map((x) => String(x).slice(0, 100)) : undefined;
+      if (phone) inquiry.phone = str(phone, 40);
+      if (locations) inquiry.locations = str(locations, 60);
+      if (employees) inquiry.employees = str(employees, 60);
+      if (existingSoftware) inquiry.existingSoftware = str(existingSoftware, 500);
+      if (list(replaceSystems)?.length) inquiry.replaceSystems = list(replaceSystems);
+      if (mobilePlatform) inquiry.mobilePlatform = str(mobilePlatform, 40);
+      if (integrations) inquiry.integrations = str(integrations, 500);
+      if (intent) inquiry.intent = str(intent, 40);
+      if (source) inquiry.source = str(source, 80);
     } else {
       // Legacy format fields
       inquiry.projectType = projectType;

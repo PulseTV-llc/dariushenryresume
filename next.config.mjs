@@ -22,16 +22,18 @@ const nextConfig = {
   },
   // NO 'output: standalone' - This breaks Vercel routing!
 
-  // VexaOS repositioning: the site no longer sells products or plans.
-  // The old SKU/pricing/platform pages funnel into the custom-systems story.
-  // 307 (temporary) so this is reversible if any page is later repositioned
-  // rather than retired.
+  // Custom business OS repositioning (2026-09). Retired product/SKU URLs
+  // funnel into the platform module pages and the custom-systems story.
+  // 307 (temporary) keeps this reversible if the modules are productized later.
   async redirects() {
     return [
-      { source: '/pricing', destination: '/contact', permanent: false },
-      { source: '/products', destination: '/what-we-build', permanent: false },
-      { source: '/products/:path*', destination: '/what-we-build', permanent: false },
-      { source: '/platform', destination: '/how-it-works', permanent: false },
+      // Order matters: specific paths before the catch-all.
+      { source: '/products/touchboard/demo', destination: '/platform/modules/touchboard/demo', permanent: false },
+      { source: '/products', destination: '/platform#modules', permanent: false },
+      { source: '/products/:slug', destination: '/platform/modules/:slug', permanent: false },
+      { source: '/platform/modules', destination: '/platform#modules', permanent: false },
+      { source: '/what-we-build', destination: '/solutions', permanent: false },
+      { source: '/case-study-shyftgrid', destination: '/case-studies/shyftgrid', permanent: false },
     ];
   },
 };

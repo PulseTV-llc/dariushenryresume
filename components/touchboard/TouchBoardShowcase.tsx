@@ -35,7 +35,7 @@ export default function TouchBoardVideo({
 
   return (
     <div className="relative mx-auto w-full max-w-[19rem] sm:max-w-[21rem]">
-      <div className="relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-[#070b14] shadow-2xl shadow-black/60 aspect-[9/16]">
+      <div className="relative overflow-hidden rounded-[1.5rem] border border-white/[0.12] bg-[#070b14] shadow-2xl shadow-black/60 aspect-[9/16]">
         {started ? (
           <video
             ref={videoRef}

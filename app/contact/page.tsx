@@ -1,101 +1,119 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Mail, Building2, Cpu, ArrowUpRight } from 'lucide-react';
+import { Suspense } from 'react';
+import { Mail, FileText, Globe2, ArrowUpRight, Layers } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
-import VexaContactForm from '@/components/site/VexaContactForm';
-import { PageHero } from '@/components/site/Section';
-import { SITE_URL, APP_URL, CONTACT_EMAIL } from '@/lib/vexaos';
+import IntakeFromParams from '@/components/marketing/intake/IntakeFromParams';
+import SystemIntakeForm from '@/components/marketing/intake/SystemIntakeForm';
+import { APP_URL, CONTACT_EMAIL, SITE_URL } from '@/lib/marketing/site';
 
 export const metadata: Metadata = {
-  title: 'Contact — Sales, quotes, and enterprise enquiries',
+  title: 'Contact — Design Your Business Operating System',
   description:
-    'Talk to VexaOS about pricing, multi-location deployments, hardware quotes, or enterprise and franchise requirements.',
+    'Tell VexaOS how your business operates: locations, people, software, devices, and the problems to solve. Start a system discovery conversation or a Business Blueprint — worldwide.',
   alternates: { canonical: `${SITE_URL}/contact` },
 };
+
+const ASIDE = [
+  {
+    icon: Layers,
+    title: 'What happens next',
+    body: 'We review how your business operates, then reply by email to schedule a discovery conversation about what to connect, automate, rebuild, or replace.',
+  },
+  {
+    icon: FileText,
+    title: 'Prefer a documented plan first?',
+    body: 'Choose “Start with a Business Blueprint” in the last step for a system design, roadmap, and budget range before development.',
+  },
+  {
+    icon: Globe2,
+    title: 'Anywhere in the world',
+    body: 'Built in America. Delivered worldwide. Discovery sessions are scheduled to overlap your business hours.',
+  },
+];
 
 export default function ContactPage() {
   return (
     <>
       <SiteNav />
       <main className="min-h-screen bg-[#04070e]">
-        <PageHero
-          eyebrow="Contact"
-          title="Talk to us about your operation."
-          subtitle="Pricing, multi-location rollouts, hardware quotes, or an enterprise agreement — you will get a real answer from someone who knows the platform."
-        />
+        <section className="relative pt-32 sm:pt-36 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+          <div aria-hidden="true" className="absolute inset-0 grid-background opacity-30 pointer-events-none" />
+          <div
+            aria-hidden="true"
+            className="absolute -top-24 left-1/3 w-[46rem] h-[28rem] rounded-full blur-3xl pointer-events-none"
+            style={{ background: 'radial-gradient(closest-side, rgba(14,165,233,0.14), rgba(14,165,233,0))' }}
+          />
+          <div className="relative max-w-7xl mx-auto grid gap-12 lg:grid-cols-12 lg:gap-14">
+            <div className="lg:col-span-5">
+              <p className="mono-label text-sky-300/90">System discovery</p>
+              <h1 className="mt-4 text-4xl sm:text-5xl font-bold text-white tracking-tight leading-[1.06] text-balance">
+                Let&rsquo;s Design Your Business Operating System.
+              </h1>
+              <p className="mt-6 text-lg text-gray-400 leading-relaxed">
+                Tell us how your company actually works — the locations, the people, the software you run on today, and
+                what keeps breaking. It takes about four minutes.
+              </p>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-4">
-          <div className="grid gap-10 lg:grid-cols-12">
-            <aside className="lg:col-span-5 space-y-4">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
-                <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
-                  <Building2 className="w-5 h-5 text-sky-300" />
-                </span>
-                <h2 className="mt-5 text-base font-semibold text-white">Sales &amp; pricing</h2>
-                <p className="mt-2 text-sm text-gray-400 leading-relaxed">
-                  Quotes for single sites, multi-location groups, franchise networks, and
-                  enterprise agreements — including volume and custom terms.
-                </p>
-                <Link
-                  href="/pricing"
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
-                >
-                  See standard pricing first
-                </Link>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
-                <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
-                  <Cpu className="w-5 h-5 text-sky-300" />
-                </span>
-                <h2 className="mt-5 text-base font-semibold text-white">Hardware quotes</h2>
-                <p className="mt-2 text-sm text-gray-400 leading-relaxed">
-                  Tell us your floor plan and traffic and we will size the kiosks and boards, then
-                  quote purchase or lease terms.
-                </p>
-                <Link
-                  href="/hardware"
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
-                >
-                  Hardware and sizes
-                </Link>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
-                <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
-                  <Mail className="w-5 h-5 text-sky-300" />
-                </span>
-                <h2 className="mt-5 text-base font-semibold text-white">Prefer email?</h2>
-                <p className="mt-2 text-sm text-gray-400 leading-relaxed">
-                  Reach us directly at{' '}
-                  <a
-                    href={`mailto:${CONTACT_EMAIL}`}
-                    className="text-sky-300 hover:text-sky-200 underline underline-offset-2"
-                  >
-                    {CONTACT_EMAIL}
-                  </a>
-                  .
-                </p>
-                <a
-                  href={APP_URL}
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
-                >
-                  Existing customer? Log in
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
-              </div>
-            </aside>
-
-            <div className="lg:col-span-7">
-              <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 sm:p-10">
-                <VexaContactForm variant="contact" />
+              <div className="hidden lg:block">
+                <ContactAside />
               </div>
             </div>
+
+            <div className="lg:col-span-7">
+              <div className="rounded-3xl border border-white/10 bg-[#050912]/90 p-5 sm:p-9 shadow-2xl shadow-black/40">
+                <Suspense fallback={<SystemIntakeForm variant="full" placement="contact_page" />}>
+                  <IntakeFromParams variant="full" placement="contact_page" />
+                </Suspense>
+              </div>
+            </div>
+
+            <div className="lg:hidden">
+              <ContactAside />
+            </div>
           </div>
-        </div>
+        </section>
       </main>
       <SiteFooter />
+    </>
+  );
+}
+
+function ContactAside() {
+  return (
+    <>
+      <ul className="space-y-4 lg:mt-10">
+        {ASIDE.map(({ icon: I, title, body }) => (
+          <li key={title} className="flex gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+            <span className="inline-flex w-10 h-10 shrink-0 rounded-xl bg-sky-500/10 border border-sky-400/20 items-center justify-center">
+              <I className="w-[18px] h-[18px] text-sky-300" />
+            </span>
+            <div>
+              <h2 className="text-[15px] font-semibold text-white">{title}</h2>
+              <p className="mt-1 text-sm text-gray-400 leading-relaxed">{body}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-8 space-y-2 text-sm text-gray-400">
+        <p className="flex items-center gap-2.5">
+          <Mail className="w-4 h-4 text-sky-400" />
+          Prefer email?{' '}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-sky-300 hover:text-sky-200 underline underline-offset-2">
+            {CONTACT_EMAIL}
+          </a>
+        </p>
+        <p>
+          <a
+            href={APP_URL}
+            className="inline-flex items-center gap-1.5 text-gray-500 hover:text-white transition-colors"
+          >
+            Existing client? Log in
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+        </p>
+      </div>
     </>
   );
 }

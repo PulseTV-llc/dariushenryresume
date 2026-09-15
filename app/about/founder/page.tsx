@@ -14,6 +14,7 @@ import {
 import {
   FOUNDER,
   FOUNDER_STATS,
+  FOUNDER_STACK,
   FOUNDER_EXPERTISE,
   FOUNDER_PRINCIPLES,
 } from '@/lib/founder';
@@ -21,9 +22,9 @@ import { projects } from '@/data/projects';
 import { SITE_URL } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'Darius Henry — Founder & Chief Architect',
+  title: 'Darius Henry — Founder & Chief Architect, VexaOS',
   description:
-    'Darius Henry founded VexaOS after a decade building connected business software. Track record, technical background, and the operating principles behind the platform.',
+    'Darius Henry is the hands-on technical founder of VexaOS, designing systems across software, mobile applications, connected hardware, business operations, media technology, and digital infrastructure.',
   alternates: { canonical: `${SITE_URL}/about/founder` },
 };
 
@@ -38,7 +39,14 @@ export default function FounderPage() {
         <PageHero
           eyebrow="Founder"
           title={FOUNDER.name}
-          subtitle={FOUNDER.role}
+          subtitle={
+            <>
+              <span className="block text-sky-300 font-medium">
+                {FOUNDER.role}, {FOUNDER.company}
+              </span>
+              <span className="mt-4 block">{FOUNDER.headline}</span>
+            </>
+          }
         >
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a
@@ -82,14 +90,22 @@ export default function FounderPage() {
               ))}
             </div>
             <div className="lg:col-span-5">
-              <div className="grid grid-cols-2 gap-px rounded-2xl overflow-hidden border border-white/10 bg-white/10">
+              <div className="grid grid-cols-3 gap-px rounded-2xl overflow-hidden border border-white/10 bg-white/10">
                 {FOUNDER_STATS.map((s) => (
-                  <div key={s.label} className="bg-[#04070e] px-5 py-7">
-                    <p className="text-3xl font-bold text-white tracking-tight">{s.value}</p>
-                    <p className="mt-1.5 text-xs text-gray-500 leading-snug">{s.label}</p>
+                  <div key={s.label} className="bg-[#04070e] px-3 sm:px-5 py-6 text-center">
+                    <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{s.value}</p>
+                    <p className="mt-1.5 text-[11px] sm:text-xs text-gray-500 leading-snug">{s.label}</p>
                   </div>
                 ))}
               </div>
+              <p className="mt-8 mono-label text-gray-500">Builds directly with</p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {FOUNDER_STACK.map((t) => (
+                  <li key={t} className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[13px] text-gray-300">
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </Section>
@@ -98,8 +114,8 @@ export default function FounderPage() {
         <Section className="bg-[#03060c] border-t border-white/10">
           <SectionHeading
             eyebrow="Operating principles"
-            title="How VexaOS gets built."
-            subtitle="The decisions that shaped the platform, and the ones that keep shaping it."
+            title="How VexaOS systems get built."
+            subtitle="The decisions that shaped the architecture, and the ones that shape every client system."
           />
           <div className="grid gap-4 sm:grid-cols-2">
             {FOUNDER_PRINCIPLES.map((p) => (
@@ -124,7 +140,7 @@ export default function FounderPage() {
           <SectionHeading
             eyebrow="Technical background"
             title="What the founder actually builds."
-            subtitle="VexaOS is not outsourced. The platform, the products, and the device layer are built and maintained in-house."
+            subtitle="VexaOS is not outsourced. The platform, the modules, and the device layer are designed and built in-house."
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FOUNDER_EXPERTISE.map((cat) => (
@@ -155,8 +171,8 @@ export default function FounderPage() {
         <Section className="bg-[#03060c] border-t border-white/10">
           <SectionHeading
             eyebrow="Track record"
-            title="Products shipped before VexaOS."
-            subtitle="Platforms built, launched, and run in production — the work that informed how VexaOS is architected."
+            title="Software shipped before VexaOS."
+            subtitle="Platforms built and launched — the work that informed how VexaOS is architected."
           />
           <div className="grid gap-4 md:grid-cols-2">
             {track.map((p) => (
@@ -218,8 +234,8 @@ export default function FounderPage() {
         </Section>
 
         <CTABand
-          title="Talk to the person who built it."
-          subtitle="Demos, architecture questions, and deployment planning go directly to the founder."
+          title="Talk to the architect who builds it."
+          subtitle="Discovery, architecture questions, and Blueprint sessions are led by the founder."
         />
       </main>
       <SiteFooter />

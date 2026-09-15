@@ -137,7 +137,7 @@ export default function PricingEstimate({ answers }: PricingEstimateProps) {
           Thank you, {answers.name}!
         </h2>
         <p className="text-xl text-gray-400">
-          Based on your requirements, here's your estimated investment
+          Based on your requirements, here&apos;s your estimated investment
         </p>
       </motion.div>
 
@@ -189,7 +189,7 @@ export default function PricingEstimate({ answers }: PricingEstimateProps) {
 
         {/* What's Included */}
         <div className="border-t border-white/10 pt-8">
-          <h3 className="text-xl font-bold text-white mb-4">What's Included:</h3>
+          <h3 className="text-xl font-bold text-white mb-4">What&apos;s Included:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="flex items-center gap-2 text-gray-300">
               <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
@@ -231,9 +231,9 @@ export default function PricingEstimate({ answers }: PricingEstimateProps) {
         className="text-center"
       >
         <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl p-8 mb-6">
-          <h3 className="text-2xl font-bold text-white mb-3">What's Next?</h3>
+          <h3 className="text-2xl font-bold text-white mb-3">What&apos;s Next?</h3>
           <p className="text-gray-300 mb-6">
-            I'll review your project details and get back to you within 24 hours at{' '}
+            I&apos;ll review your project details and get back to you within 24 hours at{' '}
             <span className="text-cyan-400 font-medium">{answers.email}</span>
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

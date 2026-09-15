@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import TrackedLink from '@/components/marketing/TrackedLink';
+import type { EventProps, MarketingEvent } from '@/lib/analytics';
 
 /** Consistent section wrapper used across pages. */
 export function Section({
@@ -13,7 +15,7 @@ export function Section({
   className?: string;
 }) {
   return (
-    <section id={id} className={`relative py-20 sm:py-24 px-4 sm:px-6 lg:px-8 ${className}`}>
+    <section id={id} className={`relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 ${className}`}>
       <div className="max-w-7xl mx-auto">{children}</div>
     </section>
   );
@@ -105,11 +107,16 @@ export function PrimaryButton({
   children,
   external = false,
   className = '',
+  event,
+  eventProps,
 }: {
   href: string;
   children: ReactNode;
   external?: boolean;
   className?: string;
+  /** Conversion event reported on click (see lib/analytics.ts). */
+  event?: MarketingEvent;
+  eventProps?: EventProps;
 }) {
   const cls = `inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold hover:from-sky-400 hover:to-blue-500 transition-colors ${className}`;
   if (external) {
@@ -117,6 +124,13 @@ export function PrimaryButton({
       <a href={href} className={cls}>
         {children}
       </a>
+    );
+  }
+  if (event) {
+    return (
+      <TrackedLink href={href} className={cls} event={event} eventProps={eventProps}>
+        {children}
+      </TrackedLink>
     );
   }
   return (
@@ -131,11 +145,16 @@ export function SecondaryButton({
   children,
   external = false,
   className = '',
+  event,
+  eventProps,
 }: {
   href: string;
   children: ReactNode;
   external?: boolean;
   className?: string;
+  /** Conversion event reported on click (see lib/analytics.ts). */
+  event?: MarketingEvent;
+  eventProps?: EventProps;
 }) {
   const cls = `inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] border border-white/15 text-white font-semibold hover:bg-white/[0.08] transition-colors ${className}`;
   if (external) {
@@ -143,6 +162,13 @@ export function SecondaryButton({
       <a href={href} className={cls}>
         {children}
       </a>
+    );
+  }
+  if (event) {
+    return (
+      <TrackedLink href={href} className={cls} event={event} eventProps={eventProps}>
+        {children}
+      </TrackedLink>
     );
   }
   return (
@@ -168,13 +194,13 @@ export function PoweredByBadge({ className = '' }: { className?: string }) {
 export function CTABand({
   title,
   subtitle,
-  primary = { label: 'Book a demo', href: '/demo' },
-  secondary = { label: 'Contact sales', href: '/contact' },
+  primary = { label: 'Build My Business System', href: '/contact' },
+  secondary = { label: 'Start a Business Blueprint', href: '/blueprint' },
 }: {
   title: ReactNode;
   subtitle?: ReactNode;
-  primary?: { label: string; href: string };
-  secondary?: { label: string; href: string };
+  primary?: { label: string; href: string; event?: MarketingEvent };
+  secondary?: { label: string; href: string; event?: MarketingEvent };
 }) {
   return (
     <Section className="border-t border-white/10">
@@ -194,11 +220,21 @@ export function CTABand({
             <p className="mt-4 text-gray-400 text-lg leading-relaxed text-balance">{subtitle}</p>
           )}
           <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <PrimaryButton href={primary.href} className="w-full sm:w-auto">
+            <PrimaryButton
+              href={primary.href}
+              className="w-full sm:w-auto"
+              event={primary.event ?? 'final_cta_click'}
+              eventProps={{ label: primary.label }}
+            >
               {primary.label}
               <ArrowRight className="w-4 h-4" />
             </PrimaryButton>
-            <SecondaryButton href={secondary.href} className="w-full sm:w-auto">
+            <SecondaryButton
+              href={secondary.href}
+              className="w-full sm:w-auto"
+              event={secondary.event}
+              eventProps={{ label: secondary.label }}
+            >
               {secondary.label}
             </SecondaryButton>
           </div>

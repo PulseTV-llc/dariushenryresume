@@ -4,7 +4,7 @@ import VexaMark from './VexaMark';
 
 /**
  * VexaOS logo lockup: atom mark + "VexaOS" wordmark, with an optional
- * "CONNECTED BUSINESS SYSTEMS" tagline. Used in the nav (no tagline) and
+ * "CUSTOM BUSINESS SYSTEMS" tagline. Used in the nav (no tagline) and
  * elsewhere. The official raster lockup (public/vexaos-logo.png) is used in
  * the footer / OG image; this vector lockup keeps the nav crisp at any size.
  */
@@ -29,10 +29,10 @@ export default function VexaLogo({
         </span>
         {showTagline && (
           <span
-            className="uppercase text-cyan-300/90 font-medium tracking-[0.22em] mt-1"
-            style={{ fontSize: markSize * 0.19 }}
+            className="uppercase text-cyan-300/90 font-medium tracking-[0.2em] mt-1.5"
+            style={{ fontSize: Math.max(9.5, markSize * 0.28) }}
           >
-            Connected Business Systems
+            Custom Business Systems
           </span>
         )}
       </span>

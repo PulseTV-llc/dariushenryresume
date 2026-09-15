@@ -1,15 +1,18 @@
 import type { Metadata } from 'next';
-import { Monitor, ClipboardList, Calculator, ArrowUpRight } from 'lucide-react';
+import { Suspense } from 'react';
+import { Monitor, ClipboardList, Hand, ArrowRight } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
-import VexaContactForm from '@/components/site/VexaContactForm';
+import IntakeFromParams from '@/components/marketing/intake/IntakeFromParams';
+import SystemIntakeForm from '@/components/marketing/intake/SystemIntakeForm';
+import TrackedLink from '@/components/marketing/TrackedLink';
 import { PageHero } from '@/components/site/Section';
-import { SITE_URL, APP_URL } from '@/lib/vexaos';
+import { SITE_URL } from '@/lib/marketing/site';
 
 export const metadata: Metadata = {
-  title: 'Book a demo — See VexaOS running your operation',
+  title: 'System Walkthrough — See a VexaOS Business System',
   description:
-    'A 30-minute VexaOS walkthrough against your actual business: your locations, your products, your shifts, and your front counter. No generic demo account.',
+    'Request a guided walkthrough of a working VexaOS system — control center, mobile and device apps, and connected hardware — framed around how your operation runs.',
   alternates: { canonical: `${SITE_URL}/demo` },
 };
 
@@ -17,20 +20,17 @@ const WHAT_TO_EXPECT = [
   {
     icon: ClipboardList,
     title: 'We start with your operation',
-    detail:
-      'Locations, roles, what you sell, and which systems you are on today. Fifteen minutes of context makes the rest of the session useful.',
+    detail: 'Locations, roles, what you sell or deliver, and which systems you run on today — so the walkthrough is relevant.',
   },
   {
     icon: Monitor,
-    title: 'Then we show the real thing',
-    detail:
-      'The control center, the products you care about, and the kiosk or board experience — configured to look like your business, not ours.',
+    title: 'Then we show working software',
+    detail: 'Control centers, mobile and device apps, and the architecture underneath — what exists today, labeled honestly.',
   },
   {
-    icon: Calculator,
-    title: 'You leave with numbers',
-    detail:
-      'Which products you actually need, what hardware fits your floor, and what it costs per location. Written down, not implied.',
+    icon: ArrowRight,
+    title: 'You leave with a direction',
+    detail: 'Whether a Business Blueprint, a focused Launch System, or a full Business OS makes sense — or none of them yet.',
   },
 ];
 
@@ -40,53 +40,52 @@ export default function DemoPage() {
       <SiteNav />
       <main className="min-h-screen bg-[#04070e]">
         <PageHero
-          eyebrow="Book a demo"
+          eyebrow="System walkthrough"
           title={
             <>
-              Thirty minutes,{' '}
-              <span className="gradient-text">your actual business.</span>
+              See a working system, <span className="gradient-text">framed around yours.</span>
             </>
           }
-          subtitle="We do not run canned demos. Tell us how your operation works and we will walk VexaOS through it — your locations, your catalog, your shifts, your front counter."
+          subtitle="Not a canned product demo. Tell us how your operation works and we’ll walk through the VexaOS systems and architecture most relevant to it."
         />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-4">
           <div className="grid gap-10 lg:grid-cols-12">
-            {/* What to expect */}
             <aside className="lg:col-span-5 space-y-4">
               {WHAT_TO_EXPECT.map(({ icon: I, title, detail }) => (
-                <div
-                  key={title}
-                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7"
-                >
-                  <span className="inline-flex w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
-                    <I className="w-5 h-5 text-sky-300" />
+                <div key={title} className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                  <span className="inline-flex w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-400/20 items-center justify-center">
+                    <I className="w-[18px] h-[18px] text-sky-300" />
                   </span>
-                  <h2 className="mt-5 text-base font-semibold text-white">{title}</h2>
+                  <h2 className="mt-4 text-base font-semibold text-white">{title}</h2>
                   <p className="mt-2 text-sm text-gray-400 leading-relaxed">{detail}</p>
                 </div>
               ))}
-
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
-                <h2 className="text-base font-semibold text-white">Already a customer?</h2>
+              <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[0.04] p-6">
+                <h2 className="flex items-center gap-2 text-base font-semibold text-white">
+                  <Hand className="w-4 h-4 text-emerald-300" />
+                  Can’t wait?
+                </h2>
                 <p className="mt-2 text-sm text-gray-400 leading-relaxed">
-                  Your control center is at app.vexaos.io. For support with a live deployment,
-                  sign in and use the in-app support channel.
+                  Drive a working TouchBoard wall display in your browser right now — no sign-up.
                 </p>
-                <a
-                  href={APP_URL}
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
+                <TrackedLink
+                  href="/platform/modules/touchboard/demo"
+                  event="demo_opened"
+                  eventProps={{ module: 'touchboard', placement: 'demo_page' }}
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-300 hover:text-emerald-200"
                 >
-                  Log in to VexaOS
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
+                  Open the interactive demo
+                  <ArrowRight className="w-4 h-4" />
+                </TrackedLink>
               </div>
             </aside>
 
-            {/* Form */}
             <div className="lg:col-span-7">
-              <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 sm:p-10">
-                <VexaContactForm variant="demo" />
+              <div className="rounded-3xl border border-white/10 bg-[#050912]/90 p-5 sm:p-9">
+                <Suspense fallback={<SystemIntakeForm variant="compact" placement="demo_page" initial={{ intent: 'walkthrough' }} />}>
+                  <IntakeFromParams variant="compact" placement="demo_page" defaults={{ intent: 'walkthrough' }} />
+                </Suspense>
               </div>
             </div>
           </div>

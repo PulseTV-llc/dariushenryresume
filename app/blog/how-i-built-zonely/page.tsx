@@ -52,7 +52,7 @@ export default function ZonelyPost() {
           </h1>
 
           <p className="text-2xl text-gray-300 leading-relaxed">
-            Real estate founders were wasting $50K+ on agencies and waiting 6 months for buggy MVPs. Here's how I built Zonely - a full real estate intelligence SaaS platform - in just 90 days.
+            Real estate founders were wasting $50K+ on agencies and waiting 6 months for buggy MVPs. Here&apos;s how I built Zonely - a full real estate intelligence SaaS platform - in just 90 days.
           </p>
         </motion.header>
 
@@ -68,7 +68,7 @@ export default function ZonelyPost() {
             <section>
               <h2 className="text-3xl font-bold text-white mb-4">🏢 The Problem</h2>
               <p>
-                Real estate investors were hemorrhaging money on slow, buggy development. Here's what they were facing:
+                Real estate investors were hemorrhaging money on slow, buggy development. Here&apos;s what they were facing:
               </p>
               <ul className="space-y-2 ml-6">
                 <li className="flex items-start gap-3">
@@ -85,7 +85,7 @@ export default function ZonelyPost() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-red-400 mt-1">❌</span>
-                  <span>No revenue features (can't charge users!)</span>
+                  <span>No revenue features (can&apos;t charge users!)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-red-400 mt-1">❌</span>
@@ -98,7 +98,7 @@ export default function ZonelyPost() {
             <section>
               <h2 className="text-3xl font-bold text-white mb-4">⚡ What I Built</h2>
               <p className="mb-4">
-                Zonely is a complete real estate intelligence platform with AI-powered deal analysis. Here's what I shipped in 90 days:
+                Zonely is a complete real estate intelligence platform with AI-powered deal analysis. Here&apos;s what I shipped in 90 days:
               </p>
 
               <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -280,7 +280,7 @@ export default function ZonelyPost() {
               <div className="space-y-4">
                 <div className="bg-white/5 border border-white/10 rounded-lg p-4">
                   <h4 className="font-bold text-cyan-400 mb-2">1. Ship revenue features FIRST</h4>
-                  <p>Don't wait to add payments. Stripe integration took 2 days and unlocked immediate monetization.</p>
+                  <p>Don&apos;t wait to add payments. Stripe integration took 2 days and unlocked immediate monetization.</p>
                 </div>
 
                 <div className="bg-white/5 border border-white/10 rounded-lg p-4">

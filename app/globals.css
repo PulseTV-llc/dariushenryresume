@@ -9,7 +9,7 @@
 
 @layer base {
   body {
-    @apply bg-black text-white;
+    @apply bg-[#04070e] text-white;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
@@ -65,6 +65,71 @@ html {
     linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 50px 50px;
+}
+
+/* ==========================================================================
+   MARKETING SYSTEM — dark surfaces, soft edge highlights, technical accents.
+   ========================================================================== */
+
+/* Card surface with a hairline top highlight. */
+.surface {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Fine technical grid that fades out toward the edges. */
+.tech-grid {
+  background-image:
+    linear-gradient(rgba(148, 197, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 197, 255, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+
+/* Small uppercase monospace label used for technical metadata. */
+.mono-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Dashed connection lines that travel toward a node. */
+@keyframes vx-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.vx-flow {
+  stroke-dasharray: 4 8;
+  animation: vx-flow 1.6s linear infinite;
+}
+
+@keyframes vx-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+.vx-pulse {
+  animation: vx-pulse 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .gradient-text,
+  .vx-flow,
+  .vx-pulse {
+    animation: none;
+  }
+}
+
+/* Anchor targets clear the fixed nav. */
+[id] {
+  scroll-margin-top: 5.5rem;
 }
 
 /* ==========================================================================

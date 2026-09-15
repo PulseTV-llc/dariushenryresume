@@ -216,7 +216,7 @@ export default function Skills() {
             href="#contact"
             className="inline-block px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105"
           >
-            Let's Talk
+            Let&apos;s Talk
           </a>
         </motion.div>
       </div>

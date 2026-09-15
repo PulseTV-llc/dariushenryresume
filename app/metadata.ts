@@ -1,98 +1,41 @@
 import { Metadata } from 'next';
 
 /**
- * Site-wide metadata for the VexaOS company + product marketing site.
+ * Site-wide metadata for vexaos.io.
  *
- * Positioning: VexaOS is a business operating system — a platform plus five
- * separately sold products (ShyftGrid, Commerce Ops, Inventory Ops, VexaFront,
- * TouchBoard) and the managed touchscreen hardware they run on.
+ * Positioning: VexaOS is a custom business operating system company. It designs
+ * and builds connected web, mobile, operations, data, and hardware systems
+ * around how each client operates — on reusable VexaOS architecture.
+ *
+ * Page-level metadata overrides title/description/canonical; the OG image comes
+ * from app/opengraph-image.tsx.
  */
 
 export const siteConfig = {
   name: 'VexaOS',
-  brandName: 'VexaOS',
-  shortTitle: 'VexaOS — The Business Operating System',
-  longTitle: 'VexaOS — One Operating System for Your Entire Business',
+  title: 'VexaOS — Custom Business Operating Systems',
   description:
-    'VexaOS connects your workforce, commerce, inventory, customer experiences, and business hardware through one platform — one identity, one data layer, one control center.',
+    'VexaOS designs and builds custom business operating systems — web, iOS, Android, workforce, commerce, inventory, AI, and connected hardware on one architecture. Built in America, delivered worldwide.',
   url: 'https://www.vexaos.io',
-  appUrl: 'https://app.vexaos.io',
-  ogImage: 'https://www.vexaos.io/og-vexaos.png',
   twitterHandle: '@vexaos',
   locale: 'en_US',
-  contactEmail: 'support@vexaos.io',
-  founder: {
-    name: 'Darius Henry',
-    linkedin: 'https://www.linkedin.com/in/darius-henry-292b21373/',
-    github: 'https://github.com/PulseTV-llc',
-  },
   keywords: [
-    // === Platform / category ===
-    'business operating system',
-    'unified business platform',
-    'all-in-one business software',
-    'connected business systems',
+    'custom business operating system',
+    'custom business management software',
+    'custom operations software',
+    'custom enterprise software',
+    'business software development',
+    'custom restaurant software',
+    'restaurant management software development',
+    'custom workforce management software',
+    'custom POS system development',
+    'custom inventory system',
     'multi-location business software',
-    'operations platform for multi-location businesses',
-    'single platform for workforce and commerce',
-
-    // === Products ===
-    'VexaOS',
-    'ShyftGrid',
-    'ShyftGrid scheduling',
-    'Commerce Ops',
-    'Inventory Ops',
-    'VexaFront',
-    'VexaFront kiosk',
-    'TouchBoard',
-    'employee touchscreen board',
-
-    // === Workforce ===
-    'employee scheduling software',
-    'shift management software',
-    'shift swap and open shift marketplace',
-    'time and attendance system',
-    'labor cost management',
-    'workforce management platform',
-
-    // === Commerce ===
-    'point of sale platform',
-    'unified commerce platform',
-    'order and payment management',
-    'customer loyalty platform',
-    'self-service ordering kiosk',
-
-    // === Inventory / operations ===
-    'inventory management software',
-    'multi-location inventory tracking',
-    'cost of goods tracking',
-    'purchase order and receiving software',
-    'waste and shrinkage tracking',
-
-    // === Hardware ===
-    'self-service kiosk hardware',
-    'commercial touchscreen kiosk',
-    'digital menu board',
-    'employee display board',
-    'managed kiosk devices',
-    'touchscreen kiosk lease',
-
-    // === Industries ===
-    'restaurant operations software',
-    'salon and barbershop software',
-    'retail operations platform',
-    'gym management software',
-    'auto service shop software',
-    'hospitality operations software',
-    'clinic and med spa software',
-    'field service management platform',
-
-    // === Buyer intent ===
-    'replace disconnected business tools',
-    'one system for scheduling and POS',
-    'multi-location operations software pricing',
-    'enterprise business operating system',
-    'franchise operations platform',
+    'business process automation',
+    'operations management software',
+    'custom business apps',
+    'custom iOS business apps',
+    'custom Android business apps',
   ],
 };
 
@@ -100,13 +43,12 @@ export const generateMetadata = (): Metadata => {
   return {
     metadataBase: new URL(siteConfig.url),
     title: {
-      default: siteConfig.longTitle,
+      default: siteConfig.title,
       template: '%s · VexaOS',
     },
     description: siteConfig.description,
     keywords: siteConfig.keywords,
     applicationName: siteConfig.name,
-    generator: 'Next.js',
     referrer: 'origin-when-cross-origin',
     authors: [{ name: 'VexaOS', url: siteConfig.url }],
     creator: 'VexaOS',
@@ -120,31 +62,16 @@ export const generateMetadata = (): Metadata => {
       type: 'website',
       locale: siteConfig.locale,
       url: siteConfig.url,
-      title: siteConfig.longTitle,
+      title: siteConfig.title,
       description: siteConfig.description,
       siteName: siteConfig.name,
-      images: [
-        {
-          url: siteConfig.ogImage,
-          width: 1200,
-          height: 630,
-          alt: 'VexaOS — One operating system for your entire business',
-          type: 'image/png',
-        },
-      ],
     },
     twitter: {
       card: 'summary_large_image',
       site: siteConfig.twitterHandle,
       creator: siteConfig.twitterHandle,
-      title: siteConfig.longTitle,
+      title: siteConfig.title,
       description: siteConfig.description,
-      images: [
-        {
-          url: siteConfig.ogImage,
-          alt: 'VexaOS — One operating system for your entire business',
-        },
-      ],
     },
     robots: {
       index: true,
@@ -169,14 +96,9 @@ export const generateMetadata = (): Metadata => {
       apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
     },
     manifest: '/site.webmanifest',
-    alternates: {
-      canonical: siteConfig.url,
-      languages: {
-        'en-US': siteConfig.url,
-        'x-default': siteConfig.url,
-      },
-    },
+    // No site-wide canonical: each page declares its own, so child routes never
+    // inherit the homepage URL as their canonical.
     category: 'technology',
-    classification: 'Business Operating System',
+    classification: 'Custom Business Software Development',
   };
 };

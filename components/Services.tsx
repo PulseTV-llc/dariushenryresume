@@ -255,7 +255,7 @@ export default function Services() {
             Not sure which one you need?
           </p>
           <p className="text-gray-400 mb-6">
-            Tell me your problem. I'll tell you how fast I can fix it.
+            Tell me your problem. I&apos;ll tell you how fast I can fix it.
           </p>
           <motion.a
             href="#contact"

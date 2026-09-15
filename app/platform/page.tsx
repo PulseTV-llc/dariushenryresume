@@ -1,55 +1,43 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
 import Icon from '@/components/site/Icon';
-import EcosystemDiagram from '@/components/site/EcosystemDiagram';
-import ScreenshotFrame from '@/components/site/ScreenshotFrame';
-import { SCREENS } from '@/lib/screens';
-import {
-  Section,
-  SectionHeading,
-  PageHero,
-  CTABand,
-  PrimaryButton,
-  SecondaryButton,
-} from '@/components/site/Section';
-import { PLATFORM_PILLARS, SITE_URL, APP_URL } from '@/lib/vexaos';
+import ScreenshotFrame, { HardwarePhotoCard } from '@/components/site/ScreenshotFrame';
+import { Section, SectionHeading, PageHero, CTABand, PrimaryButton, SecondaryButton, Eyebrow } from '@/components/site/Section';
+import PlatformLayers from '@/components/marketing/PlatformLayers';
+import ArchitecturePrinciples from '@/components/marketing/ArchitecturePrinciples';
+import { SCREENS, HARDWARE_PHOTOS } from '@/lib/screens';
+import { PRODUCTS, DOMAIN_META, type ProductDomain } from '@/lib/vexaos';
+import { SITE_URL } from '@/lib/marketing/site';
 
 export const metadata: Metadata = {
-  title: 'Platform — One identity, one org model, one data layer',
+  title: 'Platform — Proven Architecture Underneath Every Custom System',
   description:
-    'The VexaOS platform is the shared foundation under every product: a single identity, a single organization model, a single data layer, and a managed device registry — so nothing has to be integrated.',
+    'The VexaOS platform: reusable identity, organization, access, data, device, communication, integration, and intelligence layers — plus proven workforce, commerce, inventory, and facility modules — underneath every custom business system.',
   alternates: { canonical: `${SITE_URL}/platform` },
 };
 
-const CONTROL_CENTER = [
-  ['Locations & organization', 'Sites, regions, brands, and the roles attached to each.'],
-  ['People', 'Employees, permissions, onboarding, and offboarding in one place.'],
-  ['Catalog', 'Products, services, modifiers, and pricing published to every surface.'],
-  ['Devices', 'Every kiosk and board, its location, its configuration, and its health.'],
-  ['Reporting', 'Labor, revenue, and cost of goods on one timeline.'],
-  ['Audit', 'Who changed a price, approved an override, or adjusted stock — and when.'],
+const SECURITY = [
+  { icon: 'Building2', title: 'Tenant isolation', detail: 'Data is scoped to your organization and locations, enforced with row-level security or deny-by-default rules at the database — not just hidden in the interface.' },
+  { icon: 'KeyRound', title: 'Role-based access', detail: 'Roles and permissions checked server-side, down to the action. A shift lead cannot see payroll because the data layer says so.' },
+  { icon: 'ScrollText', title: 'Audit trails', detail: 'Sensitive actions — pricing, refunds, stock adjustments, approvals — recorded with who, what, and when.' },
+  { icon: 'Lock', title: 'Encryption', detail: 'Data encrypted in transit and at rest on managed cloud infrastructure.' },
+  { icon: 'MonitorSmartphone', title: 'Device lockdown', detail: 'Kiosks and boards run locked-down modes, paired to a location, and can be unpaired remotely.' },
+  { icon: 'ShieldCheck', title: 'Security maintenance', detail: 'Dependency updates, monitoring, and patching are part of Managed Platform & Support.' },
 ];
 
-const NOT_INTEGRATIONS = [
-  {
-    wrong: 'Nightly syncs between systems',
-    right: 'One record, read live by every product',
-  },
-  {
-    wrong: 'A connector that breaks on a vendor update',
-    right: 'Shared internals, versioned together',
-  },
-  {
-    wrong: 'Two customer databases you reconcile by email address',
-    right: 'One customer, created once',
-  },
-  {
-    wrong: 'Separate permission models per tool',
-    right: 'One role that means the same thing everywhere',
-  },
+const INTEGRATIONS = [
+  ['Payments', 'Card-present and online payments through established processors such as Stripe.'],
+  ['Payroll & accounting', 'Approved hours, tips, and financials exported to the providers you already use.'],
+  ['APIs & webhooks', 'REST APIs and event webhooks so your system can talk to anything with an API.'],
+  ['Existing software', 'Keep the tools that work — POS, booking, delivery, or industry software — and connect them.'],
+  ['Data migration', 'Customers, employees, catalogs, and history moved in from spreadsheets and legacy systems.'],
+  ['Notifications', 'Email, SMS, push, and on-screen alerts routed to the right person.'],
 ];
+
+const DOMAINS: ProductDomain[] = ['Workforce', 'Commerce', 'Operations'];
 
 export default function PlatformPage() {
   return (
@@ -60,144 +48,153 @@ export default function PlatformPage() {
           eyebrow="Platform"
           title={
             <>
-              The reason it is one system,{' '}
-              <span className="gradient-text">not seven subscriptions.</span>
+              Proven architecture.{' '}
+              <span className="gradient-text">Custom implementation.</span>
             </>
           }
-          subtitle="VexaOS is the foundation the products are built on: one identity, one organization model, one data layer, and one device registry. Integration is not something you configure — it is the architecture."
+          subtitle="Every VexaOS system is custom on the surface and proven underneath. The platform gives your build identity, organizations, permissions, data, devices, and integrations that already work — so the budget goes into your operation."
         >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <PrimaryButton href="/demo">
-              Book a technical walkthrough
+            <PrimaryButton href="/contact?intent=build" className="w-full sm:w-auto">
+              Build My Business System
               <ArrowRight className="w-4 h-4" />
             </PrimaryButton>
-            <SecondaryButton href={APP_URL} external>
-              Log in to the control center
+            <SecondaryButton href="#modules" className="w-full sm:w-auto">
+              See the proven modules
             </SecondaryButton>
           </div>
         </PageHero>
 
-        <Section className="pt-8">
-          <EcosystemDiagram />
+        {/* Architecture layers */}
+        <Section id="architecture" className="pt-10 sm:pt-12">
+          <PlatformLayers />
         </Section>
 
-        {/* Pillars */}
-        <Section className="border-t border-white/10">
+        {/* Principles */}
+        <Section className="bg-[#03060c] border-t border-white/10">
           <SectionHeading
-            eyebrow="The foundation"
-            title="Six things every product inherits."
-            subtitle="Build these once, properly, and every product on top of them starts consistent — and stays that way."
+            eyebrow="Architecture principles"
+            title="One identity. One organization model. One data layer."
+            subtitle="Build these once, properly, and every application on top of them starts consistent — and stays that way."
           />
-          <div className="grid gap-4 md:grid-cols-2">
-            {PLATFORM_PILLARS.map((pillar) => (
-              <div
-                key={pillar.title}
-                className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="inline-flex w-11 h-11 shrink-0 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-600/20 border border-white/10 items-center justify-center">
-                    <Icon name={pillar.icon} className="w-5 h-5 text-sky-300" />
-                  </span>
-                  <h3 className="text-lg font-semibold text-white">{pillar.title}</h3>
-                </div>
-                <p className="mt-5 text-[15px] text-gray-400 leading-relaxed">{pillar.summary}</p>
-                <ul className="mt-6 space-y-2.5">
-                  {pillar.points.map((pt) => (
-                    <li key={pt} className="flex items-start gap-3 text-sm text-gray-400">
-                      <Check className="w-4 h-4 mt-0.5 shrink-0 text-sky-400" />
-                      {pt}
+          <ArchitecturePrinciples detailed />
+          <div className="mt-14 grid gap-8 lg:grid-cols-2">
+            <ScreenshotFrame shot={SCREENS.locationSwitcher} sizes="(min-width: 1024px) 48vw, 100vw" />
+            <ScreenshotFrame shot={SCREENS.unifiedSettings} sizes="(min-width: 1024px) 48vw, 100vw" />
+          </div>
+        </Section>
+
+        {/* Modules */}
+        <Section id="modules" className="border-t border-white/10">
+          <SectionHeading
+            eyebrow="Proven modules"
+            title="Proven technology underneath every VexaOS build."
+            subtitle="Working software we assemble, extend, and customize inside your system. These are building blocks — not separate products you have to buy and stitch together."
+          />
+          <div className="grid gap-4 lg:grid-cols-3">
+            {DOMAINS.map((domain) => (
+              <div key={domain} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6">
+                <p className="mono-label text-gray-400">{DOMAIN_META[domain].label}</p>
+                <p className="mt-1.5 text-sm text-gray-500 leading-relaxed">{DOMAIN_META[domain].blurb}</p>
+                <ul className="mt-5 space-y-2.5">
+                  {PRODUCTS.filter((p) => p.domain === domain).map((p) => (
+                    <li key={p.slug}>
+                      <Link
+                        href={`/platform/modules/${p.slug}`}
+                        className="group flex items-start gap-3 rounded-xl border border-white/10 bg-[#070b14] p-3.5 hover:border-sky-400/30 transition-colors"
+                      >
+                        <span className={`inline-flex w-9 h-9 shrink-0 rounded-lg bg-gradient-to-br ${p.accent} items-center justify-center`}>
+                          <Icon name={p.icon} className="w-[18px] h-[18px] text-white" strokeWidth={2} />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-sm font-semibold text-white group-hover:text-sky-200 transition-colors">{p.name}</span>
+                          <span className="block text-xs text-gray-500 leading-relaxed mt-0.5">{p.role}</span>
+                        </span>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-
-          <div className="mt-14">
-            <ScreenshotFrame
-              shot={SCREENS.unifiedSettings}
-              sizes="(min-width: 1024px) 65vw, 100vw"
-              className="max-w-4xl mx-auto"
-            />
-          </div>
         </Section>
 
-        {/* Control center */}
-        <Section className="bg-[#03060c] border-t border-white/10">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
-            <div className="lg:col-span-5">
-              <SectionHeading
-                center={false}
-                eyebrow="Control center"
-                title="One place your operators actually work."
-                subtitle="The VexaOS control center is where the organization is configured and where the business is run — every product, every location, one browser tab."
-              />
-              <SecondaryButton href={APP_URL} external>
-                Open app.vexaos.io
-              </SecondaryButton>
-            </div>
-            <div className="lg:col-span-7 grid gap-3 sm:grid-cols-2">
-              {CONTROL_CENTER.map(([title, detail]) => (
-                <div
-                  key={title}
-                  className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5"
-                >
-                  <p className="text-sm font-semibold text-white">{title}</p>
-                  <p className="mt-1.5 text-[13px] text-gray-500 leading-relaxed">{detail}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-14 grid gap-8 lg:grid-cols-2">
-            <ScreenshotFrame
-              shot={SCREENS.locationSwitcher}
-              sizes="(min-width: 1024px) 48vw, 100vw"
-            />
-            <ScreenshotFrame
-              shot={SCREENS.deviceFleet}
-              sizes="(min-width: 1024px) 48vw, 100vw"
-            />
-          </div>
-        </Section>
-
-        {/* Not integrations */}
-        <Section className="border-t border-white/10">
+        {/* Security */}
+        <Section id="security" className="bg-[#03060c] border-t border-white/10">
           <SectionHeading
-            eyebrow="The difference"
-            title="Shared internals beat good integrations."
-            subtitle="An integration is a promise between two systems. A shared data layer removes the need for the promise."
+            eyebrow="Security"
+            title="Governed access, designed in."
+            subtitle="Security is part of the architecture every build inherits — not a feature added at the end."
           />
-          <div className="rounded-3xl border border-white/10 overflow-hidden">
-            <div className="grid grid-cols-2 bg-white/[0.03] border-b border-white/10">
-              <p className="px-5 sm:px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-                Integrated tools
-              </p>
-              <p className="px-5 sm:px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-300/90 border-l border-white/10">
-                VexaOS
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {SECURITY.map((s) => (
+              <li key={s.title} className="surface rounded-2xl p-6">
+                <Icon name={s.icon} className="w-5 h-5 text-sky-300" />
+                <h3 className="mt-4 text-base font-semibold text-white">{s.title}</h3>
+                <p className="mt-2 text-sm text-gray-400 leading-relaxed">{s.detail}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8 text-center text-sm text-gray-500 max-w-2xl mx-auto">
+            Industry and regional compliance requirements — such as payment card, health data, or
+            data-protection rules — are scoped and addressed per engagement.
+          </p>
+        </Section>
+
+        {/* Integrations */}
+        <Section id="integrations" className="border-t border-white/10">
+          <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+            <div className="lg:col-span-5">
+              <Eyebrow>Integrations</Eyebrow>
+              <h2 className="mt-5 text-3xl sm:text-4xl font-bold text-white tracking-tight leading-[1.12] text-balance">
+                Open at the edges.
+              </h2>
+              <p className="mt-5 text-lg text-gray-400 leading-relaxed">
+                Your VexaOS system becomes the system of record without becoming a walled garden.
+                Keep what works, connect it, and replace only what is holding the operation back.
               </p>
             </div>
-            {NOT_INTEGRATIONS.map((row, i) => (
-              <div
-                key={row.wrong}
-                className={`grid grid-cols-2 ${i > 0 ? 'border-t border-white/10' : ''}`}
-              >
-                <p className="px-5 sm:px-7 py-5 text-sm text-gray-500 leading-relaxed">
-                  {row.wrong}
-                </p>
-                <p className="px-5 sm:px-7 py-5 text-sm text-gray-200 leading-relaxed border-l border-white/10 bg-sky-500/[0.03]">
-                  {row.right}
-                </p>
-              </div>
+            <ul className="lg:col-span-7 grid gap-3 sm:grid-cols-2">
+              {INTEGRATIONS.map(([t, d]) => (
+                <li key={t} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                  <p className="flex items-center gap-2 text-[15px] font-semibold text-white">
+                    <Check className="w-4 h-4 text-sky-400" />
+                    {t}
+                  </p>
+                  <p className="mt-1.5 text-sm text-gray-500 leading-relaxed">{d}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Section>
+
+        {/* Devices */}
+        <Section id="devices" className="bg-[#03060c] border-t border-white/10">
+          <SectionHeading
+            eyebrow="Devices"
+            title="Web. Mobile. Hardware. One architecture."
+            subtitle="Tablets, kiosks, wall boards, readers, and sensors enroll in one device registry — paired to a location, assigned a mode, and managed remotely."
+          />
+          <ScreenshotFrame shot={SCREENS.deviceFleet} sizes="(min-width: 1024px) 70vw, 100vw" className="max-w-5xl mx-auto" />
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {HARDWARE_PHOTOS.map((p) => (
+              <HardwarePhotoCard key={p.key} photo={p} />
             ))}
+          </div>
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <SecondaryButton href="/hardware">
+              Connected hardware
+              <ArrowRight className="w-4 h-4" />
+            </SecondaryButton>
+            <SecondaryButton href="/platform/modules/touchboard/demo" event="demo_opened" eventProps={{ module: 'touchboard', placement: 'platform_devices' }}>
+              Try the TouchBoard demo
+            </SecondaryButton>
           </div>
         </Section>
 
         <CTABand
           title="Bring us your architecture questions."
-          subtitle="Multi-location rollups, permission models, device fleets, data migration — the technical walkthrough goes as deep as you need."
-          primary={{ label: 'Book a technical walkthrough', href: '/demo' }}
-          secondary={{ label: 'Contact sales', href: '/contact' }}
+          subtitle="Multi-location rollups, permission models, device fleets, data migration, integrations — the technical conversation goes as deep as you need."
         />
       </main>
       <SiteFooter />

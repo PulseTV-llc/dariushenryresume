@@ -23,7 +23,7 @@ export default function ScreenshotFrame({
   return (
     <figure className={className}>
       <div
-        className={`relative overflow-hidden rounded-2xl border border-white/12 bg-[#070b14] shadow-2xl shadow-black/50 ${
+        className={`relative overflow-hidden rounded-2xl border border-white/[0.12] bg-[#070b14] shadow-2xl shadow-black/50 ${
           shot.frame === 'device' ? 'p-2 sm:p-2.5' : ''
         }`}
       >
@@ -105,7 +105,7 @@ export function HardwarePhotoCard({
 }) {
   return (
     <figure>
-      <div className="overflow-hidden rounded-2xl border border-white/12 bg-[#070b14] shadow-xl shadow-black/40">
+      <div className="overflow-hidden rounded-2xl border border-white/[0.12] bg-[#070b14] shadow-xl shadow-black/40">
         <Image
           src={photo.src}
           width={photo.width}

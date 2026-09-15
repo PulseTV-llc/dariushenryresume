@@ -53,16 +53,16 @@ export const SCREENS = {
     height: 1250,
     alt: 'The VexaOS location switcher showing an organization with three locations and an all-locations rollup.',
     caption:
-      'One organization, many locations — every product respects the same hierarchy.',
+      'One organization, many locations — every application respects the same hierarchy.',
     frame: 'browser',
   },
   unifiedSettings: {
     src: '/screens/unified-settings.webp',
     width: 1800,
     height: 1125,
-    alt: 'VexaOS settings, split into platform settings that exist once and product settings shown only for products the organization holds.',
+    alt: 'VexaOS settings, split into platform settings that exist once and module settings shown only where they apply.',
     caption:
-      'Platform settings exist once, regardless of which products you hold. Product settings appear only for what you own.',
+      'Platform settings exist once for the whole system; module settings appear only where they apply.',
     frame: 'browser',
   },
   touchBoard: {

@@ -1,9 +1,17 @@
 /**
- * VexaOS — company & product content model.
+ * VexaOS — INTERNAL module catalog & platform model.
  *
- * Single source of truth for the marketing site: navigation, the product
- * ecosystem, platform pillars, industries, hardware and pricing. Pages stay
- * thin and presentational; everything editable lives here.
+ * Since the 2026-09 repositioning, VexaOS is SOLD as a custom business
+ * operating system (public positioning lives in lib/marketing/*). This file is
+ * the internal software architecture underneath: the reusable modules
+ * (PRODUCTS), platform pillars, hardware lines, and the per-location SaaS
+ * price book kept for a future productized offering.
+ *
+ * Publicly, modules appear only as "proven technology underneath" on /platform
+ * and /platform/modules/[slug]. The SaaS price book (BUNDLES,
+ * STANDALONE_PRICING, DEVICE_PRICING, FOUNDING_OFFER, PLAN_TIERS) is NOT
+ * rendered on the public site — engagement pricing lives in
+ * lib/marketing/pricing.ts. Legacy nav exports below are unused.
  *
  * NOTE ON PRICING: bundle, standalone and device pricing is APPROVED (price
  * book v1-2026-08) and stored in integer cents.
@@ -581,12 +589,12 @@ export const PLATFORM_PILLARS: PlatformPillar[] = [
     icon: 'Fingerprint',
     title: 'One identity',
     summary:
-      'Every employee and every customer exists once, with one login and one record across every product.',
+      'Every employee and every customer exists once, with one login and one record across every application in the system.',
     points: [
-      'Single sign-on for staff across ShyftGrid, Commerce Ops, and Inventory Ops',
+      'One sign-in for staff across web, mobile, and device apps',
       'One employee profile — hire once, not five times',
       'One customer record shared by kiosk, counter, and online',
-      'Session and device policies applied platform-wide',
+      'Session and device policies applied system-wide',
     ],
   },
   {
@@ -596,7 +604,7 @@ export const PLATFORM_PILLARS: PlatformPillar[] = [
       'Locations, departments, roles, and permissions are defined once and respected everywhere.',
     points: [
       'Multi-location and multi-brand hierarchies',
-      'Role-based permissions that apply to every product',
+      'Role-based permissions that apply to every application',
       'Per-location configuration without separate systems',
       'Delegated administration for regional and site managers',
     ],
@@ -605,11 +613,11 @@ export const PLATFORM_PILLARS: PlatformPillar[] = [
     icon: 'Database',
     title: 'One data layer',
     summary:
-      'Products, customers, employees, orders, and stock live in one model — no syncing, no drift.',
+      'Customers, employees, orders, stock, and devices live in one model — no syncing, no drift.',
     points: [
       'A single catalog behind every sales surface',
       'Real-time updates propagated to every connected device',
-      'Cross-product reporting without exports and spreadsheets',
+      'Cross-application reporting without exports and spreadsheets',
       'Historical records retained for audit and analysis',
     ],
   },
@@ -629,7 +637,7 @@ export const PLATFORM_PILLARS: PlatformPillar[] = [
     icon: 'ShieldCheck',
     title: 'Governed access',
     summary:
-      'Who can see what, who changed what, and when — recorded across the whole platform.',
+      'Who can see what, who changed what, and when — recorded across the whole system.',
     points: [
       'Granular permissions down to the action level',
       'Audit trails on schedules, pricing, refunds, and stock adjustments',
@@ -641,7 +649,7 @@ export const PLATFORM_PILLARS: PlatformPillar[] = [
     icon: 'Plug',
     title: 'Open at the edges',
     summary:
-      'VexaOS is the system of record, not a walled garden. Your existing tools stay connected.',
+      'Your system of record, not a walled garden. The tools you keep stay connected.',
     points: [
       'Payroll and accounting exports',
       'Payment processor integration',
@@ -915,7 +923,7 @@ export const HARDWARE_LINES: HardwareLine[] = [
       'Production and fulfillment status',
       'Multi-department scheduling at a glance',
     ],
-    icon: 'PresentationIcon',
+    icon: 'Presentation',
   },
 ];
 

@@ -20,7 +20,7 @@ export default function Contact() {
             <span className="gradient-text">Tell Me Your Problem.</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto font-medium">
-            I'll tell you how fast I can fix it <span className="text-green-400">(and send you a custom solution plan)</span>
+            I&apos;ll tell you how fast I can fix it <span className="text-green-400">(and send you a custom solution plan)</span>
           </p>
         </motion.div>
 

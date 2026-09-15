@@ -5,6 +5,8 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    // Data files carry class names (e.g. module accent gradients).
+    "./lib/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {

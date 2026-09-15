@@ -144,7 +144,7 @@ export default function BusinessContactForm() {
         </span>
         <h2 className="text-2xl font-bold text-white mb-3">Your request is in.</h2>
         <p className="text-gray-300 max-w-md mx-auto">
-          Thanks, {form.name.split(' ')[0] || 'there'}. We'll review your business and reply with a
+          Thanks, {form.name.split(' ')[0] || 'there'}. We&apos;ll review your business and reply with a
           system plan and a clear quote. Keep an eye on{' '}
           <span className="text-cyan-300">{form.email}</span>.
         </p>

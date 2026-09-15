@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
@@ -21,15 +20,13 @@ import {
   HARDWARE_LEASE,
   HARDWARE_SIZES,
   HARDWARE_INCLUDED,
-  TOUCHBOARD_PRICING_STATEMENT,
-  VEXAFRONT_PRICING_STATEMENT,
   SITE_URL,
 } from '@/lib/vexaos';
 
 export const metadata: Metadata = {
-  title: 'Hardware — VexaFront kiosks and TouchBoard displays',
+  title: 'Connected Hardware — Business Kiosks, Touchscreen Boards & Devices',
   description:
-    'VexaFront customer kiosks from 15" to 43" and TouchBoard employee displays from 32" to 86". Purchase outright starting at $1,099, or lease the flagship 43" board at $99/month. Enrolled and managed through VexaOS.',
+    'Customer kiosks, employee wall boards, and touchscreen displays from 15" to 86" — enrolled in the VexaOS device registry and managed as part of your custom business system. Purchase or lease the flagship 43" board.',
   alternates: { canonical: `${SITE_URL}/hardware` },
 };
 
@@ -39,20 +36,22 @@ export default function HardwarePage() {
       <SiteNav />
       <main className="min-h-screen bg-[#04070e]">
         <PageHero
-          eyebrow="Hardware"
+          eyebrow="Connected hardware"
           title={
             <>
-              Screens that are <span className="gradient-text">part of the system.</span>
+              Hardware that is <span className="gradient-text">part of the system.</span>
             </>
           }
-          subtitle="VexaFront kiosks face your customers. TouchBoard displays face your team. Both enroll in the VexaOS device registry, configure themselves from your organization settings, and are managed remotely from the control center."
+          subtitle="Customer kiosks, employee wall boards, tablets, readers, and sensors — specified with your system, enrolled in the VexaOS device registry, and managed remotely from your control center."
         >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <PrimaryButton href="/contact">
-              Request a hardware quote
+            <PrimaryButton href="/contact?intent=build" className="w-full sm:w-auto">
+              Build My Business System
               <ArrowRight className="w-4 h-4" />
             </PrimaryButton>
-            <SecondaryButton href="/demo">Book a demo</SecondaryButton>
+            <SecondaryButton href="/platform/modules/touchboard/demo" event="demo_opened" eventProps={{ module: 'touchboard', placement: 'hardware_hero' }} className="w-full sm:w-auto">
+              Try the TouchBoard demo
+            </SecondaryButton>
           </div>
         </PageHero>
 
@@ -136,8 +135,8 @@ export default function HardwarePage() {
         <Section className="bg-[#03060c] border-t border-white/10">
           <SectionHeading
             eyebrow="The lineup"
-            title="Two families, five configurations."
-            subtitle="VexaFront for the customer side of the counter, TouchBoard for the staff side. Both run VexaOS in locked-down kiosk mode."
+            title="Customer-facing and staff-facing configurations."
+            subtitle="Kiosks for the customer side of the counter, wall boards for the staff side. Both run in locked-down kiosk mode and are managed from the same device registry."
           />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {HARDWARE_LINES.map((h) => (
@@ -156,7 +155,7 @@ export default function HardwarePage() {
                         : 'bg-sky-500/10 text-sky-200 border border-sky-400/25'
                     }`}
                   >
-                    {h.product}
+                    {h.product === 'VexaFront' ? 'Customer-facing' : 'Staff-facing'}
                   </span>
                 </div>
                 <h3 className="mt-5 text-lg font-semibold text-white">{h.name}</h3>
@@ -180,7 +179,7 @@ export default function HardwarePage() {
           <SectionHeading
             eyebrow="Sizes & pricing"
             title="Every size, starting at."
-            subtitle="Hardware is billed separately from the per-device software license. Leasing is available on selected sizes — ask for terms on anything above 43&quot;."
+            subtitle="Hardware is scoped into your system and can be purchased outright or, on selected sizes, leased — ask for terms on anything above 43&quot;."
           />
           <div className="max-w-3xl mx-auto rounded-3xl border border-white/10 overflow-hidden">
             <div className="grid grid-cols-12 bg-white/[0.03] border-b border-white/10 px-5 sm:px-7 py-4">
@@ -214,36 +213,10 @@ export default function HardwarePage() {
             ))}
           </div>
           <p className="mt-6 max-w-3xl mx-auto text-center text-xs text-gray-500 leading-relaxed">
-            Starting prices are per unit in USD and exclude tax, shipping, installation, and the
-            per-device software license. Mounting hardware is included. Volume pricing is
-            available on multi-unit and multi-location orders — ask for a quote.
-          </p>
-        </Section>
-
-        {/* Device software licensing */}
-        <Section className="bg-[#03060c] border-t border-white/10">
-          <div className="max-w-3xl mx-auto grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-6">
-              <p className="text-sm font-semibold text-white">TouchBoard software</p>
-              <p className="mt-2 text-sm text-gray-400 leading-relaxed">
-                {TOUCHBOARD_PRICING_STATEMENT}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-6">
-              <p className="text-sm font-semibold text-white">VexaFront software</p>
-              <p className="mt-2 text-sm text-gray-400 leading-relaxed">
-                {VEXAFRONT_PRICING_STATEMENT}
-              </p>
-            </div>
-          </div>
-          <p className="mt-6 text-center">
-            <Link
-              href="/pricing"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-sky-300 hover:text-sky-200 transition-colors"
-            >
-              Full software pricing
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            Starting prices are per unit in USD and exclude tax, shipping, and installation.
+            Mounting hardware is included. Device software and management are scoped within your
+            system&rsquo;s Managed Platform &amp; Support. Multi-unit and multi-location orders are
+            quoted individually.
           </p>
         </Section>
 
@@ -280,9 +253,9 @@ export default function HardwarePage() {
 
         <CTABand
           title="Tell us your floor plan."
-          subtitle="We will size the kiosks and boards to your counter, your back of house, and your traffic — then quote it."
-          primary={{ label: 'Request a hardware quote', href: '/contact' }}
-          secondary={{ label: 'Book a demo', href: '/demo' }}
+          subtitle="We’ll specify the kiosks, boards, and devices your operation needs as part of the system — then scope it."
+          primary={{ label: 'Build My Business System', href: '/contact?intent=build' }}
+          secondary={{ label: 'Request a walkthrough', href: '/demo' }}
         />
       </main>
       <SiteFooter />

@@ -12,18 +12,20 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from '@/components/site/Section';
-import { SITE_URL, TOUCHBOARD_PRICING_STATEMENT } from '@/lib/vexaos';
+import { SITE_URL } from '@/lib/vexaos';
+import { OG_IMAGES } from '@/lib/marketing/site';
 
 export const metadata: Metadata = {
-  title: 'TouchBoard interactive demo — try the employee display',
+  title: 'TouchBoard Interactive Demo — A Working VexaOS Wall Display',
   description:
     'Try a working TouchBoard in your browser: the Workforce Wall Board plus five more device modes, faithful to the real Android app. No sign-up, nothing sent anywhere.',
-  alternates: { canonical: `${SITE_URL}/products/touchboard/demo` },
+  alternates: { canonical: `${SITE_URL}/platform/modules/touchboard/demo` },
   openGraph: {
     title: 'TouchBoard interactive demo — Powered by VexaOS',
     description:
       'A working TouchBoard you can drive in the browser: the Standings Board, its read-only drill-ins, and five more device modes.',
-    url: `${SITE_URL}/products/touchboard/demo`,
+    url: `${SITE_URL}/platform/modules/touchboard/demo`,
+    images: OG_IMAGES,
   },
 };
 
@@ -67,11 +69,11 @@ export default function TouchBoardDemoPage() {
           />
           <div className="relative max-w-4xl mx-auto text-center">
             <Link
-              href="/products/touchboard"
+              href="/platform/modules/touchboard"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              TouchBoard
+              TouchBoard module
             </Link>
             <div className="mt-5">
               <Eyebrow>Interactive demo</Eyebrow>
@@ -125,8 +127,8 @@ export default function TouchBoardDemoPage() {
               <p className="text-sm text-gray-400 leading-relaxed">
                 On a real deployment this runs full-screen on a wall-mounted panel in locked-down
                 kiosk mode, signed in to your location, against your live data. The mode is set
-                remotely from the VexaOS device registry — the board never picks its own.{' '}
-                {TOUCHBOARD_PRICING_STATEMENT}
+                remotely from the VexaOS device registry — the board never picks its own. In a
+                custom VexaOS system, the board shows whatever your operation needs on the wall.
               </p>
             </div>
           </div>
@@ -141,11 +143,11 @@ export default function TouchBoardDemoPage() {
               subtitle="The demo runs on invented data. A walkthrough runs on yours — your locations, your shifts, your coverage gaps."
             />
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <PrimaryButton href="/demo">
-                Book a demo
+              <PrimaryButton href="/contact?intent=walkthrough&system=workforce-os" event="demo_opened" eventProps={{ system: 'workforce-os', kind: 'walkthrough_request' }}>
+                Request a walkthrough
                 <ArrowRight className="w-4 h-4" />
               </PrimaryButton>
-              <SecondaryButton href="/products/touchboard">
+              <SecondaryButton href="/platform/modules/touchboard">
                 <MonitorPlay className="w-4 h-4" />
                 Back to TouchBoard
               </SecondaryButton>
@@ -155,9 +157,9 @@ export default function TouchBoardDemoPage() {
 
         <CTABand
           title="Put this on your wall."
-          subtitle="Hardware, software, and the platform underneath — from one vendor that is accountable for all of it."
-          primary={{ label: 'Request a quote', href: '/contact' }}
-          secondary={{ label: 'See hardware', href: '/hardware' }}
+          subtitle="Hardware, software, and the platform underneath — designed into your system by one partner accountable for all of it."
+          primary={{ label: 'Build My Business System', href: '/contact?intent=build' }}
+          secondary={{ label: 'See connected hardware', href: '/hardware' }}
         />
       </main>
       <SiteFooter />

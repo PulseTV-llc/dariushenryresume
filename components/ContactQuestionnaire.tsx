@@ -254,9 +254,9 @@ export default function ContactQuestionnaire() {
           transition={{ delay: 0.3 }}
           className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-8 mb-8 text-center"
         >
-          <h3 className="text-2xl font-bold text-white mb-3">🎯 What's Next?</h3>
+          <h3 className="text-2xl font-bold text-white mb-3">🎯 What&apos;s Next?</h3>
           <p className="text-gray-300 mb-6 text-lg">
-            I'll review your problem and get back to you within <span className="text-green-400 font-bold">24 hours</span> at{' '}
+            I&apos;ll review your problem and get back to you within <span className="text-green-400 font-bold">24 hours</span> at{' '}
             <span className="text-green-400 font-medium">{answers.email}</span> with a custom solution plan.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
