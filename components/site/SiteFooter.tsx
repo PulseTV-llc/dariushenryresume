@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Mail, Linkedin, ArrowUpRight, ArrowRight } from 'lucide-react';
+import { Mail, Linkedin, MapPin, ArrowUpRight, ArrowRight } from 'lucide-react';
 import { FOOTER_COLUMNS, APP_URL, CONTACT_EMAIL } from '@/lib/marketing/site';
 import VexaLogo from './VexaLogo';
 
@@ -35,6 +35,18 @@ export default function SiteFooter() {
                 <Linkedin className="w-4 h-4 text-sky-400" />
                 LinkedIn
                 <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </a>
+              <a
+                href="https://maps.google.com/?q=35+W.+Huron+St+Suite+403+Pontiac+MI+48342"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                <MapPin className="w-4 h-4 text-sky-400 mt-0.5 shrink-0" />
+                <span className="not-italic">
+                  35 W. Huron St, Suite 403<br />
+                  Pontiac, MI 48342
+                </span>
               </a>
             </div>
             <Link
