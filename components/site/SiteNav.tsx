@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, ArrowUpRight, ArrowRight } from 'lucide-react';
-import { MAIN_NAV, NAV_CTA, APP_URL, type NavGroup } from '@/lib/marketing/site';
+import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
+import { MAIN_NAV, NAV_CTA, type NavGroup } from '@/lib/marketing/site';
 import { trackEvent } from '@/lib/analytics';
 import VexaLogo from './VexaLogo';
 
@@ -124,13 +124,6 @@ export default function SiteNav() {
 
           {/* Right side */}
           <div className="flex items-center gap-2">
-            <a
-              href={APP_URL}
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
-            >
-              Log in
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
-            </a>
             <Link
               href={NAV_CTA.href}
               onClick={() => onCta('header')}
@@ -238,13 +231,6 @@ export default function SiteNav() {
               >
                 Start with a Business Blueprint
               </Link>
-              <a
-                href={APP_URL}
-                className="flex items-center justify-center gap-1.5 px-4 py-3 text-sm text-gray-400"
-              >
-                Client log in
-                <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
-              </a>
             </div>
           </div>
         </div>

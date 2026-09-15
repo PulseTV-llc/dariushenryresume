@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Mail, Linkedin, MapPin, ArrowUpRight, ArrowRight } from 'lucide-react';
-import { FOOTER_COLUMNS, APP_URL, CONTACT_EMAIL } from '@/lib/marketing/site';
+import { FOOTER_COLUMNS, CONTACT_EMAIL } from '@/lib/marketing/site';
 import VexaLogo from './VexaLogo';
 
 export default function SiteFooter() {
@@ -82,13 +82,6 @@ export default function SiteFooter() {
         <div className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <p className="text-sm text-gray-500">© {year} VexaOS. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <a
-              href={APP_URL}
-              className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
-            >
-              Client log in
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
-            </a>
             <Link href="/about/founder" className="text-sm text-gray-500 hover:text-white transition-colors">
               Founded by Darius Henry
             </Link>
