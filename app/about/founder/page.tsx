@@ -198,16 +198,6 @@ export default function FounderPage() {
                     {p.outcome}
                   </p>
                 )}
-                <div className="mt-5 flex flex-wrap gap-1.5">
-                  {p.technologies.slice(0, 6).map((t) => (
-                    <span
-                      key={t}
-                      className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/10 text-[11px] text-gray-500"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
               </div>
             ))}
           </div>

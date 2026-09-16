@@ -71,10 +71,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     applications: [
       { name: 'Manager control center', platform: 'Web', detail: 'Scheduling, approvals, open shifts, and labor across locations.' },
       { name: 'Employee experience', platform: 'Mobile', detail: 'Shifts, swaps, open-shift claims, and verified clock-in.' },
-      { name: 'TouchBoard', platform: 'Android (Kotlin)', detail: 'Native wall display with remotely controlled device modes.' },
+      { name: 'TouchBoard', platform: 'Android app', detail: 'Native wall display with remotely controlled device modes.' },
       { name: 'Device registry', platform: 'Web', detail: 'Pairing, location assignment, and mode switching per board.' },
     ],
-    technology: ['Next.js', 'TypeScript', 'Firebase', 'Cloud Functions', 'Kotlin', 'Android'],
+    technology: ['Custom web platform', 'Native Android', 'Real-time cloud backend', 'Secure database'],
     results: [],
     resultsNote:
       'ShyftGrid is VexaOS’s own platform, not a client engagement. Its architecture — identity, organization model, device registry — is what every VexaOS build now inherits.',
@@ -101,13 +101,13 @@ export const CASE_STUDIES: CaseStudy[] = [
     system:
       'A multi-tenant hospitality system on one database with row-level security: every screen in the control center reads live orders, labor, inventory, purchasing, reservations, and financials, while native Android apps handle the table and the kitchen line.',
     applications: [
-      { name: 'Owner control center', platform: 'Web (Next.js)', detail: 'Dashboard, orders, kitchen, workforce, payroll, tips, menu, recipes, inventory, purchasing, financials, compliance, devices.', status: 'Running on live data' },
-      { name: 'Waiter app', platform: 'Android (Kotlin/Compose)', detail: 'Tables, orders, and payments at the table.', status: 'In development' },
-      { name: 'Kitchen display', platform: 'Android (Kotlin/Compose)', detail: 'Station tickets and bump-to-served.', status: 'In development' },
-      { name: 'Team app', platform: 'React Native', detail: 'Schedules, clock-in, and tips for staff.', status: 'In development' },
-      { name: 'Guest ordering', platform: 'Web (PWA)', detail: 'Online ordering and reservations.', status: 'Planned' },
+      { name: 'Owner control center', platform: 'Web app', detail: 'Dashboard, orders, kitchen, workforce, payroll, tips, menu, recipes, inventory, purchasing, financials, compliance, devices.', status: 'Running on live data' },
+      { name: 'Waiter app', platform: 'Android app', detail: 'Tables, orders, and payments at the table.', status: 'In development' },
+      { name: 'Kitchen display', platform: 'Android app', detail: 'Station tickets and bump-to-served.', status: 'In development' },
+      { name: 'Team app', platform: 'Mobile app', detail: 'Schedules, clock-in, and tips for staff.', status: 'In development' },
+      { name: 'Guest ordering', platform: 'Web app', detail: 'Online ordering and reservations.', status: 'Planned' },
     ],
-    technology: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Row-level security', 'Kotlin', 'Jetpack Compose', 'React Native'],
+    technology: ['Custom web platform', 'Native Android apps', 'Cross-platform app', 'Multi-tenant database', 'Row-level security'],
     results: [],
     resultsNote:
       'This is a platform demonstration, not a client deployment. Client results will be published here when there are real ones to report.',
@@ -139,12 +139,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     system:
       'A monorepo platform where web, mobile, and backend share one business-logic package — pricing engine, job state machines, and permissions — so the booking site, the admin platform, and the field app enforce the same rules in real time.',
     applications: [
-      { name: 'Marketing & booking site', platform: 'Web (Next.js)', detail: 'Service information and online booking.' },
+      { name: 'Marketing & booking site', platform: 'Web app', detail: 'Service information and online booking.' },
       { name: 'Customer portal', platform: 'Web', detail: 'Bookings, history, and account.' },
       { name: 'Admin & dispatch platform', platform: 'Web', detail: 'Jobs, crews, scheduling, and operations.' },
-      { name: 'Cleaner & customer app', platform: 'React Native (Expo)', detail: 'Field workflow for cleaners and a customer experience in one app.' },
+      { name: 'Cleaner & customer app', platform: 'Mobile app', detail: 'Field workflow for cleaners and a customer experience in one app.' },
     ],
-    technology: ['Next.js', 'React Native', 'Expo', 'Firebase', 'Cloud Functions', 'Stripe', 'Zod'],
+    technology: ['Custom web platform', 'Cross-platform app', 'Real-time cloud backend', 'Integrated payments'],
     results: [],
     resultsNote:
       'An internal VexaOS deployment, not an outside client engagement. Outcomes will be published once measured in production.',

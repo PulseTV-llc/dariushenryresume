@@ -68,11 +68,11 @@ export const SYSTEMS: FlagshipSystem[] = [
       'Owners reconciling locations in spreadsheets at the end of the week',
     ],
     apps: [
-      { name: 'Owner Control Center', platform: 'Web · Next.js', detail: 'Sales, labor, food cost, and exceptions across every location.' },
+      { name: 'Owner Control Center', platform: 'Web', detail: 'Sales, labor, food cost, and exceptions across every location.' },
       { name: 'Manager Dashboard', platform: 'Web', detail: 'Floor, schedule, approvals, purchasing, and daily close.' },
-      { name: 'Waiter App', platform: 'Android · Kotlin', detail: 'Tables, orders, modifiers, and payments at the table.' },
-      { name: 'Kitchen Display', platform: 'Android · Kotlin', detail: 'Tickets by station and state, with bump-to-served.' },
-      { name: 'Team App', platform: 'React Native', detail: 'Schedules, clock-in, swaps, and tips for staff.' },
+      { name: 'Waiter App', platform: 'Android', detail: 'Tables, orders, modifiers, and payments at the table.' },
+      { name: 'Kitchen Display', platform: 'Android', detail: 'Tickets by station and state, with bump-to-served.' },
+      { name: 'Team App', platform: 'Mobile app', detail: 'Schedules, clock-in, swaps, and tips for staff.' },
       { name: 'Guest Ordering', platform: 'Web', detail: 'Online ordering, QR order-and-pay, and reservations.' },
     ],
     capabilityGroups: [

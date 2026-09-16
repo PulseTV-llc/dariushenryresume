@@ -33,20 +33,16 @@ export const FOUNDER_STATS = [
   { value: '15+', label: 'Years across web, mobile, and media' },
 ] as const;
 
-/** Technology the founder builds with directly — rendered as chips. */
+/** Capability areas the founder builds across — rendered as chips.
+ *  Kept at the capability level on purpose; the underlying stack isn't disclosed. */
 export const FOUNDER_STACK = [
-  'Next.js',
-  'React',
-  'TypeScript',
-  'Supabase',
-  'PostgreSQL',
-  'Swift / SwiftUI',
-  'Kotlin',
-  'Android',
-  'React Native',
-  'Node.js',
-  'Firebase',
+  'Web platforms',
+  'iOS & Android apps',
+  'Cross-platform apps',
+  'Real-time cloud backends',
+  'Databases & security',
   'APIs & webhooks',
+  'Payments',
   'Hardware integration',
   'NFC/RFID',
   'IoT',

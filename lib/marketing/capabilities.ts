@@ -23,7 +23,7 @@ export const BUILD_GROUPS: BuildGroup[] = [
       'Web Control Centers',
       'iOS Applications',
       'Android Applications',
-      'React Native Apps',
+      'Cross-platform Apps',
       'Employee Apps',
       'Manager Apps',
       'Customer Apps',
