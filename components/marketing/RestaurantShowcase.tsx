@@ -34,7 +34,7 @@ export default function RestaurantShowcase({ headingLevel = 'h2' }: { headingLev
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <PrimaryButton
-              href={`/systems/${system.slug}`}
+              href="/restaurants"
               event="system_explore_click"
               eventProps={{ system: system.slug, placement: 'restaurant_showcase' }}
               className="w-full sm:w-auto"
@@ -43,12 +43,12 @@ export default function RestaurantShowcase({ headingLevel = 'h2' }: { headingLev
               <ArrowRight className="w-4 h-4" />
             </PrimaryButton>
             <SecondaryButton
-              href="/contact?intent=walkthrough&system=restaurant-os"
+              href="/demo"
               event="demo_opened"
-              eventProps={{ system: system.slug, kind: 'walkthrough_request' }}
+              eventProps={{ system: system.slug, kind: 'demo_request' }}
               className="w-full sm:w-auto"
             >
-              Request a walkthrough
+              Request a live demo
             </SecondaryButton>
           </div>
         </div>

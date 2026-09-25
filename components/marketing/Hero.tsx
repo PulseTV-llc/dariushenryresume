@@ -3,27 +3,27 @@ import { PrimaryButton, SecondaryButton } from '@/components/site/Section';
 import HeroSystemVisual from './HeroSystemVisual';
 import { BUILD_SURFACES } from '@/lib/marketing/site';
 
-/** The four things a visitor must understand within ten seconds. */
+/** The four things a restaurant owner must understand within ten seconds. */
 const PROOF_POINTS = [
   {
     icon: Layers,
-    title: 'We’re not starting from zero',
-    detail: 'Identity, roles, devices, and data layers are already built and proven.',
+    title: 'Not just another POS',
+    detail: 'POS is one module. VexaOS runs front of house, kitchen, staff, inventory, and finance as one system.',
   },
   {
     icon: Building2,
-    title: 'Built for complex operations',
-    detail: 'Designed for organizations running roughly 2 to 50+ locations.',
+    title: 'Built and running today',
+    detail: 'The full restaurant system is developed on live data and approaching pilot with its first operators.',
   },
   {
     icon: Globe2,
-    title: 'Built in America. Delivered worldwide.',
-    detail: 'Remote discovery, deployment, and support across time zones.',
+    title: 'One connected system',
+    detail: 'Replace disconnected vendors with a single data layer — tools that finally talk to each other.',
   },
   {
     icon: FileText,
-    title: 'Start with a Business Blueprint',
-    detail: 'A documented system design, from $750, before major development.',
+    title: 'A platform beyond restaurants',
+    detail: 'The same architecture extends to workforce, facilities, and retail — restaurants are our first vertical.',
   },
 ];
 
@@ -42,27 +42,30 @@ export default function Hero() {
           <p className="inline-flex items-center gap-2.5 rounded-full border border-sky-400/25 bg-sky-500/[0.08] px-3.5 py-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
             <span className="text-[11px] sm:text-xs font-semibold tracking-[0.18em] uppercase text-sky-100">
-              Custom Business Operating Systems
+              Restaurant Operating System
             </span>
           </p>
 
           <h1 className="mt-7 text-[2.5rem] leading-[1.04] sm:text-6xl lg:text-[4.5rem] font-bold text-white tracking-tight text-balance">
-            Built around the way your company{' '}
-            <span className="gradient-text">actually works.</span>
+            Run your entire restaurant on{' '}
+            <span className="gradient-text">one connected system.</span>
           </h1>
 
           <p className="mt-6 sm:mt-7 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed text-balance">
-            VexaOS designs and builds connected software ecosystems that unify your workforce,
-            customers, operations, commerce, data, and business hardware into one system.
+            VexaOS replaces the tangle of POS, scheduling, inventory, reservations, and back-office
+            tools with a single operating system — front of house to kitchen to the owner’s numbers.
+          </p>
+          <p className="mt-4 text-[15px] text-gray-500 max-w-2xl mx-auto leading-relaxed text-balance">
+            VexaOS builds connected operating systems for business. <span className="text-gray-300">Restaurant OS is our first fully developed vertical.</span>
           </p>
 
           <div className="mt-9 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
-            <PrimaryButton href="/contact?intent=build" event="hero_build_system_click" className="w-full sm:w-auto">
-              Build My Business System
+            <PrimaryButton href="/restaurants" event="hero_restaurant_click" className="w-full sm:w-auto">
+              See VexaOS for Restaurants
               <ArrowRight className="w-4 h-4" />
             </PrimaryButton>
-            <SecondaryButton href="/systems" event="hero_demo_click" className="w-full sm:w-auto">
-              Explore Our Systems
+            <SecondaryButton href="/demo" event="hero_demo_click" className="w-full sm:w-auto">
+              Request a Live Demo
             </SecondaryButton>
           </div>
 

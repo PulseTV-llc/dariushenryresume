@@ -9,6 +9,9 @@ import { track } from '@vercel/analytics';
  */
 export type MarketingEvent =
   | 'hero_build_system_click'
+  | 'hero_restaurant_click'
+  | 'ecosystem_restaurant_click'
+  | 'restaurant_demo_click'
   | 'hero_demo_click'
   | 'nav_build_system_click'
   | 'pricing_blueprint_click'

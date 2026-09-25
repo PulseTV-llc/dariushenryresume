@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import SiteNav from '@/components/site/SiteNav';
 import SiteFooter from '@/components/site/SiteFooter';
-import { Section, SectionHeading, SecondaryButton } from '@/components/site/Section';
+import { Section, SectionHeading, SecondaryButton, PrimaryButton } from '@/components/site/Section';
 import Hero from '@/components/marketing/Hero';
+import RestaurantEcosystem from '@/components/marketing/RestaurantEcosystem';
 import ProblemSection from '@/components/marketing/ProblemSection';
 import ArchitectureDiagram from '@/components/marketing/ArchitectureDiagram';
 import CapabilityGrid from '@/components/marketing/CapabilityGrid';
@@ -29,15 +30,15 @@ import { SITE_URL } from '@/lib/marketing/site';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'VexaOS — Custom Business Operating Systems | Web, Mobile & Hardware',
+    absolute: 'VexaOS — The Restaurant Operating System | POS, Kitchen, Staff & Back Office in One',
   },
   description:
-    'VexaOS designs and builds custom business operating systems — web control centers, iOS and Android apps, POS, workforce, inventory, kiosks, and connected hardware on one architecture. For multi-location and operationally complex companies, delivered worldwide.',
+    'VexaOS is one connected operating system for restaurants — POS, waiter, host, kitchen display, scheduling, inventory, and financials on a single platform. Restaurant OS is our first fully developed vertical; the same architecture powers any multi-location operation.',
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: 'VexaOS — Custom Business Operating Systems',
+    title: 'VexaOS — The Restaurant Operating System',
     description:
-      'Software should fit your business — not the other way around. Custom systems across web, mobile, operations, data, and hardware, built on proven VexaOS architecture.',
+      'Replace disconnected POS, scheduling, inventory, and back-office tools with one connected system — front of house to kitchen to the owner’s numbers. Restaurant OS is our first fully developed vertical.',
     url: SITE_URL,
   },
 };
@@ -56,7 +57,29 @@ export default function Home() {
         {/* 1 — Hero */}
         <Hero />
 
-        {/* 2 — The problem */}
+        {/* 2 — Restaurant OS ecosystem at a glance */}
+        <Section id="ecosystem" className="border-t border-white/10">
+          <SectionHeading
+            eyebrow="Restaurant OS"
+            title="Your whole restaurant, as one system."
+            subtitle="Front of house, kitchen, management, finance, and staff — connected on one data layer, not stitched together from four vendors that never agree."
+          />
+          <RestaurantEcosystem />
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-3">
+            <PrimaryButton href="/restaurants" event="ecosystem_restaurant_click" className="w-full sm:w-auto">
+              See Restaurant OS
+              <ArrowRight className="w-4 h-4" />
+            </PrimaryButton>
+            <SecondaryButton href="/demo" className="w-full sm:w-auto">
+              Request a live demo
+            </SecondaryButton>
+          </div>
+        </Section>
+
+        {/* 3 — Restaurant flagship showcase */}
+        <RestaurantShowcase />
+
+        {/* 4 — The problem */}
         <ProblemSection />
 
         {/* 3 — The solution */}
@@ -136,9 +159,6 @@ export default function Home() {
             </div>
           </div>
         </Section>
-
-        {/* 6 — Restaurant / café flagship */}
-        <RestaurantShowcase />
 
         {/* 7 — Platform advantage */}
         <Section id="platform-advantage" className="border-t border-white/10">

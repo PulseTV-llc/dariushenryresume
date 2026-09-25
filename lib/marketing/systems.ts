@@ -55,9 +55,9 @@ export const SYSTEMS: FlagshipSystem[] = [
     name: 'Restaurant & Café OS',
     shortName: 'Restaurant OS',
     icon: 'UtensilsCrossed',
-    status: 'in-development',
+    status: 'walkthrough',
     summary:
-      'A complete connected operating system for hospitality — owner control center, waiter apps, kitchen operations, workforce, inventory, ordering, analytics, and customer experiences.',
+      'A complete, connected operating system for hospitality — owner control center, waiter, host, and kitchen apps, workforce, inventory, financials, ordering, and analytics. Built and running today; approaching pilot.',
     audience: ['Restaurant groups', 'Café groups', 'Quick service', 'Hospitality operators'],
     intro:
       'One system from the guest’s first order to the owner’s end-of-day numbers: front of house, kitchen, workforce, inventory, and financials on a single multi-location data layer.',
@@ -70,7 +70,8 @@ export const SYSTEMS: FlagshipSystem[] = [
     apps: [
       { name: 'Owner Control Center', platform: 'Web', detail: 'Sales, labor, food cost, and exceptions across every location.' },
       { name: 'Manager Dashboard', platform: 'Web', detail: 'Floor, schedule, approvals, purchasing, and daily close.' },
-      { name: 'Waiter App', platform: 'Android', detail: 'Tables, orders, modifiers, and payments at the table.' },
+      { name: 'Waiter / Server App', platform: 'Android', detail: 'Tables, orders, modifiers, splits, and payments at the table.' },
+      { name: 'Host App', platform: 'Android', detail: 'Waitlist, reservations, seating, and floor pacing at the door.' },
       { name: 'Kitchen Display', platform: 'Android', detail: 'Tickets by station and state, with bump-to-served.' },
       { name: 'Team App', platform: 'Mobile app', detail: 'Schedules, clock-in, swaps, and tips for staff.' },
       { name: 'Guest Ordering', platform: 'Web', detail: 'Online ordering, QR order-and-pay, and reservations.' },
@@ -85,7 +86,7 @@ export const SYSTEMS: FlagshipSystem[] = [
     ],
     foundations: ['Identity & roles', 'Multi-location organization model', 'Device registry', 'ShyftGrid workforce layer', 'Commerce & inventory modules'],
     statusNote:
-      'The control center is running on live data with the Android waiter and kitchen apps in active development. Walkthroughs of the working system are available on request.',
+      'The full restaurant system — owner control center, waiter, host, and kitchen-display apps, scheduling, inventory, and financials — is built and running on live demo data, and is now approaching pilot with its first operators. Guided demos of the working system are available today.',
     industries: ['restaurant', 'hospitality', 'multi-site'],
     caseStudy: 'restaurant-os',
   },

@@ -27,6 +27,7 @@ export interface NavGroup {
 }
 
 export const MAIN_NAV: NavGroup[] = [
+  { label: 'Restaurant OS', href: '/restaurants' },
   {
     label: 'Solutions',
     href: '/solutions',
@@ -84,7 +85,7 @@ export const MAIN_NAV: NavGroup[] = [
   },
 ];
 
-export const NAV_CTA = { label: 'Build My System', href: '/contact' } as const;
+export const NAV_CTA = { label: 'Request a Demo', href: '/demo' } as const;
 
 export const FOOTER_COLUMNS: { title: string; links: NavLink[] }[] = [
   {
