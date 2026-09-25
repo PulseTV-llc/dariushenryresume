@@ -40,3 +40,6 @@ next-env.d.ts
 .claude/
 .claude/
 .claude/
+
+# raw screenshot captures (source PNGs, not shipped)
+public/screens/_new/

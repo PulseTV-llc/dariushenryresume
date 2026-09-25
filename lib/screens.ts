@@ -29,6 +29,51 @@ export interface Screenshot {
 }
 
 export const SCREENS = {
+  ccOwner: {
+    src: '/screens/cc-owner.webp',
+    width: 1920,
+    height: 1200,
+    alt: 'The VexaOS Restaurant OS owner control center: an AI daily brief, an ask-your-business panel, and live sales, orders, covers, and tips across locations.',
+    caption:
+      'The owner control center — an AI daily brief, live sales, labor and food cost, and every open issue across locations.',
+    frame: 'browser',
+  },
+  ccFloor: {
+    src: '/screens/cc-floor.webp',
+    width: 1920,
+    height: 1200,
+    alt: 'The live floor board showing every table by status — available, seated, and needs bussing — across the dining room, patio, and bar.',
+    caption:
+      'The live floor — every table’s status, updating as hosts seat parties and bussers clear.',
+    frame: 'browser',
+  },
+  ccDelivery: {
+    src: '/screens/cc-delivery.webp',
+    width: 1920,
+    height: 1200,
+    alt: 'The delivery dispatch board with live orders, promise times, delivered revenue, and per-order commission on the real check.',
+    caption:
+      'Delivery dispatch — live orders, promise times, and revenue on the same check as the rest of the restaurant.',
+    frame: 'browser',
+  },
+  ccKitchen: {
+    src: '/screens/cc-kitchen.webp',
+    width: 1920,
+    height: 1200,
+    alt: 'The kitchen display mirror showing tickets by station status: on the line, ready to run, and served.',
+    caption:
+      'The kitchen display — tickets by station, from on-the-line to ready to served.',
+    frame: 'browser',
+  },
+  ccConnectedOps: {
+    src: '/screens/cc-connected-operations.webp',
+    width: 1920,
+    height: 1200,
+    alt: 'Connected Operations: live sensor zones, equipment tiles with temperatures and battery, and active alerts like a walk-in freezer door left open.',
+    caption:
+      'Connected Operations — sensors, equipment temperatures, and alerts across the building, on the same platform.',
+    frame: 'browser',
+  },
   vexaosHome: {
     src: '/screens/vexaos-home.webp',
     width: 1800,
@@ -107,6 +152,11 @@ export type ScreenKey = keyof typeof SCREENS;
 
 /** Provenance, so a re-drop can be swapped in without guesswork. */
 export const SCREEN_SOURCES: Record<ScreenKey, string> = {
+  ccOwner: 'control.vexaos.io /owner — captured via scripts/capture-screens.mjs',
+  ccFloor: 'control.vexaos.io /floor — captured via scripts/capture-screens.mjs',
+  ccDelivery: 'control.vexaos.io /delivery — captured via scripts/capture-screens.mjs',
+  ccKitchen: 'control.vexaos.io /kitchen — captured via scripts/capture-screens.mjs',
+  ccConnectedOps: 'control.vexaos.io /connected-operations — captured via scripts/capture-screens.mjs',
   vexaosHome: 'marketing-screens/01-vexaos-control-center.png',
   productSwitcher: 'marketing-screens/02-product-switcher.png',
   locationSwitcher: 'demo-screens/04-location-switcher.png (no marketing-screens equivalent yet)',

@@ -2,17 +2,17 @@ import Image from 'next/image';
 import { SCREENS } from '@/lib/screens';
 
 /**
- * Layered hero composition built from REAL product captures: the control
- * center, a native TouchBoard wall display, and the Facility Ops monitor,
- * joined to a coded employee-app card by live connection lines.
+ * Layered hero composition built from REAL Restaurant OS captures: the owner
+ * control center, the live floor board, and the delivery dispatch board, joined
+ * to a coded staff-app card by live connection lines.
  *
  * Percent-based positioning inside an aspect-ratio box keeps the layers
  * proportional at every width; secondary layers drop out below `sm`.
  */
 export default function HeroSystemVisual() {
-  const main = SCREENS.shyftgridSchedule;
-  const board = SCREENS.touchBoard;
-  const facility = SCREENS.facilityColdStorage;
+  const main = SCREENS.ccOwner;
+  const board = SCREENS.ccFloor;
+  const facility = SCREENS.ccDelivery;
 
   return (
     <div className="relative mx-auto max-w-6xl">
@@ -30,7 +30,7 @@ export default function HeroSystemVisual() {
       <div className="relative aspect-[16/11] sm:aspect-[16/10]">
         {/* Back layer — Facility Ops monitor */}
         <figure className="hidden sm:block absolute right-0 top-0 w-[46%] opacity-60">
-          <BrowserChrome label="facility · cold chain">
+          <BrowserChrome label="delivery · dispatch">
             <Image
               src={facility.src}
               width={facility.width}
@@ -44,7 +44,7 @@ export default function HeroSystemVisual() {
 
         {/* Main layer — control center */}
         <figure className="absolute left-0 top-[6%] sm:top-[9%] w-[88%] sm:w-[70%] z-10">
-          <BrowserChrome label="control center · mission control" strong>
+          <BrowserChrome label="owner · control center" strong>
             <Image
               src={main.src}
               width={main.width}
@@ -71,7 +71,7 @@ export default function HeroSystemVisual() {
           </div>
           <figcaption className="mt-2 hidden sm:flex items-center justify-end gap-2 mono-label text-[10px] text-gray-500">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 vx-pulse" />
-            TouchBoard · Android · live
+            Floor · live tables
           </figcaption>
         </figure>
 
@@ -100,13 +100,13 @@ export default function HeroSystemVisual() {
 
         {/* Floating system chips */}
         <Chip className="hidden md:flex left-[30%] top-[1.5%] z-30" dot="bg-sky-400">
-          Org · 3 locations
+          Live service
         </Chip>
         <Chip className="hidden md:flex left-[27%] bottom-[18%] z-30" dot="bg-emerald-400">
           Clock-in verified
         </Chip>
         <Chip className="hidden lg:flex right-[1%] top-[44%] z-30" dot="bg-violet-400">
-          Device registry · 5 online
+          Kitchen · KDS live
         </Chip>
       </div>
     </div>

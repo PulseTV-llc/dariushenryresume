@@ -13,7 +13,9 @@ import {
   Eyebrow,
 } from '@/components/site/Section';
 import RestaurantEcosystem from '@/components/marketing/RestaurantEcosystem';
+import ScreenshotFrame from '@/components/site/ScreenshotFrame';
 import { SYSTEMS_BY_SLUG } from '@/lib/marketing/systems';
+import { SCREENS } from '@/lib/screens';
 import { SITE_URL } from '@/lib/marketing/site';
 
 const system = SYSTEMS_BY_SLUG['restaurant-os'];
@@ -86,10 +88,10 @@ export default function RestaurantsPage() {
           <figure>
             <div className="overflow-hidden rounded-2xl border border-white/[0.12] bg-[#070b14] shadow-2xl shadow-black/60">
               <Image
-                src="/screens/vexaos-home.webp"
+                src="/screens/cc-owner.webp"
                 width={1920}
                 height={1200}
-                alt="VexaOS Restaurant OS owner control center showing sales, labor, and food cost across locations."
+                alt="VexaOS Restaurant OS owner control center showing an AI daily brief and live sales, orders, covers, and tips across locations."
                 sizes="(min-width: 1024px) 80vw, 100vw"
                 priority
                 className="w-full h-auto"
@@ -156,8 +158,22 @@ export default function RestaurantsPage() {
           </ul>
         </Section>
 
-        {/* Status / pilot */}
+        {/* Real product screenshots */}
         <Section className="border-t border-white/10">
+          <SectionHeading
+            eyebrow="Inside the product"
+            title="Real screens from the live system."
+            subtitle="Not mockups — these are the actual Restaurant OS control center running on live data today."
+          />
+          <div className="grid gap-6 lg:grid-cols-3">
+            <ScreenshotFrame shot={SCREENS.ccFloor} sizes="(min-width:1024px) 32vw, 100vw" />
+            <ScreenshotFrame shot={SCREENS.ccDelivery} sizes="(min-width:1024px) 32vw, 100vw" />
+            <ScreenshotFrame shot={SCREENS.ccKitchen} sizes="(min-width:1024px) 32vw, 100vw" />
+          </div>
+        </Section>
+
+        {/* Status / pilot */}
+        <Section className="bg-[#03060c] border-t border-white/10">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <Eyebrow>Where it stands</Eyebrow>
@@ -202,6 +218,9 @@ export default function RestaurantsPage() {
               system. These arrive progressively; we’ll always tell you exactly what’s live versus on
               the roadmap.
             </p>
+            <div className="mt-8">
+              <ScreenshotFrame shot={SCREENS.ccConnectedOps} sizes="(min-width:1024px) 70vw, 100vw" />
+            </div>
           </div>
         </Section>
 

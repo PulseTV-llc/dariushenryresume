@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { ComponentProps } from 'react';
+import type { ComponentProps, MouseEvent } from 'react';
 import { trackEvent, type EventProps, type MarketingEvent } from '@/lib/analytics';
 
 /** A next/link that reports a conversion event before navigating. */
@@ -14,7 +14,7 @@ export default function TrackedLink({
   return (
     <Link
       {...props}
-      onClick={(e) => {
+      onClick={(e: MouseEvent<HTMLAnchorElement>) => {
         trackEvent(event, eventProps);
         onClick?.(e);
       }}
