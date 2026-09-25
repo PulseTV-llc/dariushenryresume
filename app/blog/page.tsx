@@ -47,34 +47,64 @@ const blogPosts: Post[] = [
       'Kingsman Cuts barbershop running the VexaOS connected system — check-in kiosk, live schedule dashboard, and VexaOS POS',
   },
   {
-    slug: 'how-i-built-zonely',
-    title: 'How I Built a Revenue-Ready SaaS App in 90 Days (Zonely Case Study)',
+    slug: 'lower-food-cost',
+    title: 'How to Actually Lower Your Food Cost (Without Cutting Corners)',
     excerpt:
-      "Real estate founders were wasting $50K+ on agencies and waiting 6 months for buggy MVPs. Here's how I built Zonely — a full real estate intelligence SaaS platform — in just 90 days.",
-    date: '2026-04-08',
+      'A practical, no-nonsense playbook any restaurant owner can run this week — theoretical vs actual food cost, recipe costing, the counts that matter, finding the real leak, and a 20-minute weekly ritual. Works with a clipboard or a connected system.',
+    date: '2026-09-25',
     readTime: '8 min read',
-    category: 'Case Studies',
-    tags: ['SaaS', 'Real Estate Tech', 'MVP', 'React Native'],
+    category: 'Operator Playbook',
+    tags: ['Food Cost', 'Recipe Costing', 'Inventory', 'Waste', 'Prime Cost'],
   },
   {
-    slug: '7-day-mvp-guide',
-    title: '7-Day MVP: Why Startups Should Launch Fast and Iterate (Not Perfect)',
+    slug: 'prime-cost',
+    title: "Prime Cost: The One Number That Tells You If You'll Make It",
     excerpt:
-      'Perfectionism kills startups. Learn why shipping a working MVP in 7 days beats spending 6 months building features nobody wants. Includes my exact 7-day development process.',
-    date: '2026-04-07',
-    readTime: '6 min read',
-    category: 'Guides',
-    tags: ['MVP', 'Startup', 'Fast Development', 'Lean'],
-  },
-  {
-    slug: 'rescuing-broken-apps',
-    title: 'Rescuing Broken Apps: 5 Red Flags Your Agency Is Failing You',
-    excerpt:
-      "Agency disappeared after taking your money? App doesn't work and they won't respond? Here are 5 warning signs your development agency is failing you, and how to rescue your broken app.",
-    date: '2026-04-06',
+      'Food cost can look fine while labor sinks you. Prime cost combines the two — the costs you actually control — into a single honest read on profitability. What it is, how to calculate it, a healthy target, and how to track it weekly.',
+    date: '2026-09-25',
     readTime: '7 min read',
-    category: 'App Rescue',
-    tags: ['Agency Problems', 'App Rescue', 'Debug', 'Fix Broken App'],
+    category: 'Operator Playbook',
+    tags: ['Prime Cost', 'Profitability', 'Food & Labor', 'Weekly Numbers'],
+  },
+  {
+    slug: 'labor-scheduling',
+    title: "Scheduling So Labor Doesn't Eat Your Margin",
+    excerpt:
+      'Labor is the cost you control in real time — and the one that quietly sinks healthy restaurants. Build to demand instead of habit, set a labor target as a share of sales, catch overtime before payroll, and watch coverage live.',
+    date: '2026-09-25',
+    readTime: '8 min read',
+    category: 'Operator Playbook',
+    tags: ['Scheduling', 'Labor Cost', 'Overtime', 'Staffing'],
+  },
+  {
+    slug: 'reduce-no-shows',
+    title: 'Cutting No-Shows Without Treating Guests Like Suspects',
+    excerpt:
+      'Most no-shows are forgetfulness, not malice — so the fix is a gentle nudge and a one-tap cancel, not punitive fees. The reminder cadence that works, when deposits help vs. backfire, and using a live waitlist as a safety net.',
+    date: '2026-09-25',
+    readTime: '7 min read',
+    category: 'Operator Playbook',
+    tags: ['Reservations', 'No-Shows', 'Waitlist', 'Guest Experience'],
+  },
+  {
+    slug: 'multi-location',
+    title: 'Running Two Locations Without Living in Spreadsheets',
+    excerpt:
+      'Going from one restaurant to two breaks the informal systems that worked solo. Decide what stays central vs. local, standardize recipes and definitions, and compare locations fairly — without a spreadsheet relay every Sunday night.',
+    date: '2026-09-25',
+    readTime: '8 min read',
+    category: 'Operator Playbook',
+    tags: ['Multi-Location', 'Standardization', 'Reporting', 'Scaling'],
+  },
+  {
+    slug: 'connected-tools',
+    title: 'Why Your POS, Scheduling, and Inventory Not Talking Is Quietly Costing You',
+    excerpt:
+      "Most restaurants run five tools that never share data — and the gaps between them leak time and money through double entry, numbers that never agree, and decisions made on stale data. What the disconnection really costs, and what to fix first.",
+    date: '2026-09-25',
+    readTime: '7 min read',
+    category: 'Operator Playbook',
+    tags: ['Connected System', 'Integration', 'Operations', 'Data'],
   },
 ];
 
@@ -232,17 +262,17 @@ export default function BlogPage() {
             {/* CTA */}
             <div className="mt-16 text-center rounded-3xl bg-gradient-to-br from-cyan-500/10 to-blue-600/5 border border-cyan-500/20 p-10 sm:p-12">
               <h3 className="text-3xl font-bold text-white mb-4 tracking-tight">
-                Ready to run your business on one system?
+                Take what&rsquo;s useful here.
               </h3>
               <p className="text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Start with a Business Blueprint — we map exactly how your business runs,
-                then design the connected system that runs it better.
+                Every playbook on this page works with whatever you run today — no software required.
+                If you ever want to see how VexaOS makes these automatic, the door&rsquo;s open. No pitch.
               </p>
               <Link
-                href="/contact"
+                href="/restaurants"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold text-lg hover:shadow-2xl hover:shadow-cyan-500/40 transition-all"
               >
-                Start a Business Blueprint
+                See how VexaOS helps
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

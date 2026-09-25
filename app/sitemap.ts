@@ -33,9 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/blog', priority: 0.6, freq: 'weekly' },
     { path: '/blog/restaurant-cafe-vexaos-system', priority: 0.6, freq: 'monthly' },
     { path: '/blog/barbershop-salon-vexaos-system', priority: 0.6, freq: 'monthly' },
-    { path: '/blog/how-i-built-zonely', priority: 0.3, freq: 'monthly' },
-    { path: '/blog/7-day-mvp-guide', priority: 0.3, freq: 'monthly' },
-    { path: '/blog/rescuing-broken-apps', priority: 0.3, freq: 'monthly' },
+    { path: '/blog/lower-food-cost', priority: 0.6, freq: 'monthly' },
+    { path: '/blog/prime-cost', priority: 0.6, freq: 'monthly' },
+    { path: '/blog/labor-scheduling', priority: 0.6, freq: 'monthly' },
+    { path: '/blog/reduce-no-shows', priority: 0.6, freq: 'monthly' },
+    { path: '/blog/multi-location', priority: 0.6, freq: 'monthly' },
+    { path: '/blog/connected-tools', priority: 0.6, freq: 'monthly' },
     { path: '/ai-solutions', priority: 0.3, freq: 'monthly' },
   ];
 
