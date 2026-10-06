@@ -1,14 +1,17 @@
 {
-  "name": "VexaOS — Connected Business Systems",
+  "name": "VexaOS: Monitor Anything, Anywhere",
   "short_name": "VexaOS",
-  "description": "Custom connected business systems across web apps, iOS, Android, touchscreen kiosks, dashboards, staff tools, customer portals, scheduling, payments, and real-time operations.",
+  "description": "Vendor-neutral monitoring platform: sensors, Edge Gateway, Cloud with AI Insights, and apps for web, iOS and Android.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#000000",
-  "theme_color": "#0ea5e9",
-  "categories": ["business", "productivity", "utilities"],
+  "background_color": "#f3f6fc",
+  "theme_color": "#2563eb",
+  "categories": [
+    "business",
+    "productivity",
+    "utilities"
+  ],
   "lang": "en-US",
   "dir": "ltr",
   "icons": [

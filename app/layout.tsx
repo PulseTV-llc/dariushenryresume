@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { generateMetadata } from './metadata';
-import { vexaosSchemas } from '@/lib/structured-data-vexaos';
+import { siteSchemas } from '@/lib/structured-data';
 import './globals.css';
 
 const inter = Inter({
@@ -13,8 +13,8 @@ const inter = Inter({
 export const metadata = generateMetadata();
 
 export const viewport = {
-  themeColor: '#04070e',
-  colorScheme: 'dark',
+  themeColor: '#f3f6fc',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
 };
@@ -25,17 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-US" className="dark">
+    <html lang="en-US">
       <head>
-        {/* Performance hints for third-party origins */}
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
-        <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
-        <link rel="dns-prefetch" href="https://app.vexaos.io" />
       </head>
       <body className={inter.className}>
         {/* JSON-LD structured data — one <script> per schema */}
-        {vexaosSchemas.map((schema, i) => (
+        {siteSchemas.map((schema, i) => (
           <script
             key={`schema-${i}`}
             type="application/ld+json"

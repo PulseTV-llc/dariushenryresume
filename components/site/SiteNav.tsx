@@ -1,277 +1,146 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
-import { MAIN_NAV, NAV_CTA, type NavGroup } from '@/lib/marketing/site';
+import { ChevronDown, Menu, X } from 'lucide-react';
+import { MAIN_NAV, NAV_CTA } from '@/lib/site';
 import { trackEvent } from '@/lib/analytics';
 import VexaLogo from './VexaLogo';
 
 export default function SiteNav() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [mobileSection, setMobileSection] = useState<string | null>(null);
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close menus on route change.
-  useEffect(() => {
-    setMobileOpen(false);
-    setOpenMenu(null);
-  }, [pathname]);
+  // Close the mobile menu on navigation.
+  useEffect(() => setOpen(false), [pathname]);
 
-  // Escape closes any open menu.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setOpenMenu(null);
-        setMobileOpen(false);
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
-
-  // Lock page scroll behind the mobile menu.
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileOpen]);
-
-  useEffect(
-    () => () => {
-      if (closeTimer.current) clearTimeout(closeTimer.current);
-    },
-    []
-  );
-
-  const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
-
-  const open = useCallback((label: string) => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setOpenMenu(label);
-  }, []);
-  const scheduleClose = useCallback(() => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setOpenMenu(null), 140);
-  }, []);
-
-  const onCta = (placement: string) => trackEvent('nav_build_system_click', { placement });
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-colors duration-300 ${
-        scrolled || mobileOpen
-          ? 'bg-[#04070e]/90 backdrop-blur-xl border-b border-white/10'
-          : 'bg-transparent border-b border-transparent'
+      className={`fixed inset-x-0 top-0 z-50 transition-colors ${
+        scrolled || open ? 'border-b border-slate-200/70 bg-white/85 backdrop-blur-xl' : 'bg-transparent'
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Primary">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center shrink-0" aria-label="VexaOS — home">
-            <VexaLogo markSize={30} />
-          </Link>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:rounded-lg focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-blue-700"
+      >
+        Skip to content
+      </a>
+      <nav aria-label="Main" className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" aria-label="VexaOS home" className="rounded-lg">
+          <VexaLogo />
+        </Link>
 
-          {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-0.5">
-            {MAIN_NAV.map((group) => (
-              <li
-                key={group.label}
-                className="relative"
-                onMouseEnter={() => group.items && open(group.label)}
-                onMouseLeave={() => group.items && scheduleClose()}
-                onBlur={(e) => {
-                  if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpenMenu(null);
-                }}
-              >
-                <Link
-                  href={group.href}
-                  onFocus={() => group.items && open(group.label)}
-                  aria-expanded={group.items ? openMenu === group.label : undefined}
-                  aria-haspopup={group.items ? 'true' : undefined}
-                  className={`inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive(group.href)
-                      ? 'text-white bg-white/10'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {group.label}
-                  {group.items && (
-                    <ChevronDown
-                      className={`w-3.5 h-3.5 opacity-70 transition-transform ${
-                        openMenu === group.label ? 'rotate-180' : ''
-                      }`}
-                    />
-                  )}
-                </Link>
-                {group.items && openMenu === group.label && (
-                  <DesktopDropdown group={group} onNavigate={() => setOpenMenu(null)} />
-                )}
-              </li>
-            ))}
-          </ul>
-
-          {/* Right side */}
-          <div className="flex items-center gap-2">
-            <Link
-              href={NAV_CTA.href}
-              onClick={() => onCta('header')}
-              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg whitespace-nowrap bg-gradient-to-r from-sky-500 to-blue-600 text-white text-sm font-semibold hover:from-sky-400 hover:to-blue-500 transition-colors"
-            >
-              {NAV_CTA.label}
-            </Link>
-            <button
-              type="button"
-              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileOpen}
-              aria-controls="mobile-menu"
-              onClick={() => setMobileOpen((v) => !v)}
-              className="lg:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg text-gray-200 hover:bg-white/10 transition-colors"
-            >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div
-          id="mobile-menu"
-          onClick={(e) => {
-            // Same-page anchor links don't change the pathname, so close explicitly.
-            if ((e.target as HTMLElement).closest('a')) setMobileOpen(false);
-          }}
-          className="lg:hidden h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-[#04070e] border-t border-white/10"
-        >
-          <div className="px-4 py-4">
-            <ul className="divide-y divide-white/[0.06]">
-              {MAIN_NAV.map((group) => {
-                const expanded = mobileSection === group.label;
-                if (!group.items) {
-                  return (
-                    <li key={group.label}>
-                      <Link
-                        href={group.href}
-                        className="flex items-center justify-between px-2 py-4 text-base font-medium text-gray-100"
-                      >
-                        {group.label}
-                        <ArrowRight className="w-4 h-4 text-gray-500" />
-                      </Link>
-                    </li>
-                  );
-                }
-                return (
-                  <li key={group.label}>
-                    <button
-                      type="button"
-                      onClick={() => setMobileSection(expanded ? null : group.label)}
-                      aria-expanded={expanded}
-                      className="w-full flex items-center justify-between px-2 py-4 text-base font-medium text-gray-100"
-                    >
-                      {group.label}
-                      <ChevronDown
-                        className={`w-4 h-4 text-gray-500 transition-transform ${expanded ? 'rotate-180' : ''}`}
-                      />
-                    </button>
-                    {expanded && (
-                      <ul className="pb-3 space-y-0.5">
-                        {group.items.map((item) => (
-                          <li key={item.href}>
-                            <Link
-                              href={item.href}
-                              className="block rounded-lg px-3 py-2.5 hover:bg-white/5 transition-colors"
-                            >
-                              <span className="block text-[15px] text-gray-200">{item.label}</span>
-                              {item.description && (
-                                <span className="block text-xs text-gray-500 mt-0.5">{item.description}</span>
-                              )}
-                            </Link>
-                          </li>
-                        ))}
-                        <li>
-                          <Link
-                            href={group.footer?.href ?? group.href}
-                            className="flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-sky-300"
-                          >
-                            {group.footer?.label ?? `${group.label} overview`}
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </Link>
-                        </li>
-                      </ul>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="pt-5 space-y-2.5">
+        {/* Desktop */}
+        <ul className="hidden items-center gap-1 lg:flex">
+          {MAIN_NAV.map((group) => (
+            <li key={group.label} className="group relative">
               <Link
-                href={NAV_CTA.href}
-                onClick={() => onCta('mobile_menu')}
-                className="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
+                href={group.href}
+                aria-current={isActive(group.href) ? 'page' : undefined}
+                className={`inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive(group.href) ? 'text-blue-700' : 'text-slate-700 hover:text-slate-900'
+                }`}
               >
-                Build My Business System
-                <ArrowRight className="w-4 h-4" />
+                {group.label}
+                {group.items && <ChevronDown className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />}
               </Link>
-              <Link
-                href="/blueprint"
-                className="flex items-center justify-center px-4 py-3.5 rounded-xl border border-white/15 text-white font-medium"
-              >
-                Start with a Business Blueprint
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-}
-
-function DesktopDropdown({ group, onNavigate }: { group: NavGroup; onNavigate: () => void }) {
-  const hasDescriptions = group.items?.some((i) => i.description);
-  return (
-    <div
-      className={`absolute left-0 top-full pt-2 ${hasDescriptions ? 'w-[23rem]' : 'w-64'}`}
-      onClick={(e) => {
-        if ((e.target as HTMLElement).closest('a')) onNavigate();
-      }}
-    >
-      <div className="rounded-2xl border border-white/10 bg-[#070b14]/[0.98] backdrop-blur-xl shadow-2xl shadow-black/60 p-2">
-        <ul>
-          {group.items?.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className="block px-3 py-2.5 rounded-xl hover:bg-white/[0.06] focus:bg-white/[0.06] focus:outline-none transition-colors"
-              >
-                <span className="block text-sm font-semibold text-white">{item.label}</span>
-                {item.description && (
-                  <span className="block text-xs text-gray-400 mt-0.5">{item.description}</span>
-                )}
-              </Link>
+              {group.items && (
+                <div className="invisible absolute left-1/2 top-full w-80 -translate-x-1/2 pt-2 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+                  <ul className="rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-blue-900/10">
+                    {group.items.map((item) => (
+                      <li key={item.href}>
+                        <Link href={item.href} className="block rounded-xl px-3 py-2.5 hover:bg-blue-50">
+                          <span className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                            {item.label}
+                            {item.badge && (
+                              <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800 ring-1 ring-amber-200">
+                                {item.badge}
+                              </span>
+                            )}
+                          </span>
+                          {item.description && (
+                            <span className="mt-0.5 line-clamp-2 block text-xs leading-relaxed text-slate-500">
+                              {item.description}
+                            </span>
+                          )}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </li>
           ))}
         </ul>
-        <Link
-          href={group.footer?.href ?? group.href}
-          className="mt-1 flex items-center justify-between px-3 py-2.5 rounded-xl border-t border-white/10 text-sm font-medium text-sky-300 hover:bg-white/[0.06] transition-colors"
-        >
-          {group.footer?.label ?? `${group.label} overview`}
-          <ArrowRight className="w-4 h-4" />
-        </Link>
-      </div>
-    </div>
+
+        <div className="flex items-center gap-2">
+          <Link
+            href={NAV_CTA.href}
+            onClick={() => trackEvent('nav_demo_click')}
+            className="hidden rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-700 sm:inline-flex"
+          >
+            {NAV_CTA.label}
+          </Link>
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-800 hover:bg-slate-100 lg:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            onClick={() => setOpen((o) => !o)}
+          >
+            {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile */}
+      {open && (
+        <div id="mobile-menu" className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-200 bg-white px-4 pb-6 pt-2 lg:hidden">
+          {MAIN_NAV.map((group) => (
+            <div key={group.label} className="border-b border-slate-100 py-3">
+              <Link href={group.href} className="block py-1.5 text-base font-semibold text-slate-900">
+                {group.label}
+              </Link>
+              {group.items && (
+                <ul className="mt-1 space-y-0.5">
+                  {group.items.map((item) => (
+                    <li key={item.href}>
+                      <Link href={item.href} className="flex items-center gap-2 py-1.5 pl-3 text-sm text-slate-600">
+                        {item.label}
+                        {item.badge && (
+                          <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-800 ring-1 ring-amber-200">
+                            {item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+          <Link
+            href={NAV_CTA.href}
+            onClick={() => trackEvent('nav_demo_click')}
+            className="mt-4 flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white"
+          >
+            {NAV_CTA.label}
+          </Link>
+        </div>
+      )}
+    </header>
   );
 }

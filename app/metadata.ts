@@ -1,41 +1,35 @@
 import { Metadata } from 'next';
+import { DESCRIPTION, OG_IMAGES, SITE_URL } from '@/lib/site';
 
 /**
  * Site-wide metadata for vexaos.io.
  *
- * Positioning: VexaOS is a custom business operating system company. It designs
- * and builds connected web, mobile, operations, data, and hardware systems
- * around how each client operates — on reusable VexaOS architecture.
+ * Positioning: VexaOS is a vendor-neutral platform to monitor anything,
+ * anywhere: sensors, Edge Gateway, Cloud & AI Insights, and apps.
  *
- * Page-level metadata overrides title/description/canonical; the OG image comes
- * from app/opengraph-image.tsx.
+ * Pages build their own metadata with pageMeta() so each has its own
+ * canonical; the OG image comes from app/opengraph-image.tsx.
  */
 
 export const siteConfig = {
   name: 'VexaOS',
-  title: 'VexaOS — Custom Business Operating Systems',
-  description:
-    'VexaOS designs and builds custom business operating systems — web, iOS, Android, workforce, commerce, inventory, AI, and connected hardware on one architecture. Built in America, delivered worldwide.',
-  url: 'https://www.vexaos.io',
-  twitterHandle: '@vexaos',
+  title: 'VexaOS: Monitor Anything, Anywhere',
+  description: DESCRIPTION,
+  url: SITE_URL,
   locale: 'en_US',
   keywords: [
-    'custom business operating system',
-    'custom business management software',
-    'custom operations software',
-    'custom enterprise software',
-    'business software development',
-    'custom restaurant software',
-    'restaurant management software development',
-    'custom workforce management software',
-    'custom POS system development',
-    'custom inventory system',
-    'multi-location business software',
-    'business process automation',
-    'operations management software',
-    'custom business apps',
-    'custom iOS business apps',
-    'custom Android business apps',
+    'remote monitoring platform',
+    'IoT monitoring',
+    'wireless temperature monitoring',
+    'humidity monitoring',
+    'door sensor monitoring',
+    'cold chain monitoring',
+    'walk-in cooler monitoring',
+    'warehouse temperature monitoring',
+    'edge gateway',
+    'sensor alerts',
+    'temperature drift detection',
+    'multi-site monitoring',
   ],
 };
 
@@ -68,19 +62,15 @@ export const generateMetadata = (): Metadata => {
     },
     twitter: {
       card: 'summary_large_image',
-      site: siteConfig.twitterHandle,
-      creator: siteConfig.twitterHandle,
       title: siteConfig.title,
       description: siteConfig.description,
     },
     robots: {
       index: true,
       follow: true,
-      nocache: false,
       googleBot: {
         index: true,
         follow: true,
-        noimageindex: false,
         'max-video-preview': -1,
         'max-image-preview': 'large',
         'max-snippet': -1,
@@ -96,9 +86,34 @@ export const generateMetadata = (): Metadata => {
       apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
     },
     manifest: '/site.webmanifest',
-    // No site-wide canonical: each page declares its own, so child routes never
-    // inherit the homepage URL as their canonical.
     category: 'technology',
-    classification: 'Custom Business Software Development',
   };
 };
+
+/** Per-page metadata with its own canonical and social card. */
+export function pageMeta({
+  title,
+  description,
+  path,
+}: {
+  title: string;
+  description: string;
+  path: string;
+}): Metadata {
+  const url = `${SITE_URL}${path === '/' ? '' : path}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'website',
+      siteName: 'VexaOS',
+      locale: 'en_US',
+      title: `${title} · VexaOS`,
+      description,
+      url,
+      images: OG_IMAGES,
+    },
+    twitter: { card: 'summary_large_image', title: `${title} · VexaOS`, description },
+  };
+}

@@ -8,23 +8,14 @@ import { track } from '@vercel/analytics';
  * into the same, predictable funnel.
  */
 export type MarketingEvent =
-  | 'hero_build_system_click'
-  | 'hero_restaurant_click'
-  | 'ecosystem_restaurant_click'
-  | 'restaurant_demo_click'
+  | 'nav_demo_click'
   | 'hero_demo_click'
-  | 'nav_build_system_click'
-  | 'pricing_blueprint_click'
-  | 'pricing_tier_click'
-  | 'blueprint_started'
-  | 'contact_started'
-  | 'contact_step_completed'
-  | 'contact_completed'
-  | 'industry_cta_click'
-  | 'system_explore_click'
-  | 'demo_opened'
+  | 'hero_platform_click'
+  | 'product_explore_click'
+  | 'industry_explore_click'
   | 'final_cta_click'
-  | 'case_study_opened';
+  | 'contact_started'
+  | 'contact_completed';
 
 export type EventProps = Record<string, string | number | boolean | null>;
 

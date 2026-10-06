@@ -3,14 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  --background: #f3f6fc;
+  --foreground: #0f172a;
 }
 
 @layer base {
   body {
-    @apply bg-[#04070e] text-white;
+    @apply bg-[#f3f6fc] text-slate-900 antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-blue-600 ring-offset-2 ring-offset-white;
   }
 }
 
@@ -20,84 +23,61 @@
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #000;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
 
-/* Selection */
 ::selection {
-  background-color: #0ea5e9;
+  background-color: #2563eb;
   color: white;
 }
 
-/* Gradient text utility — VexaOS electric-blue → cyan brand gradient */
+/* Brand gradient for headline accents. */
 .gradient-text {
-  background: linear-gradient(135deg, #a5f3fc 0%, #38bdf8 35%, #0ea5e9 70%, #2563eb 100%);
+  background: linear-gradient(120deg, #1d4ed8 0%, #2563eb 45%, #0ea5e9 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-size: 200% 200%;
-  animation: gradient 5s ease infinite;
 }
 
-/* Grid background */
-.grid-background {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
+/* Glass card: the surface used by the VexaOS apps. */
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+    0 10px 30px -12px rgba(30, 64, 175, 0.16),
+    0 2px 6px -2px rgba(15, 23, 42, 0.05);
 }
 
-/* ==========================================================================
-   MARKETING SYSTEM — dark surfaces, soft edge highlights, technical accents.
-   ========================================================================== */
-
-/* Card surface with a hairline top highlight. */
-.surface {
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+/* Soft blue page wash behind heroes. */
+.page-wash {
+  background:
+    radial-gradient(60rem 30rem at 85% -10%, rgba(56, 189, 248, 0.22), transparent 60%),
+    radial-gradient(50rem 28rem at 5% 0%, rgba(37, 99, 235, 0.16), transparent 60%);
 }
 
-/* Fine technical grid that fades out toward the edges. */
+/* Fine technical grid that fades toward the edges. */
 .tech-grid {
   background-image:
-    linear-gradient(rgba(148, 197, 255, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 197, 255, 0.07) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    linear-gradient(rgba(37, 99, 235, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.07) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse at top, #000 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at top, #000 20%, transparent 70%);
 }
 
-/* Small uppercase monospace label used for technical metadata. */
+/* Small uppercase label used for technical metadata. */
 .mono-label {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 11px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-/* Dashed connection lines that travel toward a node. */
+/* Data moving along a connector in the stack diagram. */
 @keyframes vx-flow {
   to {
     stroke-dashoffset: -24;
@@ -108,21 +88,11 @@ html {
   animation: vx-flow 1.6s linear infinite;
 }
 
-@keyframes vx-pulse {
-  0%, 100% { opacity: 0.35; }
-  50% { opacity: 1; }
-}
-.vx-pulse {
-  animation: vx-pulse 2.8s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .gradient-text,
-  .vx-flow,
-  .vx-pulse {
+  .vx-flow {
     animation: none;
   }
 }
@@ -133,15 +103,11 @@ html {
 }
 
 /* ==========================================================================
+   ADMIN (internal) keeps its own dark shell. See app/admin/layout.tsx.
    QUOTE DOCUMENT styling lives in lib/quotePrintCss.ts (QUOTE_DOC_CSS) and is
    injected at runtime by QuoteCalculator so it is shared with the server-side
    PDF route. The app-shell print rules (preview overlay, @page, @media print)
    remain below.
-   ========================================================================== */
-
-
-/* ==========================================================================
-   ON-SCREEN PREVIEW — simulate the paper so the admin can see the result.
    ========================================================================== */
 .qd-preview-backdrop {
   position: fixed; inset: 0; z-index: 60;
@@ -159,16 +125,12 @@ html {
   box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6);
 }
 
-/* ==========================================================================
-   PRINT — the deterministic, locked output. Independent of dialog settings.
-   ========================================================================== */
 @page {
   size: Letter;
   margin: 0.5in;
 }
 
 @media print {
-  /* Force a white canvas regardless of the dark app theme. */
   html, body {
     background: #ffffff !important;
     margin: 0 !important;
@@ -180,16 +142,12 @@ html {
     display: block !important;
     position: absolute; left: 0; top: 0; width: 100%;
   }
-  /* Never print the preview overlay chrome. */
   .qd-preview-backdrop, .qd-preview-toolbar { display: none !important; }
-  /* Reset the on-screen sheet framing for print (page margins come from @page). */
   .qd-sheet {
     width: 100% !important; min-height: 0 !important;
     padding: 0 !important; margin: 0 !important;
     box-shadow: none !important; border-radius: 0 !important;
   }
-
-  /* Repeating footer on every printed page. */
   .qd-runfoot {
     display: flex !important; justify-content: space-between; align-items: center;
     position: fixed; bottom: 0; left: 0; right: 0;
