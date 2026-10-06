@@ -64,7 +64,7 @@ export function Icon({ name, className = 'w-5 h-5' }: { name: IconName; classNam
   return <C className={className} aria-hidden="true" />;
 }
 
-/** Icon in the soft blue tile the VexaOS apps use. */
+/** Icon in the soft blue tile the VexaOs apps use. */
 export function IconTile({ name, className = '' }: { name: IconName; className?: string }) {
   return (
     <span

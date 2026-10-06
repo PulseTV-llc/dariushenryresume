@@ -4,7 +4,7 @@ import { DESCRIPTION, OG_IMAGES, SITE_URL } from '@/lib/site';
 /**
  * Site-wide metadata for vexaos.io.
  *
- * Positioning: VexaOS is a vendor-neutral platform to monitor anything,
+ * Positioning: VexaOs is a vendor-neutral platform to monitor anything,
  * anywhere: sensors, Edge Gateway, Cloud & AI Insights, and apps.
  *
  * Pages build their own metadata with pageMeta() so each has its own
@@ -12,8 +12,8 @@ import { DESCRIPTION, OG_IMAGES, SITE_URL } from '@/lib/site';
  */
 
 export const siteConfig = {
-  name: 'VexaOS',
-  title: 'VexaOS: Monitor Anything, Anywhere',
+  name: 'VexaOs',
+  title: 'VexaOs: Monitor Anything, Anywhere',
   description: DESCRIPTION,
   url: SITE_URL,
   locale: 'en_US',
@@ -38,15 +38,15 @@ export const generateMetadata = (): Metadata => {
     metadataBase: new URL(siteConfig.url),
     title: {
       default: siteConfig.title,
-      template: '%s · VexaOS',
+      template: '%s · VexaOs',
     },
     description: siteConfig.description,
     keywords: siteConfig.keywords,
     applicationName: siteConfig.name,
     referrer: 'origin-when-cross-origin',
-    authors: [{ name: 'VexaOS', url: siteConfig.url }],
-    creator: 'VexaOS',
-    publisher: 'VexaOS',
+    authors: [{ name: 'VexaOs', url: siteConfig.url }],
+    creator: 'VexaOs',
+    publisher: 'VexaOs',
     formatDetection: {
       email: true,
       address: false,
@@ -78,7 +78,8 @@ export const generateMetadata = (): Metadata => {
     },
     icons: {
       icon: [
-        { url: '/favicon.ico' },
+        { url: '/favicon.ico', sizes: '48x48' },
+        { url: '/icon.svg', type: 'image/svg+xml' },
         { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
         { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
       ],
@@ -107,13 +108,13 @@ export function pageMeta({
     alternates: { canonical: url },
     openGraph: {
       type: 'website',
-      siteName: 'VexaOS',
+      siteName: 'VexaOs',
       locale: 'en_US',
-      title: `${title} · VexaOS`,
+      title: `${title} · VexaOs`,
       description,
       url,
       images: OG_IMAGES,
     },
-    twitter: { card: 'summary_large_image', title: `${title} · VexaOS`, description },
+    twitter: { card: 'summary_large_image', title: `${title} · VexaOs`, description },
   };
 }

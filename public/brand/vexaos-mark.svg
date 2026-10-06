@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="VexaOs">
+  <defs>
+    <linearGradient id="vx-a" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1d4ed8"/><stop offset=".45" stop-color="#2f8bff"/><stop offset="1" stop-color="#67e8f9"/>
+    </linearGradient>
+    <linearGradient id="vx-b" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7dd3fc"/><stop offset=".5" stop-color="#22a7f5"/><stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <radialGradient id="vx-c" cx=".42" cy=".38" r=".7">
+      <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#8fdcff"/><stop offset="1" stop-color="#1d6bf0"/>
+    </radialGradient>
+    <filter id="vx-g" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4"/></filter>
+  </defs>
+  <circle cx="50" cy="50" r="45.5" fill="none" stroke="#38bdf8" stroke-opacity=".32" stroke-width=".6"/>
+  <path d="M50 4.5V95.5M4.5 50H95.5" stroke="#38bdf8" stroke-opacity=".28" stroke-width=".5" stroke-dasharray=".6 2.2"/>
+  <g fill="none" stroke-width="5.2" opacity=".55" filter="url(#vx-g)">
+    <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(35 50 50)" stroke="#2f8bff"/>
+    <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(-35 50 50)" stroke="#38bdf8"/>
+  </g>
+  <g fill="none" stroke-width="5.2">
+    <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(35 50 50)" stroke="url(#vx-a)"/>
+    <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(-35 50 50)" stroke="url(#vx-b)"/>
+  </g>
+  <circle cx="50" cy="50" r="13" fill="#38bdf8" opacity=".45" filter="url(#vx-g)"/>
+  <circle cx="50" cy="50" r="9" fill="url(#vx-c)"/>
+  <g fill="#7dd3fc"><circle cx="50" cy="4.5" r="2.1"/><circle cx="50" cy="95.5" r="2.1"/><circle cx="4.5" cy="50" r="2.1"/><circle cx="95.5" cy="50" r="2.1"/></g>
+</svg>

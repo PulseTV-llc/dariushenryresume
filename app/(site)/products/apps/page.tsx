@@ -15,9 +15,9 @@ import {
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = pageMeta({
-  title: 'VexaOS Apps for Web, iOS and Android',
+  title: 'VexaOs Apps for Web, iOS and Android',
   description:
-    'The VexaOS apps for web, iOS and Android: live dashboards, alerts, analytics with CSV export, multiple sites, and team roles, on one account.',
+    'The VexaOs apps for web, iOS and Android: live dashboards, alerts, analytics with CSV export, multiple sites, and team roles, on one account.',
   path: '/products/apps',
 });
 

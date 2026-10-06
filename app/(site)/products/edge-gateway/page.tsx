@@ -16,9 +16,9 @@ import { ConnectivitySection } from '@/components/site/SensorCatalog';
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = pageMeta({
-  title: 'VexaOS Edge Gateway: Offline-Safe and Self-Healing',
+  title: 'VexaOs Edge Gateway: Offline-Safe and Self-Healing',
   description:
-    'The VexaOS Edge Gateway collects readings from nearby sensors, checks alarm rules on site, keeps every reading through outages and restarts, and recovers by itself.',
+    'The VexaOs Edge Gateway collects readings from nearby sensors, checks alarm rules on site, keeps every reading through outages and restarts, and recovers by itself.',
   path: '/products/edge-gateway',
 });
 
@@ -28,7 +28,7 @@ export default function EdgeGatewayPage() {
       <PageHero
         eyebrow="Products · Edge Gateway"
         title={<>The gateway that <span className="gradient-text">keeps recording.</span></>}
-        subtitle="The VexaOS Edge Gateway sits on site, listens to every sensor in range, and gets the data to the cloud. When the network or power lets it down, it holds on to your readings and puts itself right."
+        subtitle="The VexaOs Edge Gateway sits on site, listens to every sensor in range, and gets the data to the cloud. When the network or power lets it down, it holds on to your readings and puts itself right."
       >
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
           <PrimaryButton href="/contact" className="w-full sm:w-auto">Book a demo</PrimaryButton>

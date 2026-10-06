@@ -1,6 +1,6 @@
 {
-  "name": "VexaOS: Monitor Anything, Anywhere",
-  "short_name": "VexaOS",
+  "name": "VexaOs: Monitor Anything, Anywhere",
+  "short_name": "VexaOs",
   "description": "Vendor-neutral monitoring platform: sensors, Edge Gateway, Cloud with AI Insights, and apps for web, iOS and Android.",
   "start_url": "/",
   "scope": "/",

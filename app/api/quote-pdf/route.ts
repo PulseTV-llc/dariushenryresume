@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const pdf = await renderQuotePdfFromHtml(body.html);
-    const filename = `VexaOS-Quote-${sanitizeFilename(body.filenameBase || 'client')}.pdf`;
+    const filename = `VexaOs-Quote-${sanitizeFilename(body.filenameBase || 'client')}.pdf`;
     return new NextResponse(new Uint8Array(pdf), {
       status: 200,
       headers: {

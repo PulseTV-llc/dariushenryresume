@@ -1,5 +1,5 @@
 /**
- * Sensor catalog: families of things VexaOS can monitor.
+ * Sensor catalog: families of things VexaOs can monitor.
  *
  * HONESTY RULES (see lib/site.ts):
  *  - 'now'         = works on the platform today, end to end.
@@ -102,7 +102,7 @@ export const SENSOR_FAMILIES: SensorFamily[] = [
     ],
     use: 'Walk-ins, reach-ins, freezers, medicine fridges and prep lines.',
     detail:
-      'Air temperature inside coolers and freezers, door-ajar flags and exportable logs work today. The logs give you daily minimum, average and maximum to support your own HACCP-style records; VexaOS is not a food safety certification. Wired probes for deep-freeze and food-holding temperatures are added through adapters.',
+      'Air temperature inside coolers and freezers, door-ajar flags and exportable logs work today. The logs give you daily minimum, average and maximum to support your own HACCP-style records; VexaOs is not a food safety certification. Wired probes for deep-freeze and food-holding temperatures are added through adapters.',
     connectivity: ['ble'],
     industries: [FOOD, WAREHOUSE, HEALTH],
   },
@@ -120,7 +120,7 @@ export const SENSOR_FAMILIES: SensorFamily[] = [
     ],
     use: 'Cold-room doors, dock doors, stock rooms and quiet-hours checks.',
     detail:
-      'Contact sensors report every open and close the moment it happens, with opens today, longest open and a timeline. Unusual-hours and left-open findings come with it. Motion, occupancy and buttons are added through adapters. VexaOS is not a security or emergency response system.',
+      'Contact sensors report every open and close the moment it happens, with opens today, longest open and a timeline. Unusual-hours and left-open findings come with it. Motion, occupancy and buttons are added through adapters. VexaOs is not a security or emergency response system.',
     connectivity: ['ble'],
     industries: [FOOD, WAREHOUSE, FACILITY, HEALTH],
   },
@@ -172,7 +172,7 @@ export const SENSOR_FAMILIES: SensorFamily[] = [
     ],
     use: 'Process lines, pump stations, boiler and chiller plant, HVAC and BMS.',
     detail:
-      'Nothing in this family is live today. These instruments connect by wire over RS-485 / Modbus RTU, with Modbus TCP over Ethernet as an option. The gateway\'s Modbus adapter is not built yet; we build it against your equipment as an integration. Monitoring only: VexaOS reads values and does not control equipment.',
+      'Nothing in this family is live today. These instruments connect by wire over RS-485 / Modbus RTU, with Modbus TCP over Ethernet as an option. The gateway\'s Modbus adapter is not built yet; we build it against your equipment as an integration. Monitoring only: VexaOs reads values and does not control equipment.',
     connectivity: ['rs485'],
     industries: [FACTORY, WAREHOUSE, FACILITY],
   },
@@ -219,7 +219,7 @@ export const SENSOR_FAMILIES: SensorFamily[] = [
     ],
     use: 'Kitchens, plant rooms, garages and battery rooms.',
     detail:
-      'Nothing in this family is live today. Gas sensors can be added through adapters for awareness and trend monitoring only. VexaOS is not a life-safety system, holds no life-safety certification, and must never replace code-required smoke, fire or gas alarms.',
+      'Nothing in this family is live today. Gas sensors can be added through adapters for awareness and trend monitoring only. VexaOs is not a life-safety system, holds no life-safety certification, and must never replace code-required smoke, fire or gas alarms.',
     connectivity: ['ble', 'rs485'],
     industries: [FOOD, FACTORY, FACILITY],
   },

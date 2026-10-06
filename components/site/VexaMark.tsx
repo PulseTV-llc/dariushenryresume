@@ -1,72 +1,89 @@
 import { useId } from 'react';
 
 /**
- * VexaOS atom-orbit mark — an inline SVG recreation of the brand mark
- * (two crossed orbits + glowing nucleus) in the electric-blue → cyan gradient.
- * Crisp at any size and theme-matched. Use alongside the "VexaOS" wordmark.
+ * The official VexaOs orbital mark: two crossed elliptical orbits around a
+ * bright core, with four dots on a faint ring. Inline SVG so it stays crisp at
+ * any size. Below 40px (or with `simple`) the ring, dots and glow are dropped
+ * so it stays legible. Keep in sync with brand/build-icons.mjs, which renders
+ * the favicon and app icons from the same geometry.
  */
 export default function VexaMark({
   size = 32,
+  simple,
   className = '',
-  title = 'VexaOS',
+  title = 'VexaOs',
 }: {
   size?: number;
+  simple?: boolean;
   className?: string;
   title?: string;
 }) {
   const id = useId().replace(/:/g, '');
-  const grad = `vx-grad-${id}`;
-  const glow = `vx-glow-${id}`;
-  const core = `vx-core-${id}`;
+  const isSimple = simple ?? size < 40;
+  const w = isSimple ? 7.5 : 5.2;
 
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 100 100"
-      role="img"
-      aria-label={title}
+      role={title ? 'img' : undefined}
+      aria-label={title || undefined}
+      aria-hidden={title ? undefined : true}
       className={className}
     >
       <defs>
-        <linearGradient id={grad} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#a5f3fc" />
-          <stop offset="45%" stopColor="#38bdf8" />
-          <stop offset="100%" stopColor="#2563eb" />
+        <linearGradient id={`${id}-a`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#1d4ed8" />
+          <stop offset=".45" stopColor="#2f8bff" />
+          <stop offset="1" stopColor="#67e8f9" />
         </linearGradient>
-        <radialGradient id={core} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="40%" stopColor="#7dd3fc" />
-          <stop offset="100%" stopColor="#2563eb" />
+        <linearGradient id={`${id}-b`} x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#7dd3fc" />
+          <stop offset=".5" stopColor="#22a7f5" />
+          <stop offset="1" stopColor="#1d4ed8" />
+        </linearGradient>
+        <radialGradient id={`${id}-c`} cx=".42" cy=".38" r=".7">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset=".35" stopColor="#8fdcff" />
+          <stop offset="1" stopColor="#1d6bf0" />
         </radialGradient>
-        <filter id={glow} x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="1.6" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
+        {!isSimple && (
+          <filter id={`${id}-g`} x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="2.4" />
+          </filter>
+        )}
       </defs>
 
-      {/* faint outer ring */}
-      <circle cx="50" cy="50" r="46" fill="none" stroke={`url(#${grad})`} strokeOpacity="0.25" strokeWidth="1" strokeDasharray="2 3" />
+      {!isSimple && (
+        <>
+          <circle cx="50" cy="50" r="45.5" fill="none" stroke="#38bdf8" strokeOpacity=".32" strokeWidth=".6" />
+          <path d="M50 4.5V95.5M4.5 50H95.5" stroke="#38bdf8" strokeOpacity=".28" strokeWidth=".5" strokeDasharray=".6 2.2" />
+          <g fill="none" strokeWidth={w} opacity=".55" filter={`url(#${id}-g)`}>
+            <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(35 50 50)" stroke="#2f8bff" />
+            <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(-35 50 50)" stroke="#38bdf8" />
+          </g>
+        </>
+      )}
 
-      <g filter={`url(#${glow})`} fill="none" stroke={`url(#${grad})`} strokeWidth="6" strokeLinecap="round">
-        {/* two crossed orbits */}
-        <ellipse cx="50" cy="50" rx="40" ry="17" transform="rotate(35 50 50)" />
-        <ellipse cx="50" cy="50" rx="40" ry="17" transform="rotate(-35 50 50)" />
+      {/* two crossed orbits */}
+      <g fill="none" strokeWidth={w}>
+        <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(35 50 50)" stroke={`url(#${id}-a)`} />
+        <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(-35 50 50)" stroke={`url(#${id}-b)`} />
       </g>
 
-      {/* orbit dots */}
-      <g fill="#67e8f9">
-        <circle cx="50" cy="9" r="2.4" />
-        <circle cx="50" cy="91" r="2.4" />
-        <circle cx="12" cy="50" r="2.4" />
-        <circle cx="88" cy="50" r="2.4" />
-      </g>
+      {/* core */}
+      {!isSimple && <circle cx="50" cy="50" r="13" fill="#38bdf8" opacity=".45" filter={`url(#${id}-g)`} />}
+      <circle cx="50" cy="50" r={isSimple ? 10 : 9} fill={`url(#${id}-c)`} />
 
-      {/* nucleus */}
-      <circle cx="50" cy="50" r="9" fill={`url(#${core})`} filter={`url(#${glow})`} />
+      {!isSimple && (
+        <g fill="#7dd3fc">
+          <circle cx="50" cy="4.5" r="2.1" />
+          <circle cx="50" cy="95.5" r="2.1" />
+          <circle cx="4.5" cy="50" r="2.1" />
+          <circle cx="95.5" cy="50" r="2.1" />
+        </g>
+      )}
     </svg>
   );
 }

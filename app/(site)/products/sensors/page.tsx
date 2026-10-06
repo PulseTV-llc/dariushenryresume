@@ -16,7 +16,7 @@ import { SHOTS } from '@/lib/shots';
 export const metadata = pageMeta({
   title: 'Sensor Catalog: Nine Families, Wireless and Wired',
   description:
-    'The VexaOS sensor catalog: environment, cold chain, access and occupancy, water and leak, machine health, industrial process, energy, assets and safety, over Bluetooth LE or RS-485 / Modbus. Each measurement is labelled available now or via integration.',
+    'The VexaOs sensor catalog: environment, cold chain, access and occupancy, water and leak, machine health, industrial process, energy, assets and safety, over Bluetooth LE or RS-485 / Modbus. Each measurement is labelled available now or via integration.',
   path: '/products/sensors',
 });
 

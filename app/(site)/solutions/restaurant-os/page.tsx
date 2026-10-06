@@ -15,9 +15,9 @@ import {
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = pageMeta({
-  title: 'Restaurant OS: VexaOS Hospitality',
+  title: 'Restaurant OS: VexaOs Hospitality',
   description:
-    'Restaurant OS is the VexaOS Hospitality solution for running a restaurant: floor, kitchen display and orders in one control center. Approaching pilot.',
+    'Restaurant OS is the VexaOs Hospitality solution for running a restaurant: floor, kitchen display and orders in one control center. Approaching pilot.',
   path: '/solutions/restaurant-os',
 });
 
@@ -25,10 +25,10 @@ export default function RestaurantOSPage() {
   return (
     <>
       <PageHero
-        eyebrow="Solutions · VexaOS Hospitality"
+        eyebrow="Solutions · VexaOs Hospitality"
         badge={<StatusBadge status="development" />}
         title={<>Restaurant OS: <span className="gradient-text">one system for the whole restaurant.</span></>}
-        subtitle="Restaurant OS is a separate VexaOS solution for hospitality. It connects the floor, the kitchen and orders in one control center. It is approaching pilot and is not generally available."
+        subtitle="Restaurant OS is a separate VexaOs solution for hospitality. It connects the floor, the kitchen and orders in one control center. It is approaching pilot and is not generally available."
       >
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
           <PrimaryButton href="/contact" className="w-full sm:w-auto">Ask about the pilot</PrimaryButton>
@@ -76,7 +76,7 @@ export default function RestaurantOSPage() {
       <Section>
         <div className="mx-auto max-w-3xl space-y-5">
           <HonestNote title="How this fits with the monitoring platform">
-            Restaurant OS and the VexaOS monitoring platform are separate products today. A restaurant can use VexaOS
+            Restaurant OS and the VexaOs monitoring platform are separate products today. A restaurant can use VexaOs
             sensors and gateways to watch its coolers and doors without Restaurant OS, and the other way round. The
             screenshots on this page show Restaurant OS running on demonstration data, not a customer&apos;s
             restaurant.

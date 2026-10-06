@@ -9,7 +9,7 @@ import type { QuoteResult } from '@/lib/quote-engine';
  * This is a self-contained, deterministic layout intended to be printed to PDF
  * via the browser print dialog behind a locked `@media print` + `@page` rule
  * (see app/globals.css). It renders on a light, print-friendly background with
- * the VexaOS blue→cyan accent, and every block carries page-break rules so no
+ * the VexaOs blue→cyan accent, and every block carries page-break rules so no
  * card, row, or section is ever split across a page boundary.
  *
  * It is rendered in two contexts:
@@ -102,7 +102,7 @@ export default function QuoteDocument({
           </div>
           <div className="qd-parties-right">
             <div className="qd-eyebrow">Prepared by</div>
-            <div className="qd-party-name">VexaOS</div>
+            <div className="qd-party-name">VexaOs</div>
             <div className="qd-party-sub">Custom Connected Business Systems</div>
             <div className="qd-party-sub">support@vexaos.io</div>
           </div>
@@ -142,7 +142,7 @@ export default function QuoteDocument({
         <h2 className="qd-h2 qd-keepnext">What&apos;s included</h2>
         <p className="qd-section-intro qd-keepnext">
           Your custom build includes the following platforms, feature modules, and configured
-          quantities — designed and delivered end-to-end by VexaOS.
+          quantities — designed and delivered end-to-end by VexaOs.
         </p>
         <div className="qd-linetable">
           {scopeLines.length === 0 && (

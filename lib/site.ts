@@ -1,7 +1,7 @@
 /**
  * Site-wide constants, navigation and content for vexaos.io.
  *
- * Positioning: VexaOS is a vendor-neutral platform to monitor anything,
+ * Positioning: VexaOs is a vendor-neutral platform to monitor anything,
  * anywhere. Sensors -> Edge Gateway -> Cloud & AI Insights -> apps.
  *
  * HONESTY RULES for every string in this file:
@@ -9,7 +9,7 @@
  *    `status` of 'development' or 'soon' and is labelled on the page.
  *  - No customers, logos, testimonials, certifications or statistics.
  *  - Never name third-party hardware vendors. The gateway is the
- *    "VexaOS Edge Gateway".
+ *    "VexaOs Edge Gateway".
  */
 
 export const SITE_URL = 'https://www.vexaos.io';
@@ -25,7 +25,7 @@ export const ADDRESS = {
 
 export const TAGLINE = 'Monitor anything, anywhere.';
 export const DESCRIPTION =
-  'VexaOS is a vendor-neutral monitoring platform: wireless sensors, an offline-safe Edge Gateway, VexaOS Cloud with AI Insights, and apps for web, iOS and Android.';
+  'VexaOs is a vendor-neutral monitoring platform: wireless sensors, an offline-safe Edge Gateway, VexaOs Cloud with AI Insights, and apps for web, iOS and Android.';
 
 export type Status = 'available' | 'development' | 'soon';
 
@@ -88,7 +88,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: 'edge-gateway',
-    name: 'VexaOS Edge Gateway',
+    name: 'VexaOs Edge Gateway',
     short: 'Edge Gateway',
     role: 'Collect',
     summary:
@@ -98,7 +98,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: 'mobile-gateway',
-    name: 'VexaOS Mobile Gateway',
+    name: 'VexaOs Mobile Gateway',
     short: 'Mobile Gateway',
     role: 'Collect on the move',
     summary:
@@ -108,7 +108,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: 'cloud-ai-insights',
-    name: 'VexaOS Cloud & AI Insights',
+    name: 'VexaOs Cloud & AI Insights',
     short: 'Cloud & AI Insights',
     role: 'Understand',
     summary:
@@ -118,7 +118,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: 'apps',
-    name: 'VexaOS Apps',
+    name: 'VexaOs Apps',
     short: 'Apps',
     role: 'Act',
     summary:
@@ -147,7 +147,7 @@ export interface Industry {
   monitor: { title: string; body: string; status?: Status }[];
   /** How the platform's existing features apply. */
   how: { title: string; body: string }[];
-  /** Plain statement of what VexaOS does not claim here. */
+  /** Plain statement of what VexaOs does not claim here. */
   note: string;
 }
 
@@ -171,7 +171,7 @@ export const INDUSTRIES: Industry[] = [
       { title: 'Readings survive an outage', body: 'If the internet drops, the gateway keeps recording and uploads everything once it is back.' },
       { title: 'A record you can export', body: 'Daily minimum, average and maximum for every sensor, with CSV export for your own logs.' },
     ],
-    note: 'VexaOS records and alerts on conditions. It does not replace your food safety plan, and it holds no food safety certification.',
+    note: 'VexaOs records and alerts on conditions. It does not replace your food safety plan, and it holds no food safety certification.',
   },
   {
     slug: 'warehouses-logistics',
@@ -234,7 +234,7 @@ export const INDUSTRIES: Industry[] = [
       { title: 'Roles for staff and contractors', body: 'Owner, admin, installer and viewer roles decide who can change rules and who can only look.' },
       { title: 'Gateway health included', body: 'Each gateway reports its own power, network and uptime, so you know the monitor is working.' },
     ],
-    note: 'VexaOS monitors conditions. It is not a security or access control system.',
+    note: 'VexaOs monitors conditions. It is not a security or access control system.',
   },
   {
     slug: 'healthcare-pharma-storage',
@@ -255,7 +255,7 @@ export const INDUSTRIES: Industry[] = [
       { title: 'No gaps from an outage', body: 'The gateway stores readings locally and uploads them once the connection returns.' },
       { title: 'Acknowledge and resolve', body: 'Alerts keep a history of who acknowledged and resolved them, and when.' },
     ],
-    note: 'VexaOS is a monitoring tool. It is not a medical device and holds no regulatory validation or certification (for example 21 CFR Part 11 or GxP). Check your own compliance requirements before relying on it for regulated records.',
+    note: 'VexaOs is a monitoring tool. It is not a medical device and holds no regulatory validation or certification (for example 21 CFR Part 11 or GxP). Check your own compliance requirements before relying on it for regulated records.',
   },
 ];
 
@@ -266,7 +266,7 @@ export const RESTAURANT_OS = {
   href: '/solutions/restaurant-os',
   name: 'Restaurant OS',
   summary:
-    'A separate VexaOS Hospitality solution for running a restaurant: owner control center, floor, kitchen display and orders. Approaching pilot.',
+    'A separate VexaOs Hospitality solution for running a restaurant: owner control center, floor, kitchen display and orders. Approaching pilot.',
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -337,5 +337,5 @@ export const FOOTER_COLUMNS: { title: string; links: NavLink[] }[] = [
 ];
 
 export const OG_IMAGES = [
-  { url: '/opengraph-image', width: 1200, height: 630, alt: 'VexaOS: monitor anything, anywhere.' },
+  { url: '/opengraph-image', width: 1200, height: 630, alt: 'VexaOs: monitor anything, anywhere.' },
 ];

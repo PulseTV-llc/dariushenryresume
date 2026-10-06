@@ -40,7 +40,7 @@ html {
   -webkit-text-fill-color: transparent;
 }
 
-/* Glass card: the surface used by the VexaOS apps. */
+/* Glass card: the surface used by the VexaOs apps. */
 .glass {
   border: 1px solid rgba(255, 255, 255, 0.9);
   background: rgba(255, 255, 255, 0.72);

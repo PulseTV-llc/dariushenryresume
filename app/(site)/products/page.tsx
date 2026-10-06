@@ -7,7 +7,7 @@ import { PRODUCTS, productHref } from '@/lib/site';
 export const metadata = pageMeta({
   title: 'Products',
   description:
-    'The VexaOS product line: wireless sensors, the VexaOS Edge Gateway, the Mobile Gateway (coming soon), VexaOS Cloud with AI Insights, and apps for web, iOS and Android.',
+    'The VexaOs product line: wireless sensors, the VexaOs Edge Gateway, the Mobile Gateway (coming soon), VexaOs Cloud with AI Insights, and apps for web, iOS and Android.',
   path: '/products',
 });
 

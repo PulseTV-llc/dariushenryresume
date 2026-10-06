@@ -60,7 +60,7 @@ export default function IndustryPage({ params }: { params: { slug: string } }) {
       </Section>
 
       <Section className="bg-white/60">
-        <SectionHeading eyebrow="How VexaOS helps" title="The platform, applied." />
+        <SectionHeading eyebrow="How VexaOs helps" title="The platform, applied." />
         <div className="grid gap-5 md:grid-cols-3">
           {ind.how.map((h) => (
             <FeatureCard key={h.title} title={h.title} body={h.body} />

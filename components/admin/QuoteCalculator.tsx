@@ -244,7 +244,7 @@ export default function QuoteCalculator() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `VexaOS-Quote-${(businessName || clientName || 'client').replace(/[^a-z0-9\-_]+/gi, '-')}.pdf`;
+      a.download = `VexaOs-Quote-${(businessName || clientName || 'client').replace(/[^a-z0-9\-_]+/gi, '-')}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (e) {

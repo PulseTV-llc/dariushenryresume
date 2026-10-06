@@ -24,8 +24,8 @@ import { DESCRIPTION, INDUSTRIES, RESTAURANT_OS, industryHref } from '@/lib/site
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = {
-  ...pageMeta({ title: 'VexaOS: Monitor Anything, Anywhere', description: DESCRIPTION, path: '/' }),
-  title: { absolute: 'VexaOS: Monitor Anything, Anywhere' },
+  ...pageMeta({ title: 'VexaOs: Monitor Anything, Anywhere', description: DESCRIPTION, path: '/' }),
+  title: { absolute: 'VexaOs: Monitor Anything, Anywhere' },
 };
 
 const primary = INDUSTRIES.filter((i) => i.primary);
@@ -92,7 +92,7 @@ export default function HomePage() {
               </div>
             </div>
             <figcaption className="mt-3 text-center text-xs text-slate-500">
-              The VexaOS web dashboard and mobile app. Real captures from our test site: two sensors, one gateway, no
+              The VexaOs web dashboard and mobile app. Real captures from our test site: two sensors, one gateway, no
               sample data.
             </figcaption>
           </figure>
@@ -159,7 +159,7 @@ export default function HomePage() {
       {/* AI Insights */}
       <Section className="bg-white/60">
         <Split
-          eyebrow="VexaOS Cloud & AI Insights"
+          eyebrow="VexaOs Cloud & AI Insights"
           title="It tells you what changed, and what to look at."
           body="Every 30 minutes the cloud checks each sensor for the patterns that come before a failure. Findings are computed from your measurements, and each one carries the numbers behind it."
           visual={<Shot {...SHOTS.doorActivity} />}
@@ -270,8 +270,8 @@ export default function HomePage() {
             <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
               <li>Temperature, humidity and pressure sensors</li>
               <li>Door and contact sensors</li>
-              <li>VexaOS Edge Gateway</li>
-              <li>VexaOS Cloud with AI Insights</li>
+              <li>VexaOs Edge Gateway</li>
+              <li>VexaOs Cloud with AI Insights</li>
               <li>Web dashboard and the iOS and Android app</li>
             </ul>
           </GlassCard>

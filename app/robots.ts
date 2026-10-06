@@ -26,7 +26,7 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 0,
       },
       // AI crawlers — the site is intentionally open to AI assistants so the
-      // VexaOS platform and products surface in AI answer engines.
+      // VexaOs platform and products surface in AI answer engines.
       {
         userAgent: 'GPTBot',
         allow: '/',

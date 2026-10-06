@@ -80,7 +80,7 @@ ${QUOTE_DOC_CSS}
     await page.evaluateHandle('document.fonts && document.fonts.ready');
 
     const footer = `<div style="width:100%;font-family:Inter,Arial,sans-serif;font-size:8px;color:#94a3b8;padding:0 0.5in;display:flex;justify-content:space-between;-webkit-print-color-adjust:exact;">
-      <span>VexaOS &middot; Connected Business Systems</span>
+      <span>VexaOs &middot; Connected Business Systems</span>
       <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
     </div>`;
 

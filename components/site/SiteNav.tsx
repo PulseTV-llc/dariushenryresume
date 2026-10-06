@@ -38,7 +38,7 @@ export default function SiteNav() {
         Skip to content
       </a>
       <nav aria-label="Main" className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" aria-label="VexaOS home" className="rounded-lg">
+        <Link href="/" aria-label="VexaOs home" className="rounded-lg">
           <VexaLogo />
         </Link>
 

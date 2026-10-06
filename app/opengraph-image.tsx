@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'VexaOS: monitor anything, anywhere.';
+export const alt = 'VexaOs: monitor anything, anywhere.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -23,12 +23,25 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          <svg width="64" height="64" viewBox="0 0 48 48">
-            <path d="M9 10 L22 38" stroke="#1d4ed8" strokeWidth="9" strokeLinecap="round" fill="none" />
-            <path d="M22 38 L39 10" stroke="#38bdf8" strokeWidth="9" strokeLinecap="round" fill="none" />
-          </svg>
+          <div
+            style={{
+              display: 'flex',
+              width: 84,
+              height: 84,
+              borderRadius: 20,
+              background: '#081228',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <svg width="64" height="64" viewBox="0 0 100 100">
+              <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(35 50 50)" stroke="#2f8bff" strokeWidth="6" fill="none" />
+              <ellipse cx="50" cy="50" rx="39" ry="16.5" transform="rotate(-35 50 50)" stroke="#67e8f9" strokeWidth="6" fill="none" />
+              <circle cx="50" cy="50" r="10" fill="#bfe9ff" />
+            </svg>
+          </div>
           <div style={{ display: 'flex', fontSize: 46, fontWeight: 700, color: '#0f172a', letterSpacing: -1 }}>
-            Vexa<span style={{ color: '#2563eb' }}>OS</span>
+            Vexa<span style={{ color: '#2563eb' }}>Os</span>
           </div>
         </div>
 

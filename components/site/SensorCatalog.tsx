@@ -214,7 +214,7 @@ export function SensorRequestCTA() {
     <div className="rounded-3xl border-2 border-dashed border-blue-200 bg-blue-50/60 p-7 text-center sm:p-9">
       <h3 className="text-xl font-semibold text-slate-900">Don&apos;t see your sensor?</h3>
       <p className="mx-auto mt-2 max-w-xl text-[15px] leading-relaxed text-slate-600">
-        Wireless or wired, we integrate it. VexaOS is vendor-neutral and adds new sensors through adapters. Tell us
+        Wireless or wired, we integrate it. VexaOs is vendor-neutral and adds new sensors through adapters. Tell us
         what you need to measure and we will tell you plainly whether it works today, is in progress, or needs
         building.
       </p>
@@ -275,7 +275,7 @@ export function ConnectivitySection() {
           </div>
           <p className="mt-4 rounded-xl bg-amber-50 px-3.5 py-3 text-xs leading-relaxed text-amber-950 ring-1 ring-amber-200">
             The gateway&apos;s Modbus adapter is not built yet. Wired devices are delivered as an integration, built
-            and tested against your equipment. Monitoring only: VexaOS reads values and does not control equipment.
+            and tested against your equipment. Monitoring only: VexaOs reads values and does not control equipment.
           </p>
         </GlassCard>
       </div>

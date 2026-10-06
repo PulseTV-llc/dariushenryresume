@@ -4,9 +4,9 @@ import { CTABand, FeatureCard, GlassCard, PageHero, Section, SectionHeading } fr
 import { ADDRESS, CONTACT_EMAIL } from '@/lib/site';
 
 export const metadata = pageMeta({
-  title: 'About VexaOS',
+  title: 'About VexaOs',
   description:
-    'VexaOS builds a vendor-neutral platform to monitor anything, anywhere: sensors, an offline-safe Edge Gateway, cloud AI Insights, and apps. Based in Pontiac, Michigan.',
+    'VexaOs builds a vendor-neutral platform to monitor anything, anywhere: sensors, an offline-safe Edge Gateway, cloud AI Insights, and apps. Based in Pontiac, Michigan.',
   path: '/about',
 });
 
@@ -16,7 +16,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About"
         title={<>We build the platform that <span className="gradient-text">watches what matters.</span></>}
-        subtitle="VexaOS is a technology company based in Pontiac, Michigan. We make a vendor-neutral platform for monitoring equipment and spaces: sensors, gateways, cloud and apps, designed as one system."
+        subtitle="VexaOs is a technology company based in Pontiac, Michigan. We make a vendor-neutral platform for monitoring equipment and spaces: sensors, gateways, cloud and apps, designed as one system."
       />
 
       <Section className="pt-4 sm:pt-6">
@@ -26,7 +26,7 @@ export default function AboutPage() {
             open. A room gets damp. Usually someone finds out afterwards, when the damage is done.
           </p>
           <p>
-            VexaOS exists to close that gap. We put the hardest parts first: a gateway that keeps recording
+            VexaOs exists to close that gap. We put the hardest parts first: a gateway that keeps recording
             when the network fails, and a cloud that notices a slow drift as well as a crossed limit. Then we built
             the apps on top, so the right person sees it in time.
           </p>
@@ -62,7 +62,7 @@ export default function AboutPage() {
             <h3 className="text-base font-semibold text-slate-900">Today</h3>
             <p className="mt-2 text-sm leading-relaxed text-slate-600">
               The monitoring platform works end to end: temperature, humidity and door sensors, the Edge Gateway,
-              VexaOS Cloud with AI Insights, and the web and mobile apps. We are booking demos now.
+              VexaOs Cloud with AI Insights, and the web and mobile apps. We are booking demos now.
             </p>
           </GlassCard>
           <GlassCard>
@@ -78,7 +78,7 @@ export default function AboutPage() {
               <a href={ADDRESS.mapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 text-sm text-slate-600 hover:text-blue-700">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
                 <span>
-                  VexaOS
+                  VexaOs
                   <br />
                   {ADDRESS.street}
                   <br />

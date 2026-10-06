@@ -8,7 +8,7 @@ import { INDUSTRIES, RESTAURANT_OS, industryHref } from '@/lib/site';
 export const metadata = pageMeta({
   title: 'Solutions by Industry',
   description:
-    'How VexaOS is used across industries: food service and cold chain, warehouses and logistics, manufacturing, facilities and property, and healthcare and pharma storage.',
+    'How VexaOs is used across industries: food service and cold chain, warehouses and logistics, manufacturing, facilities and property, and healthcare and pharma storage.',
   path: '/solutions',
 });
 
@@ -18,7 +18,7 @@ export default function SolutionsPage() {
       <PageHero
         eyebrow="Solutions"
         title={<>One platform. <span className="gradient-text">Your industry.</span></>}
-        subtitle="VexaOS is not built for one kind of business. The same sensors, gateway, cloud and apps apply wherever temperature, humidity or a door matters."
+        subtitle="VexaOs is not built for one kind of business. The same sensors, gateway, cloud and apps apply wherever temperature, humidity or a door matters."
       />
       <Section className="pt-4 sm:pt-6">
         <div className="grid gap-5 md:grid-cols-2">
@@ -59,7 +59,7 @@ export default function SolutionsPage() {
 
       <Section className="bg-white/60">
         <SectionHeading
-          eyebrow="Also from VexaOS"
+          eyebrow="Also from VexaOs"
           title="Restaurant OS"
           subtitle={RESTAURANT_OS.summary}
         />

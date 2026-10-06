@@ -28,7 +28,7 @@ const STAGES: { step: string; products: Product[]; points: string[] }[] = [
   },
 ];
 
-/** The VexaOS stack, left to right: sensors, gateway, cloud, apps. */
+/** The VexaOs stack, left to right: sensors, gateway, cloud, apps. */
 export default function StackDiagram() {
   return (
     <ol className="grid gap-4 lg:grid-cols-4 lg:gap-3">

@@ -18,9 +18,9 @@ import SensorCatalog from '@/components/site/SensorCatalog';
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = pageMeta({
-  title: 'Platform: How VexaOS Works',
+  title: 'Platform: How VexaOs Works',
   description:
-    'How VexaOS works: sensors report to an offline-safe Edge Gateway, which sends summaries and instant alarms to VexaOS Cloud, where AI Insights and the web, iOS and Android apps turn them into action.',
+    'How VexaOs works: sensors report to an offline-safe Edge Gateway, which sends summaries and instant alarms to VexaOs Cloud, where AI Insights and the web, iOS and Android apps turn them into action.',
   path: '/platform',
 });
 
@@ -33,7 +33,7 @@ const JOURNEY = [
   {
     n: '2',
     title: 'The gateway hears it',
-    body: 'The VexaOS Edge Gateway picks up every sensor in range, decodes it through the adapter for that sensor type, and converts it to one common format.',
+    body: 'The VexaOs Edge Gateway picks up every sensor in range, decodes it through the adapter for that sensor type, and converts it to one common format.',
   },
   {
     n: '3',
@@ -48,7 +48,7 @@ const JOURNEY = [
   {
     n: '5',
     title: 'The cloud looks for trouble',
-    body: 'VexaOS Cloud stores the history and checks every sensor for drift, forecasts, unusual door activity, low batteries and silent devices.',
+    body: 'VexaOs Cloud stores the history and checks every sensor for drift, forecasts, unusual door activity, low batteries and silent devices.',
   },
   {
     n: '6',
@@ -63,7 +63,7 @@ export default function PlatformPage() {
       <PageHero
         eyebrow="Platform"
         title={<>From a sensor on the wall to an alert <span className="gradient-text">in your hand.</span></>}
-        subtitle="VexaOS is four layers that work as one system: sensors, gateway, cloud and apps. Here is what each one does, and what happens to a reading along the way."
+        subtitle="VexaOs is four layers that work as one system: sensors, gateway, cloud and apps. Here is what each one does, and what happens to a reading along the way."
       >
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
           <PrimaryButton href="/contact" className="w-full sm:w-auto">Book a demo</PrimaryButton>
@@ -124,7 +124,7 @@ export default function PlatformPage() {
         <SectionHeading
           eyebrow="Vendor-neutral by design"
           title="Sensors plug in through adapters."
-          subtitle="An adapter is a small piece of software on the gateway that understands one sensor type. Everything after it speaks a single VexaOS format."
+          subtitle="An adapter is a small piece of software on the gateway that understands one sensor type. Everything after it speaks a single VexaOs format."
         />
         <div className="grid gap-5 md:grid-cols-3">
           <FeatureCard
@@ -152,13 +152,13 @@ export default function PlatformPage() {
         />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           <FeatureCard title="A key per gateway" body="Every gateway holds its own device key and signs in with it. The key never leaves the gateway." />
-          <FeatureCard title="Encrypted in transit" body="Gateways talk to VexaOS Cloud over HTTPS with certificate checking. Encrypted sensor broadcasts are supported too." />
+          <FeatureCard title="Encrypted in transit" body="Gateways talk to VexaOs Cloud over HTTPS with certificate checking. Encrypted sensor broadcasts are supported too." />
           <FeatureCard title="Access by membership" body="Data is separated by organization and site. People see only the sites they have been added to." />
           <FeatureCard title="Invite-only accounts" body="Accounts are created by invitation, with owner, admin, installer and viewer roles." />
         </div>
         <div className="mt-8">
           <HonestNote>
-            VexaOS does not hold security or compliance certifications today, such as SOC 2 or ISO 27001. If you need
+            VexaOs does not hold security or compliance certifications today, such as SOC 2 or ISO 27001. If you need
             specific assurances, ask us and we will answer plainly.
           </HonestNote>
         </div>

@@ -13,7 +13,7 @@ export default function SiteFooter() {
           <div className="lg:col-span-5">
             <VexaLogo size={30} />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-600">
-              {TAGLINE} Sensors, an offline-safe Edge Gateway, VexaOS Cloud with AI Insights, and apps for web, iOS
+              {TAGLINE} Sensors, an offline-safe Edge Gateway, VexaOs Cloud with AI Insights, and apps for web, iOS
               and Android.
             </p>
             <address className="mt-6 space-y-3 not-italic">
@@ -61,7 +61,7 @@ export default function SiteFooter() {
         </div>
 
         <div className="mt-12 border-t border-slate-200 pt-6">
-          <p className="text-sm text-slate-500">© {year} VexaOS. All rights reserved.</p>
+          <p className="text-sm text-slate-500">© {year} VexaOs. All rights reserved.</p>
         </div>
       </div>
     </footer>

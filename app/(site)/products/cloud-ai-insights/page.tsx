@@ -15,9 +15,9 @@ import {
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = pageMeta({
-  title: 'VexaOS Cloud & AI Insights',
+  title: 'VexaOs Cloud & AI Insights',
   description:
-    'VexaOS Cloud stores your sensor history and runs AI Insights: drift detection, time-to-limit forecasts, unusual door activity and plain-English explanations, always shown with the measured numbers.',
+    'VexaOs Cloud stores your sensor history and runs AI Insights: drift detection, time-to-limit forecasts, unusual door activity and plain-English explanations, always shown with the measured numbers.',
   path: '/products/cloud-ai-insights',
 });
 
@@ -41,7 +41,7 @@ export default function CloudPage() {
       <PageHero
         eyebrow="Products · Cloud & AI Insights"
         title={<>Spot the problem <span className="gradient-text">before it becomes a loss.</span></>}
-        subtitle="VexaOS Cloud keeps your history, runs your alert rules, and checks every sensor for the patterns that come before a failure. Then it explains what it found in plain English."
+        subtitle="VexaOs Cloud keeps your history, runs your alert rules, and checks every sensor for the patterns that come before a failure. Then it explains what it found in plain English."
       >
         <PrimaryButton href="/contact">Book a demo</PrimaryButton>
       </PageHero>

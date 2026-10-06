@@ -1,7 +1,7 @@
 /**
  * Real product screenshots.
  *
- * The /product/iot-* images are crops of unedited captures of the VexaOS web
+ * The /product/iot-* images are crops of unedited captures of the VexaOs web
  * and mobile apps running against a real gateway and real sensors on a test
  * site ("Test Kitchen"). They are cropped only; no pixel is edited and no data
  * is invented.
@@ -25,42 +25,42 @@ export const SHOTS = {
     src: '/product/iot-dashboard-summary.webp',
     width: 1672,
     height: 236,
-    alt: 'VexaOS web dashboard summary row: 2 of 2 sensors online, average temperature 21.4 °C, humidity 40%, pressure 978 hPa, no active alerts, gateway online.',
+    alt: 'VexaOs web dashboard summary row: 2 of 2 sensors online, average temperature 21.4 °C, humidity 40%, pressure 978 hPa, no active alerts, gateway online.',
     caption: `The web dashboard summary row. ${TEST_SITE}`,
   },
   dashboardPanels: {
     src: '/product/iot-dashboard-panels.webp',
     width: 680,
     height: 570,
-    alt: 'VexaOS dashboard panels: active alerts, gateway status showing online, a 24-hour temperature trend, and a location overview.',
+    alt: 'VexaOs dashboard panels: active alerts, gateway status showing online, a 24-hour temperature trend, and a location overview.',
     caption: `Alerts, gateway status, temperature trend and locations. ${TEST_SITE}`,
   },
   doorActivity: {
     src: '/product/iot-door-activity.webp',
     width: 1600,
     height: 790,
-    alt: 'VexaOS sensor details for a door sensor: temperature, humidity, battery and signal tiles, opens today, longest open, and a timeline of open and closed events.',
+    alt: 'VexaOs sensor details for a door sensor: temperature, humidity, battery and signal tiles, opens today, longest open, and a timeline of open and closed events.',
     caption: `Door sensor details: every open and close on a timeline. ${TEST_SITE}`,
   },
   sensorCharts: {
     src: '/product/iot-sensor-charts.webp',
     width: 1600,
     height: 796,
-    alt: 'VexaOS sensor history charts for temperature, humidity, battery and signal strength over 24 hours.',
+    alt: 'VexaOs sensor history charts for temperature, humidity, battery and signal strength over 24 hours.',
     caption: `Sensor history over 24 hours: temperature, humidity, battery and signal. ${TEST_SITE}`,
   },
   mobileDashboard: {
     src: '/product/iot-mobile-dashboard.webp',
     width: 780,
     height: 700,
-    alt: 'VexaOS mobile app dashboard showing active sensors and average temperature tiles.',
+    alt: 'VexaOs mobile app dashboard showing active sensors and average temperature tiles.',
     caption: `The mobile dashboard. ${TEST_SITE}`,
   },
   mobileGateway: {
     src: '/product/iot-mobile-gateway.webp',
     width: 780,
     height: 380,
-    alt: 'VexaOS mobile app showing a VexaOS Edge Gateway online, with last contact less than a minute ago.',
+    alt: 'VexaOs mobile app showing a VexaOs Edge Gateway online, with last contact less than a minute ago.',
     caption: `Gateway status in the mobile app. ${TEST_SITE}`,
   },
   restaurantFloor: {

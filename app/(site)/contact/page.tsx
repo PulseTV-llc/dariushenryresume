@@ -7,7 +7,7 @@ import { ADDRESS, CONTACT_EMAIL } from '@/lib/site';
 export const metadata = pageMeta({
   title: 'Book a Demo',
   description:
-    'Book a demo of the VexaOS monitoring platform, or get in touch. Tell us what you want to monitor and we will show you how it works.',
+    'Book a demo of the VexaOs monitoring platform, or get in touch. Tell us what you want to monitor and we will show you how it works.',
   path: '/contact',
 });
 
