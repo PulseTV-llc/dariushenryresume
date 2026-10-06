@@ -2,7 +2,6 @@ import { pageMeta } from '../../../metadata';
 import {
   CTABand,
   CheckList,
-  FeatureCard,
   HonestNote,
   PageHero,
   PrimaryButton,
@@ -11,12 +10,13 @@ import {
   Shot,
   Split,
 } from '@/components/site/ui';
+import SensorCatalog, { ConnectivitySection, SensorRequestCTA } from '@/components/site/SensorCatalog';
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = pageMeta({
-  title: 'Sensors: Temperature, Humidity and Door',
+  title: 'Sensor Catalog: Nine Families, Wireless and Wired',
   description:
-    'Wireless, battery-powered VexaOS sensors for temperature, humidity and door state. Vibration sensing is in development, and more sensor types are added through adapters.',
+    'The VexaOS sensor catalog: environment, cold chain, access and occupancy, water and leak, machine health, industrial process, energy, assets and safety, over Bluetooth LE or RS-485 / Modbus. Each measurement is labelled available now or via integration.',
   path: '/products/sensors',
 });
 
@@ -25,40 +25,34 @@ export default function SensorsPage() {
     <>
       <PageHero
         eyebrow="Products · Sensors"
-        title={<>Small wireless sensors for <span className="gradient-text">the things you need to watch.</span></>}
-        subtitle="Battery-powered sensors that report over Bluetooth Low Energy to a VexaOS Edge Gateway. No wiring and no network setup on the sensor."
+        title={<>A sensor for <span className="gradient-text">whatever you need to watch.</span></>}
+        subtitle="Nine sensor families, wireless and wired, on one platform. Every measurement is labelled, so you can see what works today and what we add through an adapter."
       >
         <PrimaryButton href="/contact">Ask about sensors</PrimaryButton>
       </PageHero>
 
-      <Section className="pt-4 sm:pt-6">
-        <SectionHeading eyebrow="Sensor types" title="What you can measure." />
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          <FeatureCard
-            icon="thermometer"
-            title="Temperature and humidity"
-            body="Coolers, freezers, storage rooms and work areas. The sensor also reports air pressure, its own battery level and its signal strength."
-          />
-          <FeatureCard
-            icon="door"
-            title="Door and contact"
-            body="Open or closed, reported the moment it changes. The door sensor also reports the temperature and humidity where it sits."
-          />
-          <FeatureCard
-            icon="vibration"
-            title="Vibration and machine health"
-            status="development"
-            body="Vibration velocity, displacement and frequency on three axes for rotating equipment. Being built; not available yet."
-          />
-          <FeatureCard
-            icon="plug"
-            title="More through adapters"
-            body="Each sensor type connects through an adapter on the gateway. Tell us what you need to measure and we will tell you where it stands."
-          />
+      <Section id="catalog" className="pt-4 sm:pt-6">
+        <SectionHeading
+          eyebrow="Sensor catalog"
+          title="Nine families. Pick your industry."
+          subtitle="Filter by industry, then open a family for the detail."
+        />
+        <SensorCatalog />
+        <div className="mt-12">
+          <SensorRequestCTA />
         </div>
       </Section>
 
-      <Section className="bg-white/60">
+      <Section id="connectivity" className="bg-white/60">
+        <SectionHeading
+          eyebrow="Connectivity"
+          title="Wireless and wired, into one gateway."
+          subtitle="Bluetooth sensors work today. Wired RS-485 / Modbus devices are added as an integration."
+        />
+        <ConnectivitySection />
+      </Section>
+
+      <Section>
         <Split
           eyebrow="Door sensors"
           title="Every open and close, on a timeline."
@@ -75,7 +69,7 @@ export default function SensorsPage() {
         </Split>
       </Section>
 
-      <Section>
+      <Section className="bg-white/60">
         <Split
           flip
           eyebrow="Sensor health"
@@ -93,9 +87,10 @@ export default function SensorsPage() {
         </Split>
         <div className="mt-10">
           <HonestNote>
-            Sensors today connect over Bluetooth Low Energy, so they need to be within radio range of a gateway. Range
-            depends on walls, doors and equipment in between. We check signal at each location during setup. Longer
-            range radio options are not available yet.
+            Sensors that are available now connect over Bluetooth Low Energy, so they need to be within radio range of
+            a gateway; we check signal at each location during setup. &quot;Via integration&quot; means the adapter
+            does not exist yet, and that includes everything on RS-485 / Modbus: we build it when a customer needs
+            it, and we do not publish specifications for sensors we have not integrated.
           </HonestNote>
         </div>
       </Section>

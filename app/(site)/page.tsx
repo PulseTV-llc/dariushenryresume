@@ -18,6 +18,7 @@ import {
   StatusBadge,
 } from '@/components/site/ui';
 import StackDiagram from '@/components/site/StackDiagram';
+import SensorCatalog from '@/components/site/SensorCatalog';
 import TrackedLink from '@/components/site/TrackedLink';
 import { DESCRIPTION, INDUSTRIES, RESTAURANT_OS, industryHref } from '@/lib/site';
 import { SHOTS } from '@/lib/shots';
@@ -114,8 +115,18 @@ export default function HomePage() {
         </p>
       </Section>
 
+      {/* Sensor families */}
+      <Section id="sensors" className="bg-white/60">
+        <SectionHeading
+          eyebrow="Sensor families"
+          title="Far more than a thermometer."
+          subtitle="Nine families of sensor, wireless and wired, on one platform. Green is working today; the rest we add through adapters."
+        />
+        <SensorCatalog compact />
+      </Section>
+
       {/* Why it holds up */}
-      <Section className="bg-white/60">
+      <Section>
         <SectionHeading
           eyebrow="Built for the real world"
           title="Monitoring that keeps working when things go wrong."
@@ -146,7 +157,7 @@ export default function HomePage() {
       </Section>
 
       {/* AI Insights */}
-      <Section>
+      <Section className="bg-white/60">
         <Split
           eyebrow="VexaOS Cloud & AI Insights"
           title="It tells you what changed, and what to look at."
@@ -172,7 +183,7 @@ export default function HomePage() {
       </Section>
 
       {/* Industries */}
-      <Section id="industries" className="bg-white/60">
+      <Section id="industries">
         <SectionHeading
           eyebrow="Solutions"
           title="One platform, many places to use it."
@@ -228,7 +239,7 @@ export default function HomePage() {
       </Section>
 
       {/* Vendor neutral */}
-      <Section>
+      <Section className="bg-white/60">
         <Split
           flip
           eyebrow="Vendor-neutral"
@@ -247,7 +258,7 @@ export default function HomePage() {
       </Section>
 
       {/* Where it stands */}
-      <Section className="bg-white/60">
+      <Section>
         <SectionHeading
           eyebrow="Where things stand"
           title="What works today, and what is coming."
@@ -257,8 +268,8 @@ export default function HomePage() {
           <GlassCard>
             <h3 className="text-base font-semibold text-slate-900">Working today</h3>
             <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
-              <li>Temperature and humidity sensors</li>
-              <li>Door open and closed sensors</li>
+              <li>Temperature, humidity and pressure sensors</li>
+              <li>Door and contact sensors</li>
               <li>VexaOS Edge Gateway</li>
               <li>VexaOS Cloud with AI Insights</li>
               <li>Web dashboard and the iOS and Android app</li>

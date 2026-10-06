@@ -19,6 +19,14 @@ import {
   Building2,
   HeartPulse,
   UtensilsCrossed,
+  Wind,
+  Droplets,
+  Zap,
+  Tag,
+  ShieldAlert,
+  Gauge,
+  Cable,
+  Bluetooth,
   type LucideIcon,
 } from 'lucide-react';
 import TrackedLink from './TrackedLink';
@@ -41,6 +49,14 @@ const ICONS: Record<IconName, LucideIcon> = {
   building: Building2,
   health: HeartPulse,
   restaurant: UtensilsCrossed,
+  environment: Wind,
+  water: Droplets,
+  energy: Zap,
+  assets: Tag,
+  safety: ShieldAlert,
+  process: Gauge,
+  wired: Cable,
+  bluetooth: Bluetooth,
 };
 
 export function Icon({ name, className = 'w-5 h-5' }: { name: IconName; className?: string }) {

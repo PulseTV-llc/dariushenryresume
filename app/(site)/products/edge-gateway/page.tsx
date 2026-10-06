@@ -12,6 +12,7 @@ import {
   Shot,
   Split,
 } from '@/components/site/ui';
+import { ConnectivitySection } from '@/components/site/SensorCatalog';
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = pageMeta({
@@ -92,12 +93,21 @@ export default function EdgeGatewayPage() {
         </Split>
       </Section>
 
-      <Section className="bg-white/60">
+      <Section id="connectivity" className="bg-white/60">
+        <SectionHeading
+          eyebrow="Connectivity"
+          title="Wireless and wired, into one gateway."
+          subtitle="Bluetooth sensors work today. Wired RS-485 / Modbus devices are added as an integration."
+        />
+        <ConnectivitySection />
+      </Section>
+
+      <Section>
         <SectionHeading eyebrow="Setup" title="What a gateway needs." />
         <div className="grid gap-5 md:grid-cols-3">
           <FeatureCard title="Mains power" body="The Edge Gateway is for fixed sites with a power outlet. For places without one, see the Mobile Gateway, which is coming soon." />
           <FeatureCard title="Wi-Fi or Ethernet" body="An ordinary internet connection is enough. The gateway makes outbound HTTPS connections only." />
-          <FeatureCard title="Sensors in range" body="Sensors connect over Bluetooth Low Energy. Larger sites use more than one gateway." />
+          <FeatureCard title="Sensors in range" body="Wireless sensors connect over Bluetooth Low Energy; larger sites use more than one gateway. Wired RS-485 / Modbus devices are added as an integration." />
         </div>
         <div className="mt-8">
           <HonestNote>

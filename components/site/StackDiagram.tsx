@@ -9,7 +9,7 @@ const STAGES: { step: string; products: Product[]; points: string[] }[] = [
   {
     step: '1',
     products: [bySlug['sensors']],
-    points: ['Temperature and humidity', 'Door open and closed', 'More through adapters'],
+    points: ['Nine sensor families', 'Wireless Bluetooth sensors live today', 'Wired RS-485 / Modbus via integration'],
   },
   {
     step: '2',

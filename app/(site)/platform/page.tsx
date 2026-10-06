@@ -14,6 +14,7 @@ import {
   Split,
 } from '@/components/site/ui';
 import StackDiagram from '@/components/site/StackDiagram';
+import SensorCatalog from '@/components/site/SensorCatalog';
 import { SHOTS } from '@/lib/shots';
 
 export const metadata = pageMeta({
@@ -27,7 +28,7 @@ const JOURNEY = [
   {
     n: '1',
     title: 'A sensor takes a reading',
-    body: 'Battery-powered sensors broadcast temperature, humidity or door state over Bluetooth Low Energy every few seconds. Nothing to wire.',
+    body: 'Battery-powered sensors broadcast temperature, humidity or door state over Bluetooth Low Energy every few seconds. Wired RS-485 / Modbus devices join through an integration.',
   },
   {
     n: '2',
@@ -91,7 +92,17 @@ export default function PlatformPage() {
         </ol>
       </Section>
 
-      <Section id="offline">
+      {/* Sensor families */}
+      <Section id="sensors">
+        <SectionHeading
+          eyebrow="Sensor families"
+          title="What the platform can listen to."
+          subtitle="Nine families of sensor, wireless and wired, on one platform. Green is working today; the rest we add through adapters."
+        />
+        <SensorCatalog compact />
+      </Section>
+
+      <Section id="offline" className="bg-white/60">
         <Split
           eyebrow="When the internet drops"
           title="Nothing is lost. Nothing is counted twice."
@@ -109,7 +120,7 @@ export default function PlatformPage() {
         </Split>
       </Section>
 
-      <Section id="vendor-neutral" className="bg-white/60">
+      <Section id="vendor-neutral">
         <SectionHeading
           eyebrow="Vendor-neutral by design"
           title="Sensors plug in through adapters."
@@ -134,7 +145,7 @@ export default function PlatformPage() {
         </div>
       </Section>
 
-      <Section id="security">
+      <Section id="security" className="bg-white/60">
         <SectionHeading
           eyebrow="Security and access"
           title="Each gateway proves who it is. Each person sees only their sites."

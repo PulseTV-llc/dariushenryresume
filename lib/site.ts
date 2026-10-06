@@ -54,7 +54,15 @@ export type IconName =
   | 'factory'
   | 'building'
   | 'health'
-  | 'restaurant';
+  | 'restaurant'
+  | 'environment'
+  | 'water'
+  | 'energy'
+  | 'assets'
+  | 'safety'
+  | 'process'
+  | 'wired'
+  | 'bluetooth';
 
 export interface Product {
   slug: string;
@@ -74,7 +82,7 @@ export const PRODUCTS: Product[] = [
     short: 'Sensors',
     role: 'Measure',
     summary:
-      'Wireless, battery-powered sensors for temperature, humidity and door state. Vibration and more are added through adapters.',
+      'Nine sensor families, wireless and wired. Bluetooth temperature, humidity, pressure and door sensors are live today; the rest, including RS-485 / Modbus, are added through adapters.',
     icon: 'sensors',
     status: 'available',
   },
