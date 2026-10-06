@@ -370,7 +370,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: 'Thank you for your inquiry! I\'ll get back to you soon.',
+        message: 'Thank you. We will be in touch soon.',
         estimate,
         requestId,
       },
