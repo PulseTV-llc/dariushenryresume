@@ -9,12 +9,16 @@ import { LOCALES, LOCALE_INFO, isLocale, localePath } from '@/lib/i18n/config';
 import { getContent } from '@/lib/i18n/content';
 import { siteSchemas } from '@/lib/structured-data';
 import { INDUSTRIES, PRODUCTS, RESTAURANT_OS_HREF, industryHref, productHref } from '@/lib/site';
+import { hasActiveProducts } from '@/lib/store/catalog';
+import { storeStrings } from '@/lib/store/strings';
 
 // Inter covers Latin and Vietnamese. Thai gets its own face, loaded only when used.
 const inter = Inter({ subsets: ['latin', 'latin-ext', 'vietnamese'], display: 'swap', variable: '--font-inter' });
 const thai = Noto_Sans_Thai({ subsets: ['thai'], display: 'swap', variable: '--font-thai', preload: false });
 
-export const dynamicParams = false;
+// No `dynamicParams = false` here: it would also block the store's product pages (app/[locale]/store/[slug]),
+// which come from the database. Unknown locales cannot reach this layout (the middleware rewrites them) and
+// are refused below; the fixed [slug] pages set dynamicParams = false themselves.
 export const generateStaticParams = () => LOCALES.map((locale) => ({ locale }));
 
 export function generateMetadata({ params }: { params: { locale: string } }) {
@@ -23,7 +27,7 @@ export function generateMetadata({ params }: { params: { locale: string } }) {
 
 export const viewport = { themeColor: '#f3f6fc', colorScheme: 'light', width: 'device-width', initialScale: 1 };
 
-export default function LocaleLayout({ children, params }: { children: React.ReactNode; params: { locale: string } }) {
+export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: { locale: string } }) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale;
   const c = getContent(locale);
@@ -50,6 +54,8 @@ export default function LocaleLayout({ children, params }: { children: React.Rea
         { href: L(RESTAURANT_OS_HREF), label: c.catalog.restaurantOs.name, description: nav.hospitality },
       ],
     },
+    // the store appears in the navigation only once a product is on sale
+    ...((await hasActiveProducts()) ? [{ label: storeStrings(locale).nav, href: L('/store') }] : []),
     { label: nav.about, href: L('/about') },
   ];
 
