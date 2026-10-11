@@ -16,6 +16,15 @@ Every label about availability is literal: *In stock* (stock is counted), *Made 
 order, with a lead time if you enter one), *Out of stock*. Translated pages (th, vi, id, fil) use machine-draft
 interface text (`lib/store/strings.ts`); a product shows its own translation if you entered one, else English.
 
+## The hero on `/store`
+
+The dark card at the top (`components/store/StoreHero.tsx`, styles under "Store hero" in `app/globals.css`)
+features the first product on sale that has a photo, with its price; with nothing on sale it shows the VexaOs
+mark instead and the first button becomes "Ask about mounts". Its three chips are computed from the catalog
+and settings (`lib/store/hero.ts`): what the hardware is for; "Made to order" or "In stock" only when that is
+true of everything on sale, otherwise how you pay; and shipping. All motion stops for visitors who prefer
+reduced motion. Screenshot: `docs/design/screenshots/store-hero.png`.
+
 ## Environment variables (Vercel → Project → Settings → Environment Variables)
 
 | Name | Secret? | Purpose |
@@ -27,6 +36,7 @@ interface text (`lib/store/strings.ts`); a product shows its own translation if 
 | `STRIPE_WEBHOOK_SECRET` | **yes** | Verifies that webhook calls really come from Stripe (`whsec_…`). |
 | `SUPABASE_SERVICE_ROLE_KEY` | **yes** | Lets the webhook record orders and take items out of stock. |
 | `STORE_SHIP_COUNTRIES` | no | Optional. Comma-separated country codes Checkout accepts. Default `US`. |
+| `STORE_SHIPS_FROM` | no | Optional. A country code (for example `US`). When set, the store's hero says "Ships from …"; unset, it says where it ships **to** and makes no claim about the origin. |
 | `STORE_LIVE_PAYMENTS` | no | Optional. Set to `on` to allow live keys. Without it only test keys work. |
 
 Checkout opens only when all four of `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`,

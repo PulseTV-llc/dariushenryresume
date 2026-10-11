@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import Stripe from 'stripe';
 import { LOCALES } from '@/lib/i18n/config';
 import { addItem, cartCount, parseCart, quoteItems, removeItem, setQuantity } from './cart';
-import { checkoutBlock, checkoutEnabled, shipCountries } from './config';
+import { checkoutBlock, checkoutEnabled, shipCountries, shipsFrom } from './config';
+import { countryName, heroChips, spotlightProduct } from './hero';
 import { SESSION_SOURCE, sessionParams } from './checkout';
 import { minorUnit, money, priceLabel, productText } from './format';
 import { productSchema, storeListSchema } from './jsonld';
@@ -252,5 +253,34 @@ describe('admin form', () => {
     const draft = previewProduct({ ...emptyForm(), name: 'Wall Mount for Ruuvi sensors' }, []);
     expect([draft.from_cents, draft.available, draft.slug]).toEqual([null, false, 'wall-mount-for-ruuvi-sensors']);
     expect(previewProduct({ ...emptyForm(), name: 'X', price: '9', inventory_mode: 'made_to_order', leadTime: '7' }, [])).toMatchObject({ available: true, lead_time_days: 7, max_quantity: 10 });
+  });
+});
+
+describe('store hero: chips only say what the settings make true', () => {
+  const t = STORE_STRINGS.en;
+  const base = { checkoutOpen: false, shipFrom: null, shipTo: ['US'], locale: 'en' as const, t };
+  it('with nothing on sale: what it is for, how to order, where it ships to', () => {
+    expect(heroChips({ ...base, products: [] })).toEqual(['Built for sensors on VexaOs', 'Order by message', 'Ships to the United States']);
+    expect(heroChips({ ...base, products: [], checkoutOpen: true })[1]).toBe('Secure checkout by Stripe');
+  });
+  it('says "Made to order" or "In stock" only when that holds for everything on sale', () => {
+    const made = product({ inventory_mode: 'made_to_order' }), stocked = product({ id: B }), soldOut = product({ id: V, available: false });
+    expect(heroChips({ ...base, products: [made] })[1]).toBe('Made to order');
+    expect(heroChips({ ...base, products: [stocked] })[1]).toBe('In stock');
+    expect(heroChips({ ...base, products: [made, stocked] })[1]).toBe('Order by message');
+    expect(heroChips({ ...base, products: [stocked, soldOut], checkoutOpen: true })[1]).toBe('Secure checkout by Stripe');
+    expect(heroChips({ ...base, products: [product({ from_cents: null, price_cents: null })] })[1]).toBe('Order by message');
+  });
+  it('claims an origin only when STORE_SHIPS_FROM is set; otherwise names the destinations', () => {
+    expect([shipsFrom({}), shipsFrom({ STORE_SHIPS_FROM: ' us ' }), shipsFrom({ STORE_SHIPS_FROM: 'Michigan' })]).toEqual([null, 'US', null]);
+    expect(heroChips({ ...base, products: [], shipFrom: 'US' })[2]).toBe('Ships from the United States');
+    expect(heroChips({ ...base, products: [], shipTo: ['US', 'CA', 'PH'] })[2]).toBe('Ships to 3 countries');
+    expect(heroChips({ ...base, products: [], shipTo: ['CA'] })[2]).toBe('Ships to Canada');
+    expect(heroChips({ ...base, products: [], locale: 'th', t: STORE_STRINGS.th })[2]).toBe('จัดส่งไปยังสหรัฐอเมริกา');
+    expect([countryName('US', 'vi'), countryName('PH', 'en'), countryName('PH', 'fil')]).toEqual(['Hoa Kỳ', 'the Philippines', 'Pilipinas']);
+  });
+  it('features a product on sale that has a photo, else the first one, else none', () => {
+    const bare = product({ id: B, images: [] });
+    expect([spotlightProduct([bare, product()])?.id, spotlightProduct([bare])?.id, spotlightProduct([])]).toEqual([A, B, null]);
   });
 });

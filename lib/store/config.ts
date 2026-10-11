@@ -8,6 +8,7 @@
  *   STRIPE_WEBHOOK_SECRET                                     verifies Stripe's webhook calls
  *   SUPABASE_SERVICE_ROLE_KEY                                 lets the webhook record orders
  *   STORE_SHIP_COUNTRIES   optional, comma separated ISO codes (default US)
+ *   STORE_SHIPS_FROM       optional ISO code; shows "Ships from …" on the store (unset: no origin claim)
  *   STORE_LIVE_PAYMENTS    optional; "on" allows live Stripe keys (default: test keys only)
  */
 export const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').replace(/\/$/, '');
@@ -38,4 +39,13 @@ const ISO2 = /^[A-Z]{2}$/;
 export function shipCountries(env: Record<string, string | undefined> = process.env): string[] {
   const list = (env.STORE_SHIP_COUNTRIES ?? 'US').split(',').map((c) => c.trim().toUpperCase()).filter((c) => ISO2.test(c));
   return list.length ? Array.from(new Set(list)) : ['US'];
+}
+
+/**
+ * Where orders ship from, as an ISO country code (STORE_SHIPS_FROM, for example US). Unset by default: the store
+ * then says where it ships TO (from STORE_SHIP_COUNTRIES) and makes no claim about the origin.
+ */
+export function shipsFrom(env: Record<string, string | undefined> = process.env): string | null {
+  const c = (env.STORE_SHIPS_FROM ?? '').trim().toUpperCase();
+  return ISO2.test(c) ? c : null;
 }

@@ -1,11 +1,14 @@
 import { notFound } from 'next/navigation';
-import { Eyebrow, Button, Section, rich } from '@/components/site/ui';
+import { Button, Section } from '@/components/site/ui';
+import StoreHero from '@/components/store/StoreHero';
 import CartLink from '@/components/store/CartLink';
 import { ProductCard } from '@/components/store/StoreParts';
 import { pageMeta } from '../../metadata';
 import { isLocale, localePath } from '@/lib/i18n/config';
 import { getContent } from '@/lib/i18n/content';
 import { getCatalog } from '@/lib/store/catalog';
+import { checkoutEnabled, shipCountries, shipsFrom } from '@/lib/store/config';
+import { heroChips, spotlightProduct } from '@/lib/store/hero';
 import { storeListSchema } from '@/lib/store/jsonld';
 import { storeStrings } from '@/lib/store/strings';
 
@@ -27,15 +30,9 @@ export default async function StorePage({ params }: { params: { locale: string }
   const { products, categories } = await getCatalog();
   return (
     <>
-      <section className="relative overflow-hidden px-4 pb-10 pt-32 sm:px-6 sm:pt-40 lg:px-8">
-        <div className="page-wash pointer-events-none absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto max-w-4xl text-center">
-          <div className="mb-5 flex justify-center"><Eyebrow>{t.eyebrow}</Eyebrow></div>
-          <h1 className="text-balance text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl">{rich(t.heading)}</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-balance text-lg leading-relaxed text-slate-600">{t.subtitle}</p>
-        </div>
-      </section>
-      <Section className="!pt-4">
+      <StoreHero locale={locale} t={t} chips={heroChips({ products, checkoutOpen: checkoutEnabled(), shipFrom: shipsFrom(), shipTo: shipCountries(), locale, t })}
+                 spotlight={spotlightProduct(products)} hasProducts={products.length > 0} />
+      <Section id="products" className="scroll-mt-20 !pt-10 sm:!pt-14">
         {products.length === 0 ? (
           <div className="glass mx-auto max-w-xl rounded-3xl p-8 text-center">
             <h2 className="text-xl font-semibold text-slate-900">{t.empty.title}</h2>
