@@ -7,5 +7,9 @@ export const metadata: Metadata = {
 
 /** Internal tools keep the dark shell they were built against. */
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-screen bg-black text-white">{children}</div>;
+  return (
+    <html lang="en">
+      <body className="min-h-screen bg-black text-white">{children}</body>
+    </html>
+  );
 }

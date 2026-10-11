@@ -13,7 +13,7 @@ const en = { common: enCommon, catalog: enCatalog, pages: enMain, products: enPr
 export type Content = typeof en;
 
 /** Register a new locale's content here. */
-const TRANSLATIONS: Record<Exclude<Locale, 'en'>, unknown> = { th, vi, id, fil };
+const TRANSLATIONS: Partial<Record<Locale, unknown>> = { th, vi, id, fil };
 
 /**
  * Overlay a translation on the English source.
@@ -46,7 +46,7 @@ export function getContent(locale: Locale): Content {
   if (locale === DEFAULT_LOCALE) return en;
   let c = cache.get(locale);
   if (!c) {
-    const t = TRANSLATIONS[locale] as { common?: unknown; catalog?: unknown; pagesMain?: unknown; pagesProducts?: unknown };
+    const t = (TRANSLATIONS[locale] ?? {}) as { common?: unknown; catalog?: unknown; pagesMain?: unknown; pagesProducts?: unknown };
     c = overlay(en, { common: t.common, catalog: t.catalog, pages: t.pagesMain, products: t.pagesProducts });
     cache.set(locale, c);
   }

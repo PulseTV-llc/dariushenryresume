@@ -1,81 +1,38 @@
-import { Metadata } from 'next';
-import { DESCRIPTION, OG_IMAGES, SITE_URL } from '@/lib/site';
+import type { Metadata } from 'next';
+import { OG_IMAGES, SITE_URL } from '@/lib/site';
+import { DEFAULT_LOCALE, LOCALES, LOCALE_INFO, localePath, type Locale } from '@/lib/i18n/config';
+import { getContent } from '@/lib/i18n/content';
 
 /**
- * Site-wide metadata for vexaos.io.
- *
- * Positioning: VexaOs is a vendor-neutral platform to monitor anything,
- * anywhere: sensors, Edge Gateway, Cloud & AI Insights, and apps.
- *
- * Pages build their own metadata with pageMeta() so each has its own
- * canonical; the OG image comes from app/opengraph-image.tsx.
+ * Set to false to keep machine-draft translations out of search engines until
+ * a native speaker has reviewed them (they stay reachable and linked).
  */
+export const INDEX_MACHINE_DRAFTS = true;
 
-export const siteConfig = {
-  name: 'VexaOs',
-  title: 'VexaOs: Monitor Anything, Anywhere',
-  description: DESCRIPTION,
-  url: SITE_URL,
-  locale: 'en_US',
-  keywords: [
-    'remote monitoring platform',
-    'IoT monitoring',
-    'wireless temperature monitoring',
-    'humidity monitoring',
-    'door sensor monitoring',
-    'cold chain monitoring',
-    'walk-in cooler monitoring',
-    'warehouse temperature monitoring',
-    'edge gateway',
-    'sensor alerts',
-    'temperature drift detection',
-    'multi-site monitoring',
-  ],
-};
+const OG_LOCALE: Record<Locale, string> = { en: 'en_US', th: 'th_TH', vi: 'vi_VN', id: 'id_ID', fil: 'fil_PH' };
 
-export const generateMetadata = (): Metadata => {
+/** hreflang map for one path: every locale plus x-default (English). */
+export function languageAlternates(path: string): Record<string, string> {
+  const abs = (l: Locale) => `${SITE_URL}${localePath(l, path) === '/' ? '' : localePath(l, path)}`;
   return {
-    metadataBase: new URL(siteConfig.url),
-    title: {
-      default: siteConfig.title,
-      template: '%s · VexaOs',
-    },
-    description: siteConfig.description,
-    keywords: siteConfig.keywords,
-    applicationName: siteConfig.name,
+    ...Object.fromEntries(LOCALES.map((l) => [LOCALE_INFO[l].tag, abs(l)])),
+    'x-default': abs(DEFAULT_LOCALE),
+  };
+}
+
+/** Site-wide defaults for a locale (app/[locale]/layout.tsx). */
+export function baseMetadata(locale: Locale): Metadata {
+  const c = getContent(locale);
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: c.pages.home.meta.title, template: '%s · VexaOs' },
+    description: c.common.description,
+    applicationName: 'VexaOs',
     referrer: 'origin-when-cross-origin',
-    authors: [{ name: 'VexaOs', url: siteConfig.url }],
+    authors: [{ name: 'VexaOs', url: SITE_URL }],
     creator: 'VexaOs',
     publisher: 'VexaOs',
-    formatDetection: {
-      email: true,
-      address: false,
-      telephone: false,
-    },
-    openGraph: {
-      type: 'website',
-      locale: siteConfig.locale,
-      url: siteConfig.url,
-      title: siteConfig.title,
-      description: siteConfig.description,
-      siteName: siteConfig.name,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: siteConfig.title,
-      description: siteConfig.description,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
+    formatDetection: { email: true, address: false, telephone: false },
     icons: {
       icon: [
         { url: '/favicon.ico', sizes: '48x48' },
@@ -89,32 +46,29 @@ export const generateMetadata = (): Metadata => {
     manifest: '/site.webmanifest',
     category: 'technology',
   };
-};
+}
 
-/** Per-page metadata with its own canonical and social card. */
-export function pageMeta({
-  title,
-  description,
-  path,
-}: {
-  title: string;
-  description: string;
-  path: string;
-}): Metadata {
-  const url = `${SITE_URL}${path === '/' ? '' : path}`;
+/** Per-page metadata: own canonical, hreflang alternates and social card. */
+export function pageMeta(locale: Locale, path: string, meta: { title: string; description: string }, absoluteTitle = false): Metadata {
+  const languages = languageAlternates(path);
+  const url = languages[LOCALE_INFO[locale].tag];
+  const draft = LOCALE_INFO[locale].status === 'machine-draft';
+  const social = absoluteTitle ? meta.title : `${meta.title} · VexaOs`;
   return {
-    title,
-    description,
-    alternates: { canonical: url },
+    title: absoluteTitle ? { absolute: meta.title } : meta.title,
+    description: meta.description,
+    alternates: { canonical: url, languages },
+    robots: draft && !INDEX_MACHINE_DRAFTS ? { index: false, follow: true } : { index: true, follow: true },
     openGraph: {
       type: 'website',
       siteName: 'VexaOs',
-      locale: 'en_US',
-      title: `${title} · VexaOs`,
-      description,
+      locale: OG_LOCALE[locale],
+      alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => OG_LOCALE[l]),
+      title: social,
+      description: meta.description,
       url,
       images: OG_IMAGES,
     },
-    twitter: { card: 'summary_large_image', title: `${title} · VexaOs`, description },
+    twitter: { card: 'summary_large_image', title: social, description: meta.description },
   };
 }

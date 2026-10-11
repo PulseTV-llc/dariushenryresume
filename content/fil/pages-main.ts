@@ -274,7 +274,7 @@ const solutions: Page = {
 /** Labels around an industry page; the industry's own words are in catalog.ts. */
 const industry = {
   eyebrowPrefix: 'Mga Solusyon',
-  metaTitleSuffix: 'Monitoring',
+  metaTitle: 'Monitoring ng {name}',
   primary: 'Mag-book ng demo',
   secondary: 'Paano gumagana ang platform',
   monitor: { eyebrow: 'Ano ang dapat i-monitor', title: 'Kung saan ito tunay na napapakinabangan.' },

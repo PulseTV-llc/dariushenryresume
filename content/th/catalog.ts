@@ -174,7 +174,7 @@ export const catalog = {
       seeDetails: 'ดูรายละเอียด',
       hideDetails: 'ซ่อนรายละเอียด',
       typicalUse: 'การใช้งานทั่วไป:',
-      more: 'อีก +{n} รายการ',
+      more: 'อีก {n} รายการ',
       fullCatalog: 'ดูแค็ตตาล็อกเซนเซอร์ทั้งหมด',
     },
     request: {

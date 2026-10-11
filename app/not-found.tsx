@@ -1,22 +1,24 @@
 import Link from 'next/link';
-import SiteNav from '@/components/site/SiteNav';
-import SiteFooter from '@/components/site/SiteFooter';
+import VexaLogo from '@/components/site/VexaLogo';
+import { common } from '@/content/en/common';
 
+/** Global 404. Rendered outside the locale layout, so it brings its own <html>. */
 export default function NotFound() {
   return (
-    <>
-      <SiteNav />
-      <main id="main" className="flex min-h-[70vh] items-center justify-center px-4 pt-24 text-center">
-        <div>
-          <p className="mono-label text-blue-700">404</p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">We could not find that page.</h1>
-          <p className="mt-3 text-slate-600">It may have moved when the site was rebuilt.</p>
-          <Link href="/" className="mt-6 inline-flex rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700">
-            Back to the home page
+    <html lang="en">
+      <body>
+        <main className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
+          <Link href="/" aria-label={common.nav.home}>
+            <VexaLogo />
           </Link>
-        </div>
-      </main>
-      <SiteFooter />
-    </>
+          <p className="mono-label mt-10 text-blue-700">404</p>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">{common.notFound.title}</h1>
+          <p className="mt-3 text-slate-600">{common.notFound.body}</p>
+          <Link href="/" className="mt-6 inline-flex rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700">
+            {common.notFound.back}
+          </Link>
+        </main>
+      </body>
+    </html>
   );
 }

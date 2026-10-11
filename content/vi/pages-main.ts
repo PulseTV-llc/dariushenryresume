@@ -274,7 +274,7 @@ const solutions: Page = {
 /** Labels around an industry page; the industry's own words are in catalog.ts. */
 const industry = {
   eyebrowPrefix: 'Giải pháp',
-  metaTitleSuffix: 'Giám sát',
+  metaTitle: 'Giám sát {name}',
   primary: 'Đặt lịch demo',
   secondary: 'Nền tảng hoạt động như thế nào',
   monitor: { eyebrow: 'Cần giám sát những gì', title: 'Nơi nó phát huy giá trị.' },

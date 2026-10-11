@@ -64,7 +64,7 @@ export default function SiteFooter({ locale, c }: { locale: Locale; c: Content }
         {draft && (
           <p className="mt-10 rounded-xl bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-950 ring-1 ring-amber-200">
             {language.draftNotice}{' '}
-            <a href="/" hrefLang="en" lang="en" className="font-semibold underline">Read in English</a>
+            <a href="/" hrefLang="en" lang="en" className="font-semibold underline">{language.readEnglish}</a>
           </p>
         )}
 

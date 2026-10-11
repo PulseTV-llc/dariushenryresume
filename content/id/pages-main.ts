@@ -274,7 +274,7 @@ const solutions: Page = {
 /** Labels around an industry page; the industry's own words are in catalog.ts. */
 const industry = {
   eyebrowPrefix: 'Solusi',
-  metaTitleSuffix: 'Pemantauan',
+  metaTitle: 'Pemantauan {name}',
   primary: 'Jadwalkan demo',
   secondary: 'Cara kerja platform',
   monitor: { eyebrow: 'Apa yang dipantau', title: 'Tempat platform ini paling bermanfaat.' },
