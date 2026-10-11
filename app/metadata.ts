@@ -52,7 +52,7 @@ export function baseMetadata(locale: Locale): Metadata {
 export function pageMeta(locale: Locale, path: string, meta: { title: string; description: string }, absoluteTitle = false): Metadata {
   const languages = languageAlternates(path);
   const url = languages[LOCALE_INFO[locale].tag];
-  const draft = LOCALE_INFO[locale].status === 'machine-draft';
+  const draft = LOCALE_INFO[locale].reviewStatus === 'machine-draft';
   const social = absoluteTitle ? meta.title : `${meta.title} · VexaOs`;
   return {
     title: absoluteTitle ? { absolute: meta.title } : meta.title,

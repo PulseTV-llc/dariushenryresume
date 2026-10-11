@@ -30,7 +30,7 @@ export default function SiteFooter({ locale, c }: { locale: Locale; c: Content }
       ],
     },
   ];
-  const draft = LOCALE_INFO[locale].status === 'machine-draft';
+  const draft = LOCALE_INFO[locale].reviewStatus === 'machine-draft';
 
   return (
     <footer className="border-t border-slate-200 bg-white">

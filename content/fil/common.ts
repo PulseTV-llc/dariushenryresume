@@ -26,7 +26,7 @@ export const common = {
     company: 'Kompanya',
   },
   status: {
-    available: 'Available',
+    available: 'Magagamit na',
     development: 'Dine-develop pa',
     soon: 'Malapit na',
   },

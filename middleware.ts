@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import {
   DEFAULT_LOCALE, LOCALE_COOKIE, SUGGEST_COOKIE, fromAcceptLanguage, fromCountry, isLocale, localePath, stripLocale,
 } from '@/lib/i18n/config';
+import { REGION_COOKIE, regionOf } from '@/lib/i18n/regions';
 
 /**
  * Locale routing.
@@ -45,7 +46,15 @@ export function middleware(req: NextRequest) {
     return NextResponse.rewrite(url);
   };
 
-  if (isBot || isLocale(saved)) return serve();
+  if (isBot) return serve();
+
+  // Region (not language): lets the page show a regional contact channel, e.g. WhatsApp in Africa.
+  const region = regionOf(req.headers.get('x-vercel-ip-country'));
+  const withRegion = (res: NextResponse) => {
+    if (region && req.cookies.get(REGION_COOKIE)?.value !== region) res.cookies.set(REGION_COOKIE, region, { path: '/', maxAge: 2592000, sameSite: 'lax' });
+    return res;
+  };
+  if (isLocale(saved)) return withRegion(serve());
 
   const wanted = fromAcceptLanguage(req.headers.get('accept-language'));
 
@@ -64,7 +73,7 @@ export function middleware(req: NextRequest) {
   if (geo && geo !== current && !req.cookies.get(SUGGEST_COOKIE)) {
     res.cookies.set(SUGGEST_COOKIE, geo, { path: '/', maxAge: 86400, sameSite: 'lax' });
   }
-  return res;
+  return withRegion(res);
 }
 
 export const config = {

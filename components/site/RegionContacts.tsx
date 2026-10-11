@@ -1,10 +1,22 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { MessageCircle } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
-import { CHANNEL_NAME, regionChannels } from '@/lib/i18n/regions';
+import { CHANNEL_NAME, REGION_COOKIE, regionChannels, regionOnlyChannels, type Region } from '@/lib/i18n/regions';
 
-/** Regional chat channels. Renders nothing until a channel is configured. */
+/**
+ * Regional chat channels (LINE, Zalo, WhatsApp). Renders nothing until a
+ * channel is configured in the environment: by language, plus by region for
+ * visitors in Africa (a cookie set by the middleware; crawlers never get it).
+ */
 export default function RegionContacts({ locale, label, className = '' }: { locale: Locale; label: string; className?: string }) {
-  const channels = regionChannels(locale);
+  const [region, setRegion] = useState<Region | null>(null);
+  useEffect(() => {
+    const m = document.cookie.match(new RegExp(`(?:^|; )${REGION_COOKIE}=([^;]+)`));
+    if (m?.[1] === 'africa') setRegion('africa');
+  }, []);
+  const channels = [...regionChannels(locale), ...regionOnlyChannels(region, locale)];
   if (channels.length === 0) return null;
   return (
     <div className={className}>

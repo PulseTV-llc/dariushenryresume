@@ -29,7 +29,8 @@ export interface LocaleInfo {
   countries: string[];
   /** Primary language subtags in Accept-Language that map here. */
   accept: string[];
-  status: TranslationStatus;
+  /** 'machine-draft' until a native speaker has reviewed the translation; then 'reviewed'. See docs/LOCALIZATION.md. */
+  reviewStatus: TranslationStatus;
   /** Shown in the suggestion banner, in the locale's own language. */
   suggest: string;
 }
@@ -43,7 +44,7 @@ export const LOCALE_INFO: Record<Locale, LocaleInfo> = {
     currency: 'USD',
     countries: [],
     accept: ['en'],
-    status: 'source',
+    reviewStatus: 'source',
     suggest: 'Read this site in English?',
   },
   th: {
@@ -54,7 +55,7 @@ export const LOCALE_INFO: Record<Locale, LocaleInfo> = {
     currency: 'THB',
     countries: ['TH'],
     accept: ['th'],
-    status: 'machine-draft',
+    reviewStatus: 'machine-draft',
     suggest: 'อ่านเว็บไซต์นี้เป็นภาษาไทยไหม',
   },
   vi: {
@@ -65,7 +66,7 @@ export const LOCALE_INFO: Record<Locale, LocaleInfo> = {
     currency: 'VND',
     countries: ['VN'],
     accept: ['vi'],
-    status: 'machine-draft',
+    reviewStatus: 'machine-draft',
     suggest: 'Đọc trang này bằng tiếng Việt?',
   },
   id: {
@@ -76,7 +77,7 @@ export const LOCALE_INFO: Record<Locale, LocaleInfo> = {
     currency: 'IDR',
     countries: ['ID'],
     accept: ['id', 'in'],
-    status: 'machine-draft',
+    reviewStatus: 'machine-draft',
     suggest: 'Baca situs ini dalam Bahasa Indonesia?',
   },
   fil: {
@@ -87,7 +88,7 @@ export const LOCALE_INFO: Record<Locale, LocaleInfo> = {
     currency: 'PHP',
     countries: ['PH'],
     accept: ['fil', 'tl'],
-    status: 'machine-draft',
+    reviewStatus: 'machine-draft',
     suggest: 'Basahin ang site na ito sa Filipino?',
   },
 };
