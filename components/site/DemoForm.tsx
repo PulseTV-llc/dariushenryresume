@@ -2,24 +2,16 @@
 
 import { useRef, useState, FormEvent } from 'react';
 import { AlertCircle, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
-import { CONTACT_EMAIL, INDUSTRIES } from '@/lib/site';
+import { CONTACT_EMAIL } from '@/lib/site';
 import { trackEvent } from '@/lib/analytics';
-
-const INTERESTS = [
-  'Temperature & humidity',
-  'Door monitoring',
-  'Vibration (in development)',
-  'Mobile Gateway (coming soon)',
-  'Restaurant OS',
-];
-
-const SITE_COUNTS = ['1 site', '2–5 sites', '6–20 sites', '21+ sites'];
+import type { Locale } from '@/lib/i18n/config';
+import type { Content } from '@/lib/i18n/content';
 
 const inputCls =
   'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/30';
 const labelCls = 'mb-2 block text-sm font-medium text-slate-800';
 
-export default function DemoForm() {
+export default function DemoForm({ locale, t, industries }: { locale: Locale; t: Content['common']['form']; industries: string[] }) {
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -36,7 +28,7 @@ export default function DemoForm() {
   const set = (k: keyof typeof form, v: string) => {
     if (!started.current) {
       started.current = true;
-      trackEvent('contact_started');
+      trackEvent('contact_started', { locale });
     }
     setForm((f) => ({ ...f, [k]: v }));
   };
@@ -49,7 +41,7 @@ export default function DemoForm() {
 
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       setStatus('error');
-      setErrorMsg('Please add your name, email and a short note about what you want to monitor.');
+      setErrorMsg(t.missing);
       return;
     }
 
@@ -68,6 +60,7 @@ export default function DemoForm() {
         form.industry && `Industry: ${form.industry}`,
         form.sites && `Sites: ${form.sites}`,
         interests.length ? `Interested in: ${interests.join(', ')}` : '',
+        `Site language: ${locale}`,
       ]
         .filter(Boolean)
         .join('\n'),
@@ -76,7 +69,7 @@ export default function DemoForm() {
       locations: form.sites,
       systemType: 'Monitoring platform demo',
       intent: 'demo',
-      source: 'vexaos.io/contact',
+      source: `vexaos.io/contact (${locale})`,
     };
 
     try {
@@ -87,26 +80,31 @@ export default function DemoForm() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Something went wrong.');
+        throw new Error(locale === 'en' && data.error ? data.error : t.failed);
       }
-      trackEvent('contact_completed');
+      trackEvent('contact_completed', { locale });
       setStatus('success');
     } catch (err) {
       setStatus('error');
-      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong.');
+      setErrorMsg(err instanceof Error ? err.message : t.failed);
     }
   };
 
   if (status === 'success') {
+    const [before, afterName] = t.successBody.split('{name}');
+    const [mid, after] = (afterName ?? '').split('{email}');
     return (
       <div role="status" className="rounded-3xl border border-blue-200 bg-blue-50 p-10 text-center">
         <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600">
           <CheckCircle2 className="h-7 w-7 text-white" aria-hidden="true" />
         </span>
-        <h2 className="text-2xl font-bold text-slate-900">Your request is in.</h2>
+        <h2 className="text-2xl font-bold text-slate-900">{t.successTitle}</h2>
         <p className="mx-auto mt-3 max-w-md leading-relaxed text-slate-600">
-          Thanks, {form.name.split(' ')[0] || 'there'}. We will reply to{' '}
-          <span className="font-medium text-slate-900">{form.email}</span> to arrange a time.
+          {before}
+          {form.name.split(' ')[0]}
+          {mid}
+          <span className="font-medium text-slate-900">{form.email}</span>
+          {after}
         </p>
       </div>
     );
@@ -117,35 +115,35 @@ export default function DemoForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className={labelCls}>
-            Name <span className="text-blue-700">(required)</span>
+            {t.name} <span className="text-blue-700">{t.required}</span>
           </label>
           <input id="name" className={inputCls} value={form.name} onChange={(e) => set('name', e.target.value)} autoComplete="name" required maxLength={100} />
         </div>
         <div>
           <label htmlFor="email" className={labelCls}>
-            Work email <span className="text-blue-700">(required)</span>
+            {t.email} <span className="text-blue-700">{t.required}</span>
           </label>
           <input id="email" type="email" className={inputCls} value={form.email} onChange={(e) => set('email', e.target.value)} autoComplete="email" required maxLength={100} />
         </div>
         <div>
-          <label htmlFor="company" className={labelCls}>Company</label>
+          <label htmlFor="company" className={labelCls}>{t.company}</label>
           <input id="company" className={inputCls} value={form.company} onChange={(e) => set('company', e.target.value)} autoComplete="organization" maxLength={200} />
         </div>
         <div>
-          <label htmlFor="industry" className={labelCls}>Industry</label>
+          <label htmlFor="industry" className={labelCls}>{t.industry}</label>
           <select id="industry" className={inputCls} value={form.industry} onChange={(e) => set('industry', e.target.value)}>
-            <option value="">Select an industry</option>
-            {INDUSTRIES.map((i) => (
-              <option key={i.slug} value={i.name}>{i.name}</option>
+            <option value="">{t.selectIndustry}</option>
+            {industries.map((name) => (
+              <option key={name} value={name}>{name}</option>
             ))}
-            <option value="Other">Other</option>
+            <option value="Other">{t.other}</option>
           </select>
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor="sites" className={labelCls}>How many sites?</label>
+          <label htmlFor="sites" className={labelCls}>{t.sites}</label>
           <select id="sites" className={inputCls} value={form.sites} onChange={(e) => set('sites', e.target.value)}>
-            <option value="">Select</option>
-            {SITE_COUNTS.map((s) => (
+            <option value="">{t.select}</option>
+            {t.siteCounts.map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
@@ -153,9 +151,9 @@ export default function DemoForm() {
       </div>
 
       <fieldset>
-        <legend className={labelCls}>What are you interested in?</legend>
+        <legend className={labelCls}>{t.interestsLabel}</legend>
         <div className="flex flex-wrap gap-2">
-          {INTERESTS.map((name) => {
+          {t.interests.map((name) => {
             const active = interests.includes(name);
             return (
               <button
@@ -178,7 +176,7 @@ export default function DemoForm() {
 
       <div>
         <label htmlFor="message" className={labelCls}>
-          What do you want to monitor? <span className="text-blue-700">(required)</span>
+          {t.message} <span className="text-blue-700">{t.required}</span>
         </label>
         <textarea
           id="message"
@@ -186,7 +184,7 @@ export default function DemoForm() {
           className={inputCls}
           value={form.message}
           onChange={(e) => set('message', e.target.value)}
-          placeholder="For example: three walk-in coolers and a freezer across two sites, and the back door."
+          placeholder={t.messagePlaceholder}
           required
           maxLength={3000}
         />
@@ -196,7 +194,7 @@ export default function DemoForm() {
         <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-900">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>
-            {errorMsg} If it keeps happening, email us at{' '}
+            {errorMsg} {t.fallback}{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline">{CONTACT_EMAIL}</a>.
           </span>
         </div>
@@ -210,18 +208,18 @@ export default function DemoForm() {
         {status === 'loading' ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            Sending…
+            {t.sending}
           </>
         ) : (
           <>
-            Request a demo
+            {t.submit}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </>
         )}
       </button>
 
       <p className="text-center text-xs leading-relaxed text-slate-500">
-        We use your details only to reply to this request.
+        {t.privacy}
       </p>
     </form>
   );
