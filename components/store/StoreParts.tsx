@@ -7,19 +7,28 @@ import { priceLabel, productText } from '@/lib/store/format';
 import type { StoreStrings } from '@/lib/store/strings';
 import type { StoreImage, StoreProduct } from '@/lib/store/types';
 
-export function ProductImage({ image, name, t, sizes, priority = false, className = '' }: {
-  image: StoreImage | undefined; name: string; t: StoreStrings; sizes: string; priority?: boolean; className?: string;
+/**
+ * A product photo, always shown WHOLE: the picture is fitted inside a square box (never cropped) on a soft
+ * tinted background, so photos of any shape line up in grids and galleries without layout shift.
+ */
+export function ProductImage({ image, name, t, sizes, priority = false, className = '', tone = 'light', shape = 'square' }: {
+  image: StoreImage | undefined; name: string; t: StoreStrings; sizes: string; priority?: boolean; className?: string; tone?: 'light' | 'dark';
+  /** 'square': the same box for every photo (grids, galleries). 'natural': the photo's own shape, within limits (the hero). */
+  shape?: 'square' | 'natural';
 }) {
+  const ratio = shape === 'natural' && image?.width && image?.height ? Math.min(16 / 9, Math.max(3 / 4, image.width / image.height)) : 1;
+  const box = `relative w-full overflow-hidden rounded-2xl ${tone === 'dark' ? 'bg-white/[0.06]' : 'bg-gradient-to-br from-slate-50 via-white to-blue-50'} ${className}`;
   if (!image) {
     return (
-      <div className={`flex aspect-square w-full items-center justify-center rounded-2xl bg-slate-100 text-slate-400 ${className}`} role="img" aria-label={t.noPhoto}>
+      <div className={`${box} flex items-center justify-center text-slate-400`} style={{ aspectRatio: 1 }} role="img" aria-label={t.noPhoto}>
         <ImageOff className="h-8 w-8" aria-hidden="true" />
       </div>
     );
   }
   return (
-    <Image src={imageUrl(image.path)} alt={image.alt || t.photoOf.replace('{name}', name)} width={image.width ?? 1200} height={image.height ?? 1200}
-           sizes={sizes} priority={priority} className={`aspect-square w-full rounded-2xl bg-white object-cover ${className}`} />
+    <div className={box} style={{ aspectRatio: ratio }}>
+      <Image src={imageUrl(image.path)} alt={image.alt || t.photoOf.replace('{name}', name)} fill sizes={sizes} priority={priority} className="object-contain" />
+    </div>
   );
 }
 

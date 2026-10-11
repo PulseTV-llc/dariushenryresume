@@ -12,6 +12,7 @@ import { WEBHOOK_EVENTS, handleStripeEvent, orderItems, sessionSummary, type Web
 import {
   emptyForm, formFromProduct, move, moneyInput, parseMoney, parseOptions, previewProduct, productPayload, readiness, slugify, variantsFromOptions,
 } from './admin-logic';
+import { FIT, clampView, swipeDirection, wrap, zoomAt } from './zoom';
 import type { Quote, StoreProduct } from './types';
 
 const A = '11111111-1111-4111-8111-111111111111', B = '22222222-2222-4222-8222-222222222222', V = '33333333-3333-4333-8333-333333333333';
@@ -282,5 +283,25 @@ describe('store hero: chips only say what the settings make true', () => {
   it('features a product on sale that has a photo, else the first one, else none', () => {
     const bare = product({ id: B, images: [] });
     expect([spotlightProduct([bare, product()])?.id, spotlightProduct([bare])?.id, spotlightProduct([])]).toEqual([A, B, null]);
+  });
+});
+
+describe('photo viewer: zoom, pan and swipe', () => {
+  const image = { width: 800, height: 600 }, stage = { width: 1000, height: 700 };
+  it('zooms around the point under the cursor and stays between 1x and 4x', () => {
+    const v = zoomAt(FIT, 2, 100, 50, image, stage);
+    expect(v).toEqual({ scale: 2, x: -100, y: -50 });          // the point (100, 50) has not moved: (100 - x) / 2 = 100
+    expect(zoomAt(v, 99, 0, 0, image, stage).scale).toBe(4);
+    expect(zoomAt(v, 0.2, 0, 0, image, stage)).toEqual(FIT);
+    expect(zoomAt(FIT, 2.5, 0, 0, image, stage)).toEqual({ scale: 2.5, x: 0, y: 0 });
+  });
+  it('lets the picture be dragged only as far as its own edges', () => {
+    expect(clampView({ scale: 2, x: 9999, y: -9999 }, image, stage)).toEqual({ scale: 2, x: 300, y: -250 });
+    expect(clampView({ scale: 1.2, x: 50, y: 50 }, image, stage)).toEqual({ scale: 1.2, x: 0, y: 10 });   // still narrower than the stage: no sideways pan
+    expect(clampView({ scale: 1, x: 40, y: 40 }, image, stage)).toEqual(FIT);
+  });
+  it('a sideways flick turns the page; a short or mostly vertical one does not', () => {
+    expect([swipeDirection(-80, 5), swipeDirection(90, -10), swipeDirection(-30, 0), swipeDirection(-80, 90), swipeDirection(0, 0)]).toEqual([1, -1, 0, 0, 0]);
+    expect([wrap(5, 5), wrap(-1, 5), wrap(2, 5), wrap(0, 1)]).toEqual([0, 4, 2, 0]);
   });
 });

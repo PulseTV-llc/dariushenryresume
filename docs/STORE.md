@@ -25,6 +25,14 @@ and settings (`lib/store/hero.ts`): what the hardware is for; "Made to order" or
 true of everything on sale, otherwise how you pay; and shipping. All motion stops for visitors who prefer
 reduced motion. Screenshot: `docs/design/screenshots/store-hero.png`.
 
+## Product photos
+
+Photos are always shown whole, never cropped: fitted inside a square box on a soft background in the grid and
+the product gallery, and in their own shape in the hero. Clicking the main photo on a product page opens a
+full-screen viewer (`components/store/Lightbox.tsx`): arrows, keyboard and swipe to change photo; scroll wheel,
+click, double-tap, pinch or the buttons to zoom (up to 4x), then drag to pan; thumbnails, a counter and the
+photo's description; Esc, the X or the dark area to close.
+
 ## Environment variables (Vercel → Project → Settings → Environment Variables)
 
 | Name | Secret? | Purpose |

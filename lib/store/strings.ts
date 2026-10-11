@@ -68,6 +68,7 @@ const en = {
   checkoutFailed: 'Checkout could not be started. Please try again, or contact us.',
   success: { title: 'Thank you. Your order is in.', body: 'Stripe has emailed your receipt. We will email you again when your order ships.', back: 'Back to the store' },
   cancel: { title: 'Checkout was cancelled.', body: 'Nothing was charged. Your cart is still here.', back: 'Back to your cart' },
+  lightbox: { open: 'View photo {n} of {total} full screen', label: 'Photos of {name}', close: 'Close', previous: 'Previous photo', next: 'Next photo', zoomIn: 'Zoom in', zoomOut: 'Zoom out', counter: '{n} / {total}', show: 'Show photo {n}' },
   photoOf: 'Photo of {name}',
   noPhoto: 'No photo yet',
 };
@@ -134,6 +135,7 @@ const th: StoreStrings = {
   checkoutFailed: 'ไม่สามารถเริ่มการชำระเงินได้ โปรดลองอีกครั้ง หรือติดต่อเรา',
   success: { title: 'ขอบคุณ เราได้รับคำสั่งซื้อของคุณแล้ว', body: 'Stripe ได้ส่งใบเสร็จไปยังอีเมลของคุณแล้ว เราจะส่งอีเมลถึงคุณอีกครั้งเมื่อจัดส่งคำสั่งซื้อ', back: 'กลับไปที่ร้านค้า' },
   cancel: { title: 'ยกเลิกการชำระเงินแล้ว', body: 'ไม่มีการเรียกเก็บเงิน ตะกร้าของคุณยังอยู่ที่เดิม', back: 'กลับไปที่ตะกร้า' },
+  lightbox: { open: 'ดูรูปที่ {n} จาก {total} แบบเต็มจอ', label: 'รูปภาพของ {name}', close: 'ปิด', previous: 'รูปก่อนหน้า', next: 'รูปถัดไป', zoomIn: 'ซูมเข้า', zoomOut: 'ซูมออก', counter: '{n} / {total}', show: 'แสดงรูปที่ {n}' },
   photoOf: 'รูปภาพของ {name}',
   noPhoto: 'ยังไม่มีรูปภาพ',
 };
@@ -199,6 +201,7 @@ const vi: StoreStrings = {
   checkoutFailed: 'Không thể bắt đầu thanh toán. Vui lòng thử lại hoặc liên hệ với chúng tôi.',
   success: { title: 'Cảm ơn bạn. Đơn hàng đã được ghi nhận.', body: 'Stripe đã gửi biên nhận qua email cho bạn. Chúng tôi sẽ gửi email lần nữa khi đơn hàng được giao đi.', back: 'Quay lại cửa hàng' },
   cancel: { title: 'Đã hủy thanh toán.', body: 'Bạn chưa bị tính phí. Giỏ hàng của bạn vẫn còn nguyên.', back: 'Quay lại giỏ hàng' },
+  lightbox: { open: 'Xem ảnh {n} trên {total} toàn màn hình', label: 'Ảnh của {name}', close: 'Đóng', previous: 'Ảnh trước', next: 'Ảnh tiếp theo', zoomIn: 'Phóng to', zoomOut: 'Thu nhỏ', counter: '{n} / {total}', show: 'Hiện ảnh {n}' },
   photoOf: 'Ảnh của {name}',
   noPhoto: 'Chưa có ảnh',
 };
@@ -264,6 +267,7 @@ const id: StoreStrings = {
   checkoutFailed: 'Pembayaran tidak dapat dimulai. Silakan coba lagi, atau hubungi kami.',
   success: { title: 'Terima kasih. Pesanan Anda sudah masuk.', body: 'Stripe telah mengirim tanda terima ke email Anda. Kami akan mengirim email lagi saat pesanan Anda dikirim.', back: 'Kembali ke toko' },
   cancel: { title: 'Pembayaran dibatalkan.', body: 'Tidak ada yang ditagih. Keranjang Anda masih ada.', back: 'Kembali ke keranjang' },
+  lightbox: { open: 'Lihat foto {n} dari {total} layar penuh', label: 'Foto {name}', close: 'Tutup', previous: 'Foto sebelumnya', next: 'Foto berikutnya', zoomIn: 'Perbesar', zoomOut: 'Perkecil', counter: '{n} / {total}', show: 'Tampilkan foto {n}' },
   photoOf: 'Foto {name}',
   noPhoto: 'Belum ada foto',
 };
@@ -329,6 +333,7 @@ const fil: StoreStrings = {
   checkoutFailed: 'Hindi masimulan ang checkout. Pakisubukang muli, o makipag-ugnayan sa amin.',
   success: { title: 'Salamat. Natanggap na ang iyong order.', body: 'Ipinadala na ng Stripe ang iyong resibo sa email. Mag-e-email kaming muli kapag naipadala na ang iyong order.', back: 'Bumalik sa tindahan' },
   cancel: { title: 'Kinansela ang checkout.', body: 'Walang siningil. Nandito pa rin ang iyong cart.', back: 'Bumalik sa iyong cart' },
+  lightbox: { open: 'Tingnan ang larawan {n} sa {total} nang full screen', label: 'Mga larawan ng {name}', close: 'Isara', previous: 'Nakaraang larawan', next: 'Susunod na larawan', zoomIn: 'Palakihin', zoomOut: 'Paliitin', counter: '{n} / {total}', show: 'Ipakita ang larawan {n}' },
   photoOf: 'Larawan ng {name}',
   noPhoto: 'Wala pang larawan',
 };

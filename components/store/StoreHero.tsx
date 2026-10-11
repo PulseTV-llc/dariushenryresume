@@ -98,7 +98,7 @@ export default function StoreHero({ locale, t, chips, spotlight, hasProducts }: 
             {spotlight && text ? (
               <Link href={localePath(locale, `/store/${spotlight.slug}`)} className="sh-glass sh-float group block p-3 sm:p-4">
                 <div className="relative">
-                  <ProductImage image={spotlight.images[0]} name={text.name} t={t} sizes="(min-width: 1024px) 34vw, 90vw" priority className="!rounded-[1.25rem]" />
+                  <ProductImage image={spotlight.images[0]} name={text.name} t={t} sizes="(min-width: 1024px) 34vw, 90vw" priority tone="dark" shape="natural" className="!rounded-[1.25rem]" />
                   <span className="sh-tag">{h.featured}</span>
                   <OrbitalMark className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 sm:h-24 sm:w-24" />
                 </div>
