@@ -12,9 +12,6 @@ export function countryName(code: string, locale: Locale): string {
 }
 const THE = new Set(['US', 'GB', 'PH', 'NL', 'AE', 'BS', 'DO', 'CZ', 'MV', 'SC']);
 
-/** The product shown inside the hero: the first one on sale that has a photo, else the first on sale. */
-export const spotlightProduct = (products: StoreProduct[]): StoreProduct | null => products.find((p) => p.images.length > 0) ?? products[0] ?? null;
-
 /**
  * The three chips under the hero's buttons. Each one states only what the
  * store's settings and catalog make true right now:

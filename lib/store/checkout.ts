@@ -23,7 +23,9 @@ export function sessionParams(quote: Quote, locale: Locale, origin: string, coun
         product_data: {
           name: l.variant_title ? `${l.name} (${l.variant_title})` : l.name,
           ...(l.image ? { images: [imageUrl(l.image)] } : {}),
-          metadata: { product_id: l.product_id, variant_id: l.variant_id ?? '', sku: l.sku ?? '', name: l.name, variant_title: l.variant_title ?? '' },
+          // what was charged against: kept with the order by the webhook
+          metadata: { product_id: l.product_id, variant_id: l.variant_id ?? '', sku: l.sku ?? '', name: l.name, variant_title: l.variant_title ?? '',
+                      base_cents: l.base_cents == null ? '' : String(l.base_cents), tier_min: l.tier_min == null ? '' : String(l.tier_min), tier_max: l.tier_max == null ? '' : String(l.tier_max) },
         },
       },
     })),

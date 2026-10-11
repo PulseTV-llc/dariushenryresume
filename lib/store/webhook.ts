@@ -12,7 +12,10 @@ export const WEBHOOK_EVENTS = [
   'charge.refunded',
 ] as const;
 
-export interface OrderItem { product_id: string | null; variant_id: string | null; name: string; variant_title: string | null; sku: string | null; unit_cents: number; quantity: number }
+export interface OrderItem {
+  product_id: string | null; variant_id: string | null; name: string; variant_title: string | null; sku: string | null; unit_cents: number; quantity: number;
+  base_cents: number | null; tier_min: number | null; tier_max: number | null;
+}
 export interface WebhookDeps {
   lineItems(sessionId: string): Promise<Stripe.LineItem[]>;
   recordOrder(eventId: string, eventType: string, session: Record<string, unknown>, items: OrderItem[]): Promise<{ number: number; duplicate: boolean; oversold?: boolean }>;
@@ -23,6 +26,8 @@ export type Outcome = { handled: 'recorded' | 'duplicate' | 'refunded'; number?:
 
 const id = (v: string | { id: string } | null | undefined) => (typeof v === 'string' ? v : v?.id ?? null);
 
+const int = (v: string | undefined) => (v && /^\d+$/.test(v) ? Number(v) : null);
+
 export function orderItems(lines: Stripe.LineItem[]): OrderItem[] {
   return lines.map((l) => {
     const product = l.price?.product;
@@ -32,6 +37,7 @@ export function orderItems(lines: Stripe.LineItem[]): OrderItem[] {
       product_id: meta.product_id || null, variant_id: meta.variant_id || null, name: meta.name || l.description || 'Item',
       variant_title: meta.variant_title || null, sku: meta.sku || null,
       unit_cents: l.price?.unit_amount ?? Math.round((l.amount_subtotal ?? 0) / Math.max(quantity, 1)), quantity,
+      base_cents: int(meta.base_cents), tier_min: int(meta.tier_min), tier_max: int(meta.tier_max),
     };
   });
 }

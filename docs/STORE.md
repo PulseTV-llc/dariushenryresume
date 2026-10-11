@@ -19,11 +19,11 @@ interface text (`lib/store/strings.ts`); a product shows its own translation if 
 ## The hero on `/store`
 
 The dark card at the top (`components/store/StoreHero.tsx`, styles under "Store hero" in `app/globals.css`)
-features the first product on sale that has a photo, with its price; with nothing on sale it shows the VexaOs
-mark instead and the first button becomes "Ask about mounts". Its three chips are computed from the catalog
-and settings (`lib/store/hero.ts`): what the hardware is for; "Made to order" or "In stock" only when that is
-true of everything on sale, otherwise how you pay; and shipping. All motion stops for visitors who prefer
-reduced motion. Screenshot: `docs/design/screenshots/store-hero.png`.
+always shows the brand: the living VexaOs mark and the sensor → Edge Gateway → cloud → apps flow. It never shows
+a product photo. With nothing on sale the first button becomes "Ask about mounts". Its three chips are computed
+from the catalog and settings (`lib/store/hero.ts`): what the hardware is for; "Made to order" or "In stock" only
+when that is true of everything on sale, otherwise how you pay; and shipping. All motion stops for visitors who
+prefer reduced motion. Screenshot: `docs/design/screenshots/store-hero.png`.
 
 ## Product photos
 
@@ -32,6 +32,25 @@ the product gallery, and in their own shape in the hero. Clicking the main photo
 full-screen viewer (`components/store/Lightbox.tsx`): arrows, keyboard and swipe to change photo; scroll wheel,
 click, double-tap, pinch or the buttons to zoom (up to 4x), then drag to pan; thumbnails, a counter and the
 photo's description; Esc, the X or the dark area to close.
+
+## Bulk pricing
+
+A product can cost less per unit in quantity ranges, set in the admin under **Bulk pricing**: rows of
+"from – to – price each" (for example 2–10, 11–30, 31 and up). Quantity 1 is always the normal price.
+
+- Ranges must follow each other with no gaps or overlaps; only the last may be open-ended. The admin shows what
+  is wrong as you type and the database refuses anything else.
+- **Largest order** is the most of one item an order may contain (10 unless changed, up to 10,000). It cannot lie
+  beyond a closed last range. With **Offer "contact us" for more**, shoppers at the limit see a contact link.
+- **"% off per range"** fills the prices in: each range that much cheaper than the one before.
+- A range that costs more than the previous one, or no less than the normal price, is allowed but flagged.
+- Variants: "Product price" ranges apply to every variant without its own price. A variant with its own price
+  keeps it unless you give it its own ranges (choose it under "Prices for").
+- Shoppers see a "Buy more, save" table; the price follows the quantity, with "You save …". The cart shows the
+  bulk price per line.
+- The price charged is worked out by the database from the quantity (`store.unit_price`), never taken from the
+  browser. Each order line keeps the unit price, the normal price and the range that applied, so later price
+  changes do not alter past orders. Stock on hand still limits what can be ordered.
 
 ## Environment variables (Vercel → Project → Settings → Environment Variables)
 

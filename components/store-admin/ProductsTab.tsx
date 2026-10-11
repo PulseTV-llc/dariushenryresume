@@ -6,11 +6,13 @@ import { ArrowDown, ArrowLeft, ArrowUp, ImagePlus, Loader2, Plus, Trash2 } from 
 import { LOCALES, LOCALE_INFO } from '@/lib/i18n/config';
 import { call, refreshSite, removeFiles, removeImage, uploadImage } from '@/lib/store/admin-client';
 import {
-  emptyForm, formFromProduct, move, parseOptions, previewProduct, productPayload, readiness, slugify, variantsFromOptions,
-  type ProductForm, type VariantForm,
+  addTierRow, applyStepDiscount, emptyForm, formFromProduct, move, newKey, parseMoney, parseOptions, parseTiers, previewProduct, productPayload, readiness,
+  slugify, suggestMaxQuantity, tierProblems, tierSummary, variantsFromOptions,
+  type ProductForm, type TierForm, type VariantForm,
 } from '@/lib/store/admin-logic';
 import { imageUrl } from '@/lib/store/config';
 import { money, priceLabel } from '@/lib/store/format';
+import { rangeLabel } from '@/lib/store/pricing';
 import { storeStrings } from '@/lib/store/strings';
 import type { ProductStatus, StoreCategory, StoreProduct } from '@/lib/store/types';
 import { Availability, ProductImage } from '@/components/store/StoreParts';
@@ -21,6 +23,97 @@ const T = storeStrings('en');
 const Label = ({ text, hint, children }: { text: string; hint?: string; children: React.ReactNode }) => (
   <label className="block text-sm font-medium text-slate-800">{text}{children}{hint && <span className="mt-1 block text-xs font-normal text-slate-500">{hint}</span>}</label>
 );
+
+/**
+ * Bulk pricing: quantity ranges with a price per unit. One list for the product's own price, and one for any
+ * variant that should have its own. The database checks the same rules again when the product is saved.
+ */
+function BulkPricing({ form, set }: { form: ProductForm; set: (patch: Partial<ProductForm>) => void }) {
+  const [scope, setScope] = useState('');
+  const [percent, setPercent] = useState('10');
+  const owner = scope === '' ? null : form.variants.find((v) => v.key === scope) ?? null;
+  const active = scope !== '' && !owner ? '' : scope;
+  const cents = (text: string) => { const r = parseMoney(text, form.currency); return 'cents' in r ? r.cents : null; };
+  const base = (owner ? cents(owner.price) : null) ?? cents(form.price);
+  const rows = form.tiers.filter((r) => r.scope === active);
+  const parsed = parseTiers(rows, form.currency);
+  const maxQuantity = Math.max(1, Math.floor(Number(form.maxQuantity)) || 0);
+  const check = 'tiers' in parsed ? tierProblems(parsed.tiers, base, maxQuantity) : { errors: [parsed.error], warnings: [] };
+  const fmt = (c: number) => money(c, form.currency);
+  const update = (row: TierForm, patch: Partial<TierForm>) => set({ tiers: form.tiers.map((r) => (r === row ? { ...r, ...patch } : r)) });
+  const withMax = (tiers: TierForm[]) => {
+    const p = parseTiers(tiers.filter((r) => r.scope === active), form.currency);
+    return 'tiers' in p ? { tiers, maxQuantity: String(Math.max(maxQuantity, suggestMaxQuantity(maxQuantity, p.tiers))) } : { tiers };
+  };
+  const scopes = [{ key: '', label: 'Product price' }, ...form.variants.filter((v) => v.title.trim()).map((v) => ({ key: v.key, label: v.title }))];
+  return (
+    <section className={`${CARD} space-y-3`}>
+      <h3 className="text-base font-semibold">Bulk pricing</h3>
+      <p className="text-xs text-slate-500">A lower price per unit when more are bought. Quantity 1 is always the normal price; add ranges such as 2–10 and 11–30. Leave the last “to” empty for “and up”.</p>
+      {form.variants.length > 0 && (
+        <label className="block text-sm font-medium text-slate-800">Prices for
+          <select value={active} onChange={(e) => setScope(e.target.value)} className={`${INPUT} mt-1`}>
+            {scopes.map((s) => <option key={s.key} value={s.key}>{s.label}{form.tiers.some((r) => r.scope === s.key) ? ' ✓' : ''}</option>)}
+          </select>
+          <span className="mt-1 block text-xs font-normal text-slate-500">“Product price” applies to every variant without its own price. A variant with its own price keeps it unless you give it ranges here.</span>
+        </label>
+      )}
+      {rows.length > 0 && (
+        <ul className="space-y-2">
+          <li className="grid grid-cols-[1fr_1fr_1.3fr_auto] items-center gap-2 text-xs font-medium text-slate-500" aria-hidden="true"><span>From</span><span>To</span><span>Price each</span><span className="w-10" /></li>
+          <li className="grid grid-cols-[1fr_1fr_1.3fr_auto] items-center gap-2 text-sm text-slate-500">
+            <span className="rounded-xl bg-slate-100 px-3 py-2.5">1</span>
+            <span className="rounded-xl bg-slate-100 px-3 py-2.5">{'tiers' in parsed && parsed.tiers[0] ? Math.max(1, parsed.tiers[0].min_qty - 1) : '—'}</span>
+            <span className="rounded-xl bg-slate-100 px-3 py-2.5">{base == null ? 'set a price' : fmt(base)}</span><span className="w-10" />
+          </li>
+          {rows.map((r, i) => {
+            const price = cents(r.price);
+            const pct = base != null && base > 0 && price != null ? Math.round(((base - price) / base) * 100) : null;
+            return (
+              <li key={i} className="grid grid-cols-[1fr_1fr_1.3fr_auto] items-start gap-2">
+                <input inputMode="numeric" value={r.min} aria-label={`Range ${i + 1}: from quantity`} onChange={(e) => update(r, { min: e.target.value.replace(/\D/g, '') })} className={INPUT} />
+                <input inputMode="numeric" value={r.max} placeholder="and up" aria-label={`Range ${i + 1}: to quantity (empty for and up)`} onChange={(e) => update(r, { max: e.target.value.replace(/\D/g, '') })} className={INPUT} />
+                <span>
+                  <input inputMode="decimal" value={r.price} placeholder="0.00" aria-label={`Range ${i + 1}: price each`} onChange={(e) => update(r, { price: e.target.value })} className={INPUT} />
+                  {pct != null && <span className={`mt-0.5 block text-xs ${pct > 0 ? 'text-emerald-700' : 'text-amber-700'}`}>{pct > 0 ? `${pct}% off` : pct === 0 ? 'same as normal' : `${-pct}% more`}</span>}
+                </span>
+                <button type="button" onClick={() => set({ tiers: form.tiers.filter((x) => x !== r) })} aria-label={`Remove range ${i + 1}`} className="inline-flex h-11 w-10 items-center justify-center rounded-lg text-rose-500 hover:bg-rose-50"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="button" onClick={() => set(withMax(addTierRow(form.tiers, active)))} className={`${BTN_QUIET} !h-10`}><Plus className="h-4 w-4" aria-hidden="true" />Add range</button>
+        {rows.length > 0 && (
+          <span className="flex items-center gap-2 text-sm text-slate-600">
+            <input inputMode="decimal" value={percent} aria-label="Percent cheaper per range" onChange={(e) => setPercent(e.target.value.replace(/[^\d.]/g, ''))} className={`${INPUT} !h-10 !w-16`} />
+            <button type="button" disabled={base == null} onClick={() => set({ tiers: applyStepDiscount(form.tiers, active, base, Number(percent), form.currency) })} className={`${BTN_QUIET} !h-10`}>% off per range</button>
+          </span>
+        )}
+      </div>
+      {rows.length > 0 && <p className="text-xs text-slate-500">“% off per range” fills in the prices: each range that much cheaper than the one before, starting from the normal price.</p>}
+      {check.errors.map((e) => <p key={e} role="alert" className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-900 ring-1 ring-rose-200">{e}</p>)}
+      {check.warnings.map((w) => <p key={w} className="rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-200">Check: {w}</p>)}
+      {'tiers' in parsed && parsed.tiers.length > 0 && base != null && check.errors.length === 0 && (
+        <div className="rounded-xl border border-slate-200 p-3 text-sm" aria-label="Bulk price preview">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Shoppers will see</p>
+          <p className="mt-1 text-slate-800">{tierSummary(parsed.tiers, base, fmt)}</p>
+        </div>
+      )}
+      <div className="grid gap-3 border-t border-slate-100 pt-3 sm:grid-cols-2">
+        <label className="block text-sm font-medium text-slate-800">Largest order (per item)
+          <input inputMode="numeric" value={form.maxQuantity} onChange={(e) => set({ maxQuantity: e.target.value.replace(/\D/g, '') })} className={`${INPUT} mt-1`} />
+          <span className="mt-1 block text-xs font-normal text-slate-500">The most of this item one order can contain{form.inventory_mode === 'tracked' ? ' (stock on hand still limits it)' : ''}.</span>
+        </label>
+        <label className="flex items-start gap-3 rounded-xl border border-slate-300 p-3 text-sm">
+          <input type="checkbox" checked={form.bulkContact} onChange={(e) => set({ bulkContact: e.target.checked })} className="mt-1" />
+          <span><span className="block font-semibold">Offer “contact us” for more</span><span className="block text-xs text-slate-500">Shows “Need more than {maxQuantity || '…'}? Contact us” when a shopper reaches the largest order.</span></span>
+        </label>
+      </div>
+    </section>
+  );
+}
 
 function Editor({ initial, categories, onClose, onCategories }: {
   initial: StoreProduct | null; categories: StoreCategory[]; onClose: (changed: boolean) => void; onCategories: () => void;
@@ -186,6 +279,8 @@ function Editor({ initial, categories, onClose, onCategories }: {
             </div>
           </section>
 
+          <BulkPricing form={form} set={set} />
+
           <section className={`${CARD} space-y-3`}>
             <h3 className="text-base font-semibold">Options and variants</h3>
             <p className="text-xs text-slate-500">For a product that comes in versions (colour, size). Leave empty for a single item.</p>
@@ -199,12 +294,12 @@ function Editor({ initial, categories, onClose, onCategories }: {
             <div className="flex flex-wrap gap-2">
               {form.options.length < 3 && <button type="button" onClick={() => set({ options: [...form.options, { name: '', values: '' }] })} className={`${BTN_QUIET} !h-10`}><Plus className="h-4 w-4" aria-hidden="true" />Add option</button>}
               {parseOptions(form.options).length > 0 && <button type="button" onClick={() => set({ variants: variantsFromOptions(parseOptions(form.options), form.variants) })} className={`${BTN_QUIET} !h-10`}>Create variants from options</button>}
-              <button type="button" onClick={() => set({ variants: [...form.variants, { title: '', sku: '', price: '', inventory: '0', active: true, option_values: {} }] })} className={`${BTN_QUIET} !h-10`}><Plus className="h-4 w-4" aria-hidden="true" />Add variant</button>
+              <button type="button" onClick={() => set({ variants: [...form.variants, { key: newKey(), title: '', sku: '', price: '', inventory: '0', active: true, option_values: {} }] })} className={`${BTN_QUIET} !h-10`}><Plus className="h-4 w-4" aria-hidden="true" />Add variant</button>
             </div>
             {form.variants.length > 0 && (
               <ul className="space-y-2">
                 {form.variants.map((v, i) => (
-                  <li key={v.id ?? `n${i}`} className="grid grid-cols-2 gap-2 rounded-xl border border-slate-200 p-2 sm:grid-cols-[2fr_1fr_1fr_1fr_auto]">
+                  <li key={v.key} className="grid grid-cols-2 gap-2 rounded-xl border border-slate-200 p-2 sm:grid-cols-[2fr_1fr_1fr_1fr_auto]">
                     <input value={v.title} placeholder="Name (Black)" aria-label="Variant name" onChange={(e) => setVariant(i, { title: e.target.value })} className={`${INPUT} col-span-2 sm:col-span-1`} />
                     <input value={v.sku} placeholder="SKU" aria-label="SKU" onChange={(e) => setVariant(i, { sku: e.target.value })} className={INPUT} />
                     <input value={v.price} inputMode="decimal" placeholder={form.price || 'Price'} aria-label="Variant price (empty: the product price)" onChange={(e) => setVariant(i, { price: e.target.value })} className={INPUT} />
@@ -271,6 +366,10 @@ function Editor({ initial, categories, onClose, onCategories }: {
               </div>
               {preview.inventory_mode === 'made_to_order' && preview.lead_time_days != null && <p className="mt-1 text-xs text-slate-500">{T.leadTime.replace('{days}', String(preview.lead_time_days))}</p>}
               {preview.variants.length > 0 && <p className="mt-2 text-xs text-slate-500">{preview.variants.map((v) => v.title).filter(Boolean).join(' · ')}</p>}
+              {(preview.price_tiers ?? []).filter((x) => x.variant_id === null).length > 0 && preview.price_cents != null && (
+                <p className="mt-2 rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs text-slate-700"><span className="font-semibold">{T.bulk.title}:</span>{' '}
+                  {(preview.price_tiers ?? []).filter((x) => x.variant_id === null).map((x) => `${rangeLabel(x.min_qty, x.max_qty)} ${money(x.unit_cents, preview.currency)}`).join(' · ')}</p>
+              )}
               <span className="mt-3 inline-flex h-10 items-center rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white opacity-90">{preview.from_cents != null && preview.available ? T.addToCart : T.contactToOrder}</span>
               {preview.description && <p className="mt-3 line-clamp-6 whitespace-pre-line text-sm text-slate-700">{preview.description}</p>}
             </div>

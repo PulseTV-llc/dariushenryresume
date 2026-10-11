@@ -1,7 +1,8 @@
 import type { CartItem } from './types';
 
 /** Cart rules. Pure: the browser keeps the list, the database decides prices and availability at checkout. */
-export const MAX_QUANTITY = 10;
+/** A sanity cap only: the real limit per product (and bulk prices) come from the database. */
+export const MAX_QUANTITY = 10000;
 export const MAX_LINES = 20;
 export const CART_KEY = 'vx_cart_v1';
 

@@ -3,15 +3,17 @@ import Stripe from 'stripe';
 import { LOCALES } from '@/lib/i18n/config';
 import { addItem, cartCount, parseCart, quoteItems, removeItem, setQuantity } from './cart';
 import { checkoutBlock, checkoutEnabled, shipCountries, shipsFrom } from './config';
-import { countryName, heroChips, spotlightProduct } from './hero';
+import { countryName, heroChips } from './hero';
 import { SESSION_SOURCE, sessionParams } from './checkout';
 import { minorUnit, money, priceLabel, productText } from './format';
 import { productSchema, storeListSchema } from './jsonld';
 import { STORE_STRINGS } from './strings';
 import { WEBHOOK_EVENTS, handleStripeEvent, orderItems, sessionSummary, type WebhookDeps } from './webhook';
 import {
+  addTierRow, applyStepDiscount, parseTiers, suggestMaxQuantity, tierProblems, tierSummary,
   emptyForm, formFromProduct, move, moneyInput, parseMoney, parseOptions, previewProduct, productPayload, readiness, slugify, variantsFromOptions,
 } from './admin-logic';
+import { activeRow, lineSavings, rangeLabel, tierRows, tiersFor, unitPrice } from './pricing';
 import { FIT, clampView, swipeDirection, wrap, zoomAt } from './zoom';
 import type { Quote, StoreProduct } from './types';
 
@@ -29,7 +31,9 @@ describe('cart', () => {
     c = addItem(c, A, null, 3);
     c = addItem(c, A, V, 1);
     expect(c).toEqual([{ productId: A, variantId: null, quantity: 5 }, { productId: A, variantId: V, quantity: 1 }]);
-    expect(addItem(c, A, null, 50)[0].quantity).toBe(10);
+    expect(addItem(c, A, null, 50)[0].quantity).toBe(55);
+    expect(addItem(c, A, null, 50, 30)[0].quantity).toBe(30);
+    expect(addItem(c, A, null, 99999)[0].quantity).toBe(10000);
     expect(addItem([], A, null, 9, 3)[0].quantity).toBe(3);
     expect(setQuantity(c, A, V, 4)[1].quantity).toBe(4);
     expect(setQuantity(c, A, V, 0)).toHaveLength(1);
@@ -41,7 +45,7 @@ describe('cart', () => {
     expect(parseCart({})).toEqual([]);
     expect(parseCart(JSON.stringify([{ productId: A, quantity: 2, price_cents: 1 }, { productId: 'x', quantity: 1 }, { productId: B, variantId: 'nope', quantity: 1 },
       { product_id: B, variant_id: null, quantity: 99 }, { productId: A, quantity: -1 }])))
-      .toEqual([{ productId: A, variantId: null, quantity: 2 }, { productId: B, variantId: null, quantity: 10 }]);
+      .toEqual([{ productId: A, variantId: null, quantity: 2 }, { productId: B, variantId: null, quantity: 99 }]);
   });
 });
 
@@ -110,7 +114,7 @@ describe('interface strings', () => {
 describe('Stripe Checkout session', () => {
   const quote: Quote = { currency: 'usd', subtotal_cents: 4050, lines: [
     { product_id: A, variant_id: null, slug: 'bracket', name: 'Bracket', variant_title: null, sku: null, unit_cents: 1800, quantity: 2, image: 'products/a/x y.webp', made_to_order: false },
-    { product_id: B, variant_id: V, slug: 'clip', name: 'Clip', variant_title: 'Large', sku: 'CL-L', unit_cents: 450, quantity: 1, image: null, made_to_order: false }] };
+    { product_id: B, variant_id: V, slug: 'clip', name: 'Clip', variant_title: 'Large', sku: 'CL-L', unit_cents: 450, quantity: 12, image: null, made_to_order: false, base_cents: 600, tier_min: 11, tier_max: 30 }] };
   it('is built only from the database quote', () => {
     const p = sessionParams(quote, 'th', 'https://www.vexaos.io', ['US', 'TH']);
     expect(p.mode).toBe('payment');
@@ -125,7 +129,10 @@ describe('Stripe Checkout session', () => {
     expect(a.price_data?.product_data?.images?.[0]).toMatch(/store-images\/products\/a\/x%20y\.webp$/);
     expect(b.price_data?.product_data?.name).toBe('Clip (Large)');
     expect(b.price_data?.product_data?.images).toBeUndefined();
-    expect(b.price_data?.product_data?.metadata).toEqual({ product_id: B, variant_id: V, sku: 'CL-L', name: 'Clip', variant_title: 'Large' });
+    // the bulk price is the unit amount; what it was measured against travels in the metadata for the order record
+    expect([b.quantity, b.price_data?.unit_amount]).toEqual([12, 450]);
+    expect(b.price_data?.product_data?.metadata).toEqual({ product_id: B, variant_id: V, sku: 'CL-L', name: 'Clip', variant_title: 'Large', base_cents: '600', tier_min: '11', tier_max: '30' });
+    expect(a.price_data?.product_data?.metadata).toMatchObject({ base_cents: '', tier_min: '', tier_max: '' });
   });
 });
 
@@ -136,7 +143,7 @@ describe('webhook', () => {
     collected_information: { shipping_details: { name: 'Pat Buyer', address: { line1: '1 Main St', country: 'US' } } }, ...o });
   const event = (type: string, object: unknown, id = 'evt_1') => ({ id, type, data: { object } }) as unknown as Stripe.Event;
   const lines = [{ quantity: 2, amount_subtotal: 3600, description: 'Bracket', price: { unit_amount: 1800, product: { id: 'prod_1', metadata: { product_id: A, variant_id: '', name: 'Bracket', sku: '', variant_title: '' } } } },
-    { quantity: 1, amount_subtotal: 450, description: 'Clip (Large)', price: { unit_amount: 450, product: { id: 'prod_2', metadata: { product_id: B, variant_id: V, name: 'Clip', sku: 'CL-L', variant_title: 'Large' } } } }] as unknown as Stripe.LineItem[];
+    { quantity: 12, amount_subtotal: 5400, description: 'Clip (Large)', price: { unit_amount: 450, product: { id: 'prod_2', metadata: { product_id: B, variant_id: V, name: 'Clip', sku: 'CL-L', variant_title: 'Large', base_cents: '600', tier_min: '31', tier_max: '' } } } }] as unknown as Stripe.LineItem[];
   const deps = () => {
     const calls: unknown[][] = [];
     const d: WebhookDeps = {
@@ -156,8 +163,8 @@ describe('webhook', () => {
     expect([eventId, type]).toEqual(['evt_1', 'checkout.session.completed']);
     expect(summary).toMatchObject({ id: 'cs_test_1', payment_intent: 'pi_1', email: 'buyer@example.com', currency: 'usd', subtotal_cents: 3600, shipping_cents: 500, total_cents: 4100, livemode: false, locale: 'vi' });
     expect((summary.shipping as { address: { line1: string } }).address.line1).toBe('1 Main St');
-    expect(items).toEqual([{ product_id: A, variant_id: null, name: 'Bracket', variant_title: null, sku: null, unit_cents: 1800, quantity: 2 },
-      { product_id: B, variant_id: V, name: 'Clip', variant_title: 'Large', sku: 'CL-L', unit_cents: 450, quantity: 1 }]);
+    expect(items).toEqual([{ product_id: A, variant_id: null, name: 'Bracket', variant_title: null, sku: null, unit_cents: 1800, quantity: 2, base_cents: null, tier_min: null, tier_max: null },
+      { product_id: B, variant_id: V, name: 'Clip', variant_title: 'Large', sku: 'CL-L', unit_cents: 450, quantity: 12, base_cents: 600, tier_min: 31, tier_max: null }]);
   });
   it('reads shipping from the older place too', () => {
     const s = session({ collected_information: undefined, shipping_details: { name: 'Old', address: { line1: '2 Side St' } } });
@@ -225,7 +232,7 @@ describe('admin form', () => {
   it('builds variants from options and keeps what was entered', () => {
     const options = parseOptions([{ name: ' Color ', values: 'Black, White, Black' }, { name: 'Size', values: 'S,L' }, { name: '', values: 'x' }]);
     expect(options).toEqual([{ name: 'Color', values: ['Black', 'White'] }, { name: 'Size', values: ['S', 'L'] }]);
-    const made = variantsFromOptions(options, [{ title: 'Black / L', sku: 'B-L', price: '20', inventory: '4', active: true, option_values: {} }]);
+    const made = variantsFromOptions(options, [{ key: 'k1', title: 'Black / L', sku: 'B-L', price: '20', inventory: '4', active: true, option_values: {} }]);
     expect(made.map((v) => v.title)).toEqual(['Black / S', 'Black / L', 'White / S', 'White / L']);
     expect(made[1]).toMatchObject({ sku: 'B-L', price: '20', inventory: '4', option_values: { Color: 'Black', Size: 'L' } });
     expect(move(['a', 'b', 'c'], 2, -1)).toEqual(['a', 'c', 'b']);
@@ -239,9 +246,9 @@ describe('admin form', () => {
     expect(productPayload({ ...f, status: 'active' })).toEqual({ error: 'Set a price before making the product active.' });
     expect(productPayload({ ...f, price: '10', compareAt: '8' })).toHaveProperty('error');
     expect(productPayload({ ...f, inventory: '1.5' })).toEqual({ error: 'Stock must be a whole number.' });
-    expect(productPayload({ ...f, variants: [{ title: 'A', sku: '', price: '', inventory: '0', active: true, option_values: {} }, { title: 'a', sku: '', price: '', inventory: '0', active: true, option_values: {} }] })).toEqual({ error: 'Two variants have the same name.' });
+    expect(productPayload({ ...f, variants: [{ key: 'a', title: 'A', sku: '', price: '', inventory: '0', active: true, option_values: {} }, { key: 'b', title: 'a', sku: '', price: '', inventory: '0', active: true, option_values: {} }] })).toEqual({ error: 'Two variants have the same name.' });
     const ok = productPayload({ ...f, status: 'active', price: '18', inventory: '5', summary: ' Holds a sensor. ', translations: { th: { name: 'ขายึด', summary: ' ' }, vi: {} },
-      variants: [{ title: 'Black', sku: ' BK ', price: '', inventory: '3', active: true, option_values: { Color: 'Black' } }] });
+      variants: [{ key: 'bk', title: 'Black', sku: ' BK ', price: '', inventory: '3', active: true, option_values: { Color: 'Black' } }] });
     expect(ok).toEqual({ payload: expect.objectContaining({ status: 'active', price_cents: 1800, inventory: 5, summary: 'Holds a sensor.', category_id: null, lead_time_days: null,
       translations: { th: { name: 'ขายึด' } }, variants: [{ id: undefined, title: 'Black', sku: 'BK', price_cents: null, inventory: 3, active: true, option_values: { Color: 'Black' } }] }) });
   });
@@ -280,10 +287,6 @@ describe('store hero: chips only say what the settings make true', () => {
     expect(heroChips({ ...base, products: [], locale: 'th', t: STORE_STRINGS.th })[2]).toBe('จัดส่งไปยังสหรัฐอเมริกา');
     expect([countryName('US', 'vi'), countryName('PH', 'en'), countryName('PH', 'fil')]).toEqual(['Hoa Kỳ', 'the Philippines', 'Pilipinas']);
   });
-  it('features a product on sale that has a photo, else the first one, else none', () => {
-    const bare = product({ id: B, images: [] });
-    expect([spotlightProduct([bare, product()])?.id, spotlightProduct([bare])?.id, spotlightProduct([])]).toEqual([A, B, null]);
-  });
 });
 
 describe('photo viewer: zoom, pan and swipe', () => {
@@ -303,5 +306,93 @@ describe('photo viewer: zoom, pan and swipe', () => {
   it('a sideways flick turns the page; a short or mostly vertical one does not', () => {
     expect([swipeDirection(-80, 5), swipeDirection(90, -10), swipeDirection(-30, 0), swipeDirection(-80, 90), swipeDirection(0, 0)]).toEqual([1, -1, 0, 0, 0]);
     expect([wrap(5, 5), wrap(-1, 5), wrap(2, 5), wrap(0, 1)]).toEqual([0, 4, 2, 0]);
+  });
+});
+
+describe('bulk prices on the storefront (display only; the database charges)', () => {
+  const tier = (min_qty: number, max_qty: number | null, unit_cents: number, variant_id: string | null = null) => ({ variant_id, min_qty, max_qty, unit_cents });
+  const variant = (id: string, price_cents: number, own_price: boolean) => ({ id, title: id, option_values: {}, price_cents, own_price, available: true, max_quantity: 100 });
+  const p = product({ price_tiers: [tier(31, null, 1200), tier(2, 10, 1600), tier(11, 30, 1400), tier(2, null, 8000, 'gold')],
+    variants: [variant('black', 1800, false), variant('steel', 3000, true), variant('gold', 9000, true)] });
+  it('finds the price at every boundary', () => {
+    expect([1, 2, 10, 11, 30, 31, 500].map((n) => unitPrice(p, null, n).unit_cents)).toEqual([1800, 1600, 1600, 1400, 1400, 1200, 1200]);
+    expect(unitPrice(p, null, 11)).toMatchObject({ base_cents: 1800, tier: { min_qty: 11, max_qty: 30 } });
+    expect(unitPrice(p, null, 1).tier).toBeNull();
+  });
+  it('a variant uses the product\'s ranges, keeps its own price, or uses its own ranges', () => {
+    const [black, steel, gold] = p.variants;
+    expect([unitPrice(p, black, 11).unit_cents, unitPrice(p, steel, 50).unit_cents, unitPrice(p, gold, 1).unit_cents, unitPrice(p, gold, 2).unit_cents]).toEqual([1400, 3000, 9000, 8000]);
+    expect([tiersFor(p, black).length, tiersFor(p, steel).length, tiersFor(p, gold).length]).toEqual([3, 0, 1]);
+  });
+  it('lists every range with its saving, and marks the one a quantity falls in', () => {
+    const rows = tierRows(p);
+    expect(rows.map((r) => [rangeLabel(r.min, r.max), r.unit_cents, r.savePct, r.base])).toEqual([['1', 1800, 0, true], ['2–10', 1600, 11, false], ['11–30', 1400, 22, false], ['31+', 1200, 33, false]]);
+    expect([1, 10, 11, 31].map((n) => activeRow(rows, n))).toEqual([0, 1, 2, 3]);
+    expect(tierRows(product())).toEqual([]);
+    expect(tierRows(product({ price_cents: null, price_tiers: [tier(2, null, 100)] }))).toEqual([]);
+    expect(rangeLabel(1, 4)).toBe('1–4');
+    expect([lineSavings(1800, 1400, 12), lineSavings(1800, 1800, 5), lineSavings(null, 1400, 3), lineSavings(1000, 1200, 3)]).toEqual([4800, 0, 0, 0]);
+  });
+});
+
+describe('bulk pricing in the admin form', () => {
+  const row = (min: string, max: string, price: string, scope = '') => ({ scope, min, max, price });
+  const good = [{ min_qty: 2, max_qty: 10, unit_cents: 1600 }, { min_qty: 11, max_qty: 30, unit_cents: 1400 }, { min_qty: 31, max_qty: null, unit_cents: 1200 }];
+  it('reads the rows as typed', () => {
+    expect(parseTiers([row('11', '30', '14'), row('2', '10', '16.00'), row('31', '', '12')])).toEqual({ tiers: good });
+    expect(parseTiers([row('', '10', '16')])).toHaveProperty('error');
+    expect(parseTiers([row('2', 'ten', '16')])).toHaveProperty('error');
+    expect(parseTiers([row('2', '10', '')])).toEqual({ error: 'Every range needs a price.' });
+    expect(parseTiers([row('2', '10', '1.999')])).toHaveProperty('error');
+  });
+  it('finds gaps, overlaps, misplaced open ends and ranges the largest order cannot reach', () => {
+    expect(tierProblems(good, 1800, 500)).toEqual({ errors: [], warnings: [] });
+    expect(tierProblems([], null, 10)).toEqual({ errors: [], warnings: [] });
+    const first = (tiers: typeof good, base: number | null = 1800, max = 500) => tierProblems(tiers, base, max).errors[0];
+    expect(first([good[0], { min_qty: 12, max_qty: 30, unit_cents: 1400 }])).toMatch(/gap between 10 and 12.*start at 11/);
+    expect(first([good[0], { min_qty: 10, max_qty: 30, unit_cents: 1400 }])).toMatch(/2–10 and 10–30 overlap/);
+    expect(first([{ min_qty: 2, max_qty: null, unit_cents: 1600 }, good[1]])).toMatch(/Only the last range/);
+    expect(first([{ min_qty: 1, max_qty: 10, unit_cents: 1600 }])).toMatch(/starts at 2 or more/);
+    expect(first([{ min_qty: 5, max_qty: 3, unit_cents: 1600 }], 1800, 3)).toMatch(/ends before it starts/);
+    expect(first([good[0], good[1]], 1800, 50)).toMatch(/largest order \(50\) is beyond your last range/);
+    expect(first(good, 1800, 20)).toMatch(/31\+ starts above the largest order \(20\)/);
+    expect(first(good, null)).toMatch(/Set the price for one item first/);
+  });
+  it('warns, without refusing, when a bigger quantity costs more or nothing is saved', () => {
+    const r = tierProblems([{ min_qty: 2, max_qty: 10, unit_cents: 1800 }, { min_qty: 11, max_qty: null, unit_cents: 1900 }], 1800, 100);
+    expect(r.errors).toEqual([]);
+    expect(r.warnings).toEqual(['2–10 is not cheaper than the normal price.', '11+ costs more per unit than 2–10.', '11+ is not cheaper than the normal price.']);
+  });
+  it('adds rows that continue the list, fills prices by a percentage, and suggests a largest order', () => {
+    let rows = addTierRow([], '');
+    expect(rows).toEqual([row('2', '10', '')]);
+    rows = addTierRow(rows, '');
+    expect(rows.map((r) => [r.min, r.max])).toEqual([['2', '10'], ['11', '']]);
+    rows = addTierRow(rows, '');                       // the open-ended row is closed, the new one carries on
+    expect(rows.map((r) => [r.min, r.max])).toEqual([['2', '10'], ['11', '20'], ['21', '']]);
+    expect(addTierRow(rows, 'v1').filter((r) => r.scope === 'v1')).toEqual([row('2', '10', '', 'v1')]);
+    expect(applyStepDiscount(rows, '', 2000, 10).map((r) => r.price)).toEqual(['18.00', '16.20', '14.58']);
+    expect(applyStepDiscount(rows, '', null, 10)).toBe(rows);
+    expect(applyStepDiscount(rows, '', 2000, 0)).toBe(rows);
+    expect([suggestMaxQuantity(10, good), suggestMaxQuantity(250, good), suggestMaxQuantity(10, good.slice(0, 2)), suggestMaxQuantity(10, [])]).toEqual([100, 250, 30, 10]);
+    expect(tierSummary(good, 1800, (c) => `$${(c / 100).toFixed(2)}`)).toBe('1: $18.00 · 2–10: $16.00 each (11% off) · 11–30: $14.00 each (22% off) · 31+: $12.00 each (33% off)');
+  });
+  it('sends the ranges with the product, named by variant, and refuses a form the database would refuse', () => {
+    const f = { ...emptyForm(), name: 'Bracket', slug: 'bracket', price: '18', maxQuantity: '100', bulkContact: true,
+      variants: [{ key: 'k-gold', title: 'Gold', sku: '', price: '90', inventory: '0', active: true, option_values: {} }],
+      tiers: [row('2', '10', '16'), row('11', '', '14'), row('2', '', '80', 'k-gold'), row('2', '', '1', 'k-removed')] };
+    const ok = productPayload(f);
+    expect(ok).toEqual({ payload: expect.objectContaining({ max_quantity: 100, bulk_contact: true, price_tiers: [
+      { min_qty: 2, max_qty: 10, unit_cents: 1600, variant_id: undefined, variant_title: undefined }, { min_qty: 11, max_qty: null, unit_cents: 1400, variant_id: undefined, variant_title: undefined },
+      { min_qty: 2, max_qty: null, unit_cents: 8000, variant_id: undefined, variant_title: 'Gold' }] }) });
+    expect(productPayload({ ...f, tiers: [row('2', '10', '16'), row('12', '', '14')] })).toEqual({ error: expect.stringMatching(/^Bulk pricing: There is a gap/) });
+    expect(productPayload({ ...f, tiers: [row('2', '', '80', 'k-gold'), row('2', '5', '70', 'k-gold')] })).toEqual({ error: expect.stringMatching(/^Bulk pricing: Gold: /) });
+    expect(productPayload({ ...f, maxQuantity: '0' })).toEqual({ error: expect.stringMatching(/largest order/) });
+    expect(productPayload({ ...f, maxQuantity: '10' })).toEqual({ error: expect.stringMatching(/starts above the largest order \(10\)/) });
+    // the preview shows shoppers the same list
+    const pv = previewProduct(f, []);
+    expect([pv.order_limit, pv.bulk_contact, pv.variants[0].own_price, tierRows(pv).length, unitPrice(pv, pv.variants[0], 2).unit_cents]).toEqual([100, true, true, 3, 8000]);
+    const back = formFromProduct(product({ price_tiers: [{ variant_id: null, min_qty: 2, max_qty: null, unit_cents: 1650 }], order_limit: 40, bulk_contact: true }));
+    expect([back.tiers, back.maxQuantity, back.bulkContact]).toEqual([[row('2', '', '16.50')], '40', true]);
   });
 });

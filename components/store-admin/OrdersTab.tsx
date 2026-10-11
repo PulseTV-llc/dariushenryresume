@@ -53,7 +53,8 @@ function OrderCard({ order, onSaved }: { order: StoreOrder; onSaved: (o: StoreOr
             <ul className="divide-y divide-slate-100">
               {order.items.map((i, n) => (
                 <li key={n} className="flex justify-between gap-3 py-1.5">
-                  <span className="min-w-0">{i.quantity} × {i.name}{i.variant_title ? ` (${i.variant_title})` : ''}{i.sku ? <span className="text-slate-400"> · {i.sku}</span> : null}</span>
+                  <span className="min-w-0">{i.quantity} × {i.name}{i.variant_title ? ` (${i.variant_title})` : ''}{i.sku ? <span className="text-slate-400"> · {i.sku}</span> : null}
+                    {i.tier_min != null ? <span className="ml-1 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-800">bulk {i.tier_min}{i.tier_max == null ? '+' : `–${i.tier_max}`}: {money(i.unit_cents, order.currency)} each{i.base_cents != null ? ` (normally ${money(i.base_cents, order.currency)})` : ''}</span> : null}</span>
                   <span className="shrink-0 tabular-nums">{money(i.unit_cents * i.quantity, order.currency)}</span>
                 </li>
               ))}

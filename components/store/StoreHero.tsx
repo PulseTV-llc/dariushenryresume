@@ -1,10 +1,7 @@
 import Link from 'next/link';
 import { ArrowDown, ArrowRight, Check, CloudCog, Radio, Router, Smartphone } from 'lucide-react';
 import { localePath, type Locale } from '@/lib/i18n/config';
-import { priceLabel, productText } from '@/lib/store/format';
 import type { StoreStrings } from '@/lib/store/strings';
-import type { StoreProduct } from '@/lib/store/types';
-import { Availability, ProductImage } from './StoreParts';
 import StoreHeroFx from './StoreHeroFx';
 
 /** "Hardware made for [[the VexaOs platform.]]": the bracketed part takes the light brand gradient. */
@@ -53,12 +50,11 @@ const STARS = [[6, 22, 0], [14, 68, 1.2], [23, 12, 2.1], [31, 84, 0.6], [39, 35,
  * (see "Store hero" in app/globals.css) plus a few lines of script for the cursor spotlight and scroll
  * depth. With prefers-reduced-motion everything holds still.
  */
-export default function StoreHero({ locale, t, chips, spotlight, hasProducts }: {
-  locale: Locale; t: StoreStrings; chips: string[]; spotlight: StoreProduct | null; hasProducts: boolean;
+export default function StoreHero({ locale, t, chips, hasProducts }: {
+  locale: Locale; t: StoreStrings; chips: string[]; hasProducts: boolean;
 }) {
   const h = t.hero;
   const flow = [{ icon: Radio, label: h.flowSensor }, { icon: Router, label: h.flowGateway }, { icon: CloudCog, label: h.flowCloud }, { icon: Smartphone, label: h.flowApps }];
-  const text = spotlight ? productText(spotlight, locale) : null;
   return (
     <section className="px-3 pt-20 sm:px-6 sm:pt-24 lg:px-8" aria-labelledby="store-hero-title">
       <div id="store-hero" className="store-hero relative isolate mx-auto max-w-[88rem] overflow-hidden rounded-[1.75rem] sm:rounded-[2.5rem]">
@@ -92,33 +88,13 @@ export default function StoreHero({ locale, t, chips, spotlight, hasProducts }: 
             </ul>
           </div>
 
-          {/* the glass card: a product on sale, or the mark itself */}
+          {/* the glass card: the VexaOs mark, alive. Always the brand, never a product photo. */}
           <div className="sh-depth-3 relative mx-auto w-full max-w-[26rem] lg:max-w-none">
             <div className="sh-halo" aria-hidden="true" />
-            {spotlight && text ? (
-              <Link href={localePath(locale, `/store/${spotlight.slug}`)} className="sh-glass sh-float group block p-3 sm:p-4">
-                <div className="relative">
-                  <ProductImage image={spotlight.images[0]} name={text.name} t={t} sizes="(min-width: 1024px) 34vw, 90vw" priority tone="dark" shape="natural" className="!rounded-[1.25rem]" />
-                  <span className="sh-tag">{h.featured}</span>
-                  <OrbitalMark className="pointer-events-none absolute -right-5 -top-5 h-20 w-20 sm:h-24 sm:w-24" />
-                </div>
-                <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2 px-2 pb-1 pt-4">
-                  <div className="min-w-0">
-                    <p className="line-clamp-2 text-lg font-semibold leading-snug text-white">{text.name}</p>
-                    <p className="mt-0.5 flex flex-wrap items-center gap-2 text-sm text-sky-100/80">
-                      <span className="text-base font-semibold text-white">{priceLabel(spotlight, locale, t.from) ?? t.noPrice}</span>
-                      <Availability product={spotlight} t={t} />
-                    </p>
-                  </div>
-                  <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-sky-200 transition group-hover:text-white">{h.viewProduct}<ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden="true" /></span>
-                </div>
-              </Link>
-            ) : (
-              <div className="sh-glass sh-float p-6 sm:p-8">
-                <div className="mx-auto aspect-square w-full max-w-[19rem]"><OrbitalMark className="h-full w-full" /></div>
-                <p className="mt-4 text-center text-sm font-medium text-sky-100/85">{h.markCaption}</p>
-              </div>
-            )}
+            <div className="sh-glass sh-float p-6 sm:p-8">
+              <div className="mx-auto aspect-square w-full max-w-[19rem]"><OrbitalMark className="h-full w-full" /></div>
+              <p className="mt-4 text-center text-sm font-medium text-sky-100/85">{h.markCaption}</p>
+            </div>
           </div>
         </div>
 

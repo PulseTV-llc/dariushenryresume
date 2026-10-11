@@ -8,7 +8,7 @@ import { isLocale, localePath } from '@/lib/i18n/config';
 import { getContent } from '@/lib/i18n/content';
 import { getCatalog } from '@/lib/store/catalog';
 import { checkoutEnabled, shipCountries, shipsFrom } from '@/lib/store/config';
-import { heroChips, spotlightProduct } from '@/lib/store/hero';
+import { heroChips } from '@/lib/store/hero';
 import { storeListSchema } from '@/lib/store/jsonld';
 import { storeStrings } from '@/lib/store/strings';
 
@@ -30,8 +30,7 @@ export default async function StorePage({ params }: { params: { locale: string }
   const { products, categories } = await getCatalog();
   return (
     <>
-      <StoreHero locale={locale} t={t} chips={heroChips({ products, checkoutOpen: checkoutEnabled(), shipFrom: shipsFrom(), shipTo: shipCountries(), locale, t })}
-                 spotlight={spotlightProduct(products)} hasProducts={products.length > 0} />
+      <StoreHero locale={locale} t={t} chips={heroChips({ products, checkoutOpen: checkoutEnabled(), shipFrom: shipsFrom(), shipTo: shipCountries(), locale, t })} hasProducts={products.length > 0} />
       <Section id="products" className="scroll-mt-20 !pt-10 sm:!pt-14">
         {products.length === 0 ? (
           <div className="glass mx-auto max-w-xl rounded-3xl p-8 text-center">
