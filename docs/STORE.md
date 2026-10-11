@@ -95,6 +95,12 @@ A price in the request body is ignored.
 
 ## Admin (`/admin/store`)
 
+The admin also has its own address, **https://admin.vexaos.io** (`ADMIN_HOST`): on that host `/` is the store
+admin, `/admin/...` and `/api/...` work as usual, every other page goes back to the admin, nothing is indexed and
+no language detection runs. `/admin/store` on the main site keeps working. In Vercel the domain is attached to
+the project; until the site is live it is assigned to the git branch `feat/platform-company-site` and must be
+re-pointed to Production at go-live (Project → Settings → Domains → admin.vexaos.io → Production).
+
 Sign in with your VexaOs (Supabase) account. Access is an allowlist in the database (`store.admins`); the
 email must be confirmed. `darius.henry@gmail.com` is the owner; owners add and remove people in Settings.
 

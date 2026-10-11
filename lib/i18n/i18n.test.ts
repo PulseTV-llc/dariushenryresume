@@ -80,6 +80,26 @@ describe('middleware: detection without moving bots or overriding a choice', () 
   });
 });
 
+describe('admin host (admin.vexaos.io)', () => {
+  const admin = (path: string, o: { lang?: string; country?: string; ua?: string } = {}) => new NextRequest(`https://admin.vexaos.io${path}`, { headers: {
+    host: 'admin.vexaos.io', 'user-agent': o.ua ?? 'Mozilla/5.0 Safari', ...(o.lang ? { 'accept-language': o.lang } : {}), ...(o.country ? { 'x-vercel-ip-country': o.country } : {}) } });
+  it('shows the store admin at the root, with noindex and no language handling', () => {
+    const res = middleware(admin('/', { lang: 'th-TH,th;q=0.9', country: 'TH' }));
+    expect([res.status, rewrite(res), res.headers.get('location'), res.headers.get('x-robots-tag'), res.headers.get('set-cookie')])
+      .toEqual([200, 'https://admin.vexaos.io/admin/store', null, 'noindex, nofollow', null]);
+  });
+  it('sends every other page on that host back to the admin', () => {
+    for (const path of ['/platform', '/th/store', '/store/cart?x=1', '/en/about', '/nope']) {
+      const res = middleware(admin(path, { lang: 'vi' }));
+      expect([path, res.status, res.headers.get('location'), res.headers.get('x-robots-tag')]).toEqual([path, 307, 'https://admin.vexaos.io/', 'noindex, nofollow']);
+    }
+  });
+  it('leaves the main site alone', () => {
+    const res = middleware(req('/', { lang: 'en' }));
+    expect([rewrite(res), res.headers.get('x-robots-tag')]).toEqual(['https://www.vexaos.io/en', null]);
+  });
+});
+
 describe('content', () => {
   const walk = (src: unknown, tr: unknown, path: string, visit: (s: string, t: string, key: string, path: string) => void, key = '') => {
     if (typeof src === 'string') return visit(src, tr as string, key, path);

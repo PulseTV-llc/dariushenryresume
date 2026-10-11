@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { BarChart3, Loader2, LogOut, Package, Settings as SettingsIcon, ShoppingBag } from 'lucide-react';
 import { adminClient, call } from '@/lib/store/admin-client';
 import { storeConfigured } from '@/lib/store/config';
+import { SITE_URL } from '@/lib/site';
 import ProductsTab from './ProductsTab';
 import OrdersTab from './OrdersTab';
 import { Overview, SettingsTab } from './OverviewSettings';
@@ -80,6 +81,9 @@ export default function StoreAdmin() {
   }, []);
   useEffect(() => { if (storeConfigured()) check(); }, [check]);
 
+  // on the admin's own host the storefront lives on the main site
+  const storeHref = typeof window !== 'undefined' && window.location.hostname.startsWith('admin.') ? `${SITE_URL}/store` : '/store';
+
   if (!storeConfigured()) {
     return <main className="mx-auto max-w-md px-4 py-20 text-center text-sm text-slate-600">The store is not configured on this deployment (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are missing).</main>;
   }
@@ -94,7 +98,7 @@ export default function StoreAdmin() {
           <p className="truncate text-xs text-slate-500">{me.email} · {me.role}</p>
         </div>
         <div className="flex items-center gap-2">
-          <a href="/store" target="_blank" rel="noopener" className="hidden text-sm font-semibold text-blue-700 hover:text-blue-900 sm:inline">View store</a>
+          <a href={storeHref} target="_blank" rel="noopener" className="hidden text-sm font-semibold text-blue-700 hover:text-blue-900 sm:inline">View store</a>
           <button type="button" onClick={async () => { await adminClient().auth.signOut(); setMe(null); setState('signed-out'); }} className={`${BTN_QUIET} !h-10 !px-3`} aria-label="Sign out">
             <LogOut className="h-4 w-4" aria-hidden="true" /><span className="hidden sm:inline">Sign out</span>
           </button>

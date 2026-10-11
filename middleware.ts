@@ -23,8 +23,33 @@ import { REGION_COOKIE, regionOf } from '@/lib/i18n/regions';
  */
 const BOT = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora link preview|pinterest|vkshare|w3c_validator|whatsapp|telegram|discord|slack|linkedin|twitter|lighthouse|pagespeed|headless|gtmetrix|preview/i;
 
+/**
+ * The store admin has its own host (admin.vexaos.io, or ADMIN_HOST). On that host:
+ *   /            shows the store admin (served from /admin/store)
+ *   /admin/...   and /api/... are served as they are (they never reach this middleware: see the matcher)
+ *   anything else goes back to the admin's front page
+ * Nothing there is for search engines, and no language detection runs. /admin on the main site keeps working.
+ */
+export const ADMIN_HOST = (process.env.ADMIN_HOST ?? 'admin.vexaos.io').toLowerCase();
+
+function adminHost(req: NextRequest): NextResponse {
+  const url = req.nextUrl.clone();
+  let res: NextResponse;
+  if (url.pathname === '/') {
+    url.pathname = '/admin/store';
+    res = NextResponse.rewrite(url);
+  } else {
+    url.pathname = '/';
+    url.search = '';
+    res = NextResponse.redirect(url, 307);
+  }
+  res.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  return res;
+}
+
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  if ((req.headers.get('host') ?? '').toLowerCase().split(':')[0] === ADMIN_HOST) return adminHost(req);
   const first = pathname.split('/')[1];
 
   // /en/... is never a public URL.

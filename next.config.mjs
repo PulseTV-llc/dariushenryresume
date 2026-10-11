@@ -26,6 +26,11 @@ const nextConfig = {
   // platform. Personal resume/portfolio URLs are gone for good (permanent).
   // Other retired marketing URLs use temporary redirects so they stay
   // reversible if a page is ever brought back.
+  // The admin host is never for search engines, whatever path is asked for (pages, /admin, /api, files).
+  async headers() {
+    return [{ source: '/:path*', has: [{ type: 'host', value: process.env.ADMIN_HOST ?? 'admin.vexaos.io' }], headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] }];
+  },
+
   async redirects() {
     const gone = (source, destination) => ({ source, destination, permanent: true });
     const moved = (source, destination) => ({ source, destination, permanent: false });
