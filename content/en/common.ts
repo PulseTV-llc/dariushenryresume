@@ -101,7 +101,7 @@ export const common = {
   },
   shots: {
     dashboardSummary: {
-      alt: 'VexaOs web dashboard summary row: 2 of 2 sensors online, average temperature 21.4 °C, humidity 40%, pressure 978 hPa, no active alerts, gateway online.',
+      alt: 'VexaOs web dashboard summary row: 2 of 2 sensors online, average temperature 21.4 °C, humidity 40%, pressure 978 hPa and no active alerts.',
       caption: 'The web dashboard summary row. Real capture from our test site.',
     },
     dashboardPanels: {

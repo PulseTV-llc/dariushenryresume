@@ -102,7 +102,7 @@ export const common = {
   },
   shots: {
     dashboardSummary: {
-      alt: 'Baris ringkasan dashboard web VexaOs: 2 dari 2 sensor online, suhu rata-rata 21,4 °C, kelembapan 40%, tekanan 978 hPa, tidak ada peringatan aktif, gateway online.',
+      alt: 'Baris ringkasan dashboard web VexaOs: 2 dari 2 sensor online, suhu rata-rata 21,4 °C, kelembapan 40%, tekanan 978 hPa dan tidak ada peringatan aktif.',
       caption: 'Baris ringkasan dashboard web. Tangkapan layar asli dari site uji kami.',
     },
     dashboardPanels: {

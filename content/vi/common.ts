@@ -102,7 +102,7 @@ export const common = {
   },
   shots: {
     dashboardSummary: {
-      alt: 'Hàng tóm tắt trên bảng điều khiển web của VexaOs: 2 trên 2 cảm biến đang trực tuyến, nhiệt độ trung bình 21,4 °C, độ ẩm 40%, áp suất 978 hPa, không có cảnh báo đang hoạt động, gateway đang trực tuyến.',
+      alt: 'Hàng tóm tắt trên bảng điều khiển web của VexaOs: 2 trên 2 cảm biến đang trực tuyến, nhiệt độ trung bình 21,4 °C, độ ẩm 40%, áp suất 978 hPa và không có cảnh báo đang hoạt động.',
       caption: 'Hàng tóm tắt trên bảng điều khiển web. Ảnh chụp thực tế từ cơ sở thử nghiệm của chúng tôi.',
     },
     dashboardPanels: {

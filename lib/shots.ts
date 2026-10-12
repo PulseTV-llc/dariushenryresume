@@ -13,7 +13,7 @@ import type { ShotKey } from './i18n/types';
  * running on demonstration data, and are always captioned as such.
  */
 export const SHOTS: Record<ShotKey, { src: string; width: number; height: number }> = {
-  dashboardSummary: { src: '/product/iot-dashboard-summary.webp', width: 1420, height: 236 },
+  dashboardSummary: { src: '/product/iot-dashboard-summary.webp', width: 1166, height: 236 },
   dashboardPanels: { src: '/product/iot-dashboard-panels.webp', width: 362, height: 570 },
   doorActivity: { src: '/product/iot-door-activity.webp', width: 1600, height: 790 },
   sensorCharts: { src: '/product/iot-sensor-charts.webp', width: 1600, height: 796 },
