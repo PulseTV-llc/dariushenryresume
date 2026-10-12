@@ -40,6 +40,23 @@ const en = {
     badge: { name: 'Asset tag · Staff badge', measures: 'Which zone the badge was last heard in. Room-level, not GPS.', reading: 'In: {room}', alert: 'Someone needs to be found quickly.' },
     toolkit: { name: 'Asset tag · Tool kit', measures: 'Which zone the tool kit is in. Room-level, not GPS.', reading: 'In: {room}', alert: 'The kit is moved out of the machine room.' },
   } as Record<DeviceId, DeviceText>,
+  // the same building dressed as a factory: only what differs from the restaurant
+  layouts: { label: 'Building', restaurant: 'Restaurant', factory: 'Factory' },
+  factory: {
+    intro: 'A production floor, a cold store, a dock, a compressor room. Point at anything to see what it measures, which Locate Node hears it, and what it could tell you.',
+    rooms: { dining: 'Production floor', kitchen: 'Assembly', walkin: 'Cold store', office: 'Office', storage: 'Warehouse & loading dock', machine: 'Compressor room' } as Record<RoomId, string>,
+    notifications: { doorWalkin: 'Cold store door open 4 min', cart: 'Pallet jack #3 moved to Warehouse & loading dock', plug: 'Conveyor plug drawing 1.4 kW' } as Partial<Record<DeviceId, string>>,
+    devices: {
+      temp: { measures: 'The air temperature inside the cold store.', alert: 'The cold store warms past the limit you set.' },
+      humidity: { measures: 'Humidity and temperature in the warehouse.', alert: 'The warehouse gets too damp for what is stored there.' },
+      doorWalkin: { name: 'Door sensor · Cold store', measures: 'Whether the cold store door is open or closed, and for how long.' },
+      plug: { name: 'Smart plug · Conveyor', measures: 'The power the conveyor is drawing, and the energy it has used.', alert: 'The conveyor is still running after the shift.' },
+      motion: {},
+      vibration: { name: 'Vibration sensor · Compressor', measures: 'How much the compressor vibrates as it runs.', alert: 'The compressor starts to shake more than usual.' },
+      cart: { name: 'Asset tag · Pallet jack #3', measures: 'Which zone the pallet jack is in. Room-level, not GPS.', alert: 'The pallet jack leaves the building, or is not where it should be.' },
+      toolkit: { alert: 'The kit is moved out of the compressor room.' },
+    } as Partial<Record<DeviceId, Partial<DeviceText>>>,
+  },
   footnote: 'An illustration, not a floor plan of a real site. Readings are examples. Ripples show a zone, not a measured range. Locations are estimated per room and depend on where nodes are placed. Locate Node is in development: supported sensor types are confirmed at launch.',
   static: 'Animation is off. Every marker still opens its details.',
 };
@@ -75,6 +92,23 @@ const th: FacilityStrings = {
     badge: { name: 'แท็กทรัพย์สิน · บัตรพนักงาน', measures: 'บัตรถูกได้ยินครั้งล่าสุดในโซนใด ระดับห้อง ไม่ใช่ GPS', reading: 'อยู่ที่: {room}', alert: 'ต้องการตามหาใครบางคนอย่างรวดเร็ว' },
     toolkit: { name: 'แท็กทรัพย์สิน · ชุดเครื่องมือ', measures: 'ชุดเครื่องมืออยู่ในโซนใด ระดับห้อง ไม่ใช่ GPS', reading: 'อยู่ที่: {room}', alert: 'ชุดเครื่องมือถูกย้ายออกจากห้องเครื่อง' },
   },
+  // the same building dressed as a factory: only what differs from the restaurant
+  layouts: { label: 'อาคาร', restaurant: 'ร้านอาหาร', factory: 'โรงงาน' },
+  factory: {
+    intro: 'พื้นที่ผลิต ห้องเย็น ลานขนถ่าย ห้องคอมเพรสเซอร์ ชี้ไปที่จุดใดก็ได้เพื่อดูว่ามันวัดอะไร Locate Node ตัวไหนได้ยิน และมันบอกอะไรคุณได้บ้าง',
+    rooms: { dining: 'พื้นที่ผลิต', kitchen: 'สายประกอบ', walkin: 'ห้องเย็น', office: 'สำนักงาน', storage: 'คลังสินค้าและลานขนถ่าย', machine: 'ห้องคอมเพรสเซอร์' },
+    notifications: { doorWalkin: 'ประตูห้องเย็นเปิดอยู่ 4 นาที', cart: 'รถลากพาเลท #3 ย้ายไปที่คลังสินค้าและลานขนถ่าย', plug: 'ปลั๊กสายพานใช้ไฟ 1.4 kW' },
+    devices: {
+      temp: { measures: 'อุณหภูมิอากาศภายในห้องเย็น', alert: 'ห้องเย็นอุ่นเกินขีดจำกัดที่คุณตั้งไว้' },
+      humidity: { measures: 'ความชื้นและอุณหภูมิในคลังสินค้า', alert: 'คลังสินค้าชื้นเกินไปสำหรับของที่เก็บอยู่' },
+      doorWalkin: { name: 'เซ็นเซอร์ประตู · ห้องเย็น', measures: 'ประตูห้องเย็นเปิดหรือปิดอยู่ และนานเท่าใด' },
+      plug: { name: 'ปลั๊กอัจฉริยะ · สายพาน', measures: 'กำลังไฟที่สายพานใช้อยู่ และพลังงานที่ใช้ไปแล้ว', alert: 'สายพานยังทำงานอยู่หลังเลิกกะ' },
+      motion: {},
+      vibration: { name: 'เซ็นเซอร์การสั่น · คอมเพรสเซอร์', measures: 'คอมเพรสเซอร์สั่นมากเพียงใดขณะทำงาน', alert: 'คอมเพรสเซอร์เริ่มสั่นมากกว่าปกติ' },
+      cart: { name: 'แท็กทรัพย์สิน · รถลากพาเลท #3', measures: 'รถลากพาเลทอยู่ในโซนใด ระดับห้อง ไม่ใช่ GPS', alert: 'รถลากพาเลทออกจากอาคาร หรือไม่อยู่ในที่ที่ควรอยู่' },
+      toolkit: { alert: 'ชุดเครื่องมือถูกย้ายออกจากห้องคอมเพรสเซอร์' },
+    },
+  },
   footnote: 'ภาพประกอบ ไม่ใช่แผนผังของสถานที่จริง ค่าที่อ่านได้เป็นตัวอย่าง วงคลื่นแสดงโซน ไม่ใช่ระยะที่วัดได้ ตำแหน่งประมาณเป็นรายห้องและขึ้นอยู่กับตำแหน่งที่วางโหนด Locate Node อยู่ระหว่างการพัฒนา: ประเภทเซ็นเซอร์ที่รองรับจะยืนยันเมื่อเปิดตัว',
   static: 'ปิดภาพเคลื่อนไหวอยู่ ทุกเครื่องหมายยังเปิดดูรายละเอียดได้',
 };
@@ -108,6 +142,23 @@ const vi: FacilityStrings = {
     cart: { name: 'Thẻ tài sản · Xe đẩy #3', measures: 'Xe đẩy đang ở khu vực nào. Theo phòng, không phải GPS.', reading: 'Ở: {room}', alert: 'Xe đẩy rời tòa nhà, hoặc không ở đúng chỗ.' },
     badge: { name: 'Thẻ tài sản · Thẻ nhân viên', measures: 'Thẻ được nghe lần cuối ở khu vực nào. Theo phòng, không phải GPS.', reading: 'Ở: {room}', alert: 'Cần tìm ai đó thật nhanh.' },
     toolkit: { name: 'Thẻ tài sản · Bộ dụng cụ', measures: 'Bộ dụng cụ đang ở khu vực nào. Theo phòng, không phải GPS.', reading: 'Ở: {room}', alert: 'Bộ dụng cụ bị mang ra khỏi phòng máy.' },
+  },
+  // the same building dressed as a factory: only what differs from the restaurant
+  layouts: { label: 'Tòa nhà', restaurant: 'Nhà hàng', factory: 'Nhà máy' },
+  factory: {
+    intro: 'Xưởng sản xuất, kho lạnh, khu bốc dỡ, phòng máy nén. Trỏ vào bất cứ thứ gì để xem nó đo gì, Locate Node nào nghe thấy nó, và nó có thể cho bạn biết điều gì.',
+    rooms: { dining: 'Xưởng sản xuất', kitchen: 'Lắp ráp', walkin: 'Kho lạnh', office: 'Văn phòng', storage: 'Kho hàng và khu bốc dỡ', machine: 'Phòng máy nén' },
+    notifications: { doorWalkin: 'Cửa kho lạnh mở 4 phút', cart: 'Xe nâng tay #3 đã chuyển đến Kho hàng và khu bốc dỡ', plug: 'Ổ cắm băng chuyền đang dùng 1.4 kW' },
+    devices: {
+      temp: { measures: 'Nhiệt độ không khí bên trong kho lạnh.', alert: 'Kho lạnh ấm lên quá giới hạn bạn đặt.' },
+      humidity: { measures: 'Độ ẩm và nhiệt độ trong kho hàng.', alert: 'Kho hàng quá ẩm so với hàng đang lưu.' },
+      doorWalkin: { name: 'Cảm biến cửa · Kho lạnh', measures: 'Cửa kho lạnh đang mở hay đóng, và trong bao lâu.' },
+      plug: { name: 'Ổ cắm thông minh · Băng chuyền', measures: 'Công suất băng chuyền đang dùng và điện năng đã tiêu thụ.', alert: 'Băng chuyền vẫn chạy sau ca làm.' },
+      motion: {},
+      vibration: { name: 'Cảm biến rung · Máy nén', measures: 'Máy nén rung nhiều đến mức nào khi chạy.', alert: 'Máy nén bắt đầu rung nhiều hơn bình thường.' },
+      cart: { name: 'Thẻ tài sản · Xe nâng tay #3', measures: 'Xe nâng tay đang ở khu vực nào. Theo phòng, không phải GPS.', alert: 'Xe nâng tay rời tòa nhà, hoặc không ở đúng chỗ.' },
+      toolkit: { alert: 'Bộ dụng cụ bị mang ra khỏi phòng máy nén.' },
+    },
   },
   footnote: 'Đây là hình minh họa, không phải sơ đồ của một địa điểm thật. Số đo là ví dụ. Các vòng sóng thể hiện một khu vực, không phải tầm phủ đo được. Vị trí được ước tính theo phòng và phụ thuộc vào nơi đặt node. Locate Node đang được phát triển: các loại cảm biến được hỗ trợ sẽ được xác nhận khi ra mắt.',
   static: 'Hoạt ảnh đang tắt. Mọi điểm đánh dấu vẫn mở được chi tiết.',
@@ -143,6 +194,23 @@ const id: FacilityStrings = {
     badge: { name: 'Tag aset · Lencana staf', measures: 'Di zona mana lencana terakhir terdengar. Tingkat ruangan, bukan GPS.', reading: 'Di: {room}', alert: 'Seseorang perlu ditemukan dengan cepat.' },
     toolkit: { name: 'Tag aset · Kotak perkakas', measures: 'Di zona mana kotak perkakas berada. Tingkat ruangan, bukan GPS.', reading: 'Di: {room}', alert: 'Kotak perkakas dipindahkan keluar dari ruang mesin.' },
   },
+  // the same building dressed as a factory: only what differs from the restaurant
+  layouts: { label: 'Bangunan', restaurant: 'Restoran', factory: 'Pabrik' },
+  factory: {
+    intro: 'Lantai produksi, ruang pendingin, area bongkar muat, ruang kompresor. Arahkan ke apa pun untuk melihat apa yang diukurnya, Locate Node mana yang mendengarnya, dan apa yang bisa diberitahukannya kepada Anda.',
+    rooms: { dining: 'Lantai produksi', kitchen: 'Perakitan', walkin: 'Ruang pendingin', office: 'Kantor', storage: 'Gudang & area bongkar muat', machine: 'Ruang kompresor' },
+    notifications: { doorWalkin: 'Pintu ruang pendingin terbuka 4 menit', cart: 'Hand pallet #3 pindah ke Gudang & area bongkar muat', plug: 'Steker konveyor memakai 1.4 kW' },
+    devices: {
+      temp: { measures: 'Suhu udara di dalam ruang pendingin.', alert: 'Ruang pendingin menghangat melewati batas yang Anda tetapkan.' },
+      humidity: { measures: 'Kelembapan dan suhu di gudang.', alert: 'Gudang terlalu lembap untuk barang yang disimpan.' },
+      doorWalkin: { name: 'Sensor pintu · Ruang pendingin', measures: 'Apakah pintu ruang pendingin terbuka atau tertutup, dan berapa lama.' },
+      plug: { name: 'Steker pintar · Konveyor', measures: 'Daya yang sedang dipakai konveyor, dan energi yang telah digunakannya.', alert: 'Konveyor masih berjalan setelah sif selesai.' },
+      motion: {},
+      vibration: { name: 'Sensor getaran · Kompresor', measures: 'Seberapa besar getaran kompresor saat berjalan.', alert: 'Kompresor mulai bergetar lebih dari biasanya.' },
+      cart: { name: 'Tag aset · Hand pallet #3', measures: 'Di zona mana hand pallet berada. Tingkat ruangan, bukan GPS.', alert: 'Hand pallet keluar dari gedung, atau tidak berada di tempatnya.' },
+      toolkit: { alert: 'Kotak perkakas dipindahkan keluar dari ruang kompresor.' },
+    },
+  },
   footnote: 'Ini ilustrasi, bukan denah lokasi nyata. Pembacaan adalah contoh. Riak menunjukkan zona, bukan jangkauan terukur. Lokasi diperkirakan per ruangan dan bergantung pada penempatan node. Locate Node sedang dikembangkan: jenis sensor yang didukung dikonfirmasi saat peluncuran.',
   static: 'Animasi dimatikan. Setiap penanda tetap dapat membuka detailnya.',
 };
@@ -177,9 +245,33 @@ const fil: FacilityStrings = {
     badge: { name: 'Asset tag · Badge ng staff', measures: 'Kung saang sona huling narinig ang badge. Ayon sa silid, hindi GPS.', reading: 'Nasa: {room}', alert: 'May taong kailangang mahanap agad.' },
     toolkit: { name: 'Asset tag · Tool kit', measures: 'Kung saang sona naroon ang tool kit. Ayon sa silid, hindi GPS.', reading: 'Nasa: {room}', alert: 'Inilabas ang kit mula sa silid ng makina.' },
   },
+  // the same building dressed as a factory: only what differs from the restaurant
+  layouts: { label: 'Gusali', restaurant: 'Restawran', factory: 'Pabrika' },
+  factory: {
+    intro: 'Isang production floor, cold store, loading dock, silid ng compressor. Ituro ang anuman para makita kung ano ang sinusukat nito, aling Locate Node ang nakakarinig dito, at ano ang masasabi nito sa iyo.',
+    rooms: { dining: 'Production floor', kitchen: 'Assembly', walkin: 'Cold store', office: 'Opisina', storage: 'Bodega at loading dock', machine: 'Silid ng compressor' },
+    notifications: { doorWalkin: 'Bukas ang pinto ng cold store nang 4 minuto', cart: 'Lumipat ang Pallet jack #3 sa Bodega at loading dock', plug: 'Kumukonsumo ang plug ng conveyor ng 1.4 kW' },
+    devices: {
+      temp: { measures: 'Ang temperatura ng hangin sa loob ng cold store.', alert: 'Uminit ang cold store lampas sa limitasyong itinakda mo.' },
+      humidity: { measures: 'Halumigmig at temperatura sa bodega.', alert: 'Masyadong mahalumigmig ang bodega para sa nakatago roon.' },
+      doorWalkin: { name: 'Sensor ng pinto · Cold store', measures: 'Kung bukas o sarado ang pinto ng cold store, at gaano katagal.' },
+      plug: { name: 'Smart plug · Conveyor', measures: 'Ang kuryenteng ginagamit ng conveyor, at ang enerhiyang nakonsumo nito.', alert: 'Umaandar pa ang conveyor pagkatapos ng shift.' },
+      motion: {},
+      vibration: { name: 'Sensor ng vibration · Compressor', measures: 'Kung gaano kalakas ang pagyanig ng compressor habang umaandar.', alert: 'Nagsimulang yumanig ang compressor nang higit sa karaniwan.' },
+      cart: { name: 'Asset tag · Pallet jack #3', measures: 'Kung saang sona naroon ang pallet jack. Ayon sa silid, hindi GPS.', alert: 'Lumabas ng gusali ang pallet jack, o wala sa dapat nitong kinalalagyan.' },
+      toolkit: { alert: 'Inilabas ang kit mula sa silid ng compressor.' },
+    },
+  },
   footnote: 'Isang ilustrasyon ito, hindi plano ng totoong lugar. Mga halimbawa ang mga reading. Ipinapakita ng mga alon ang isang sona, hindi sukat na abot. Tinatantya ang lokasyon ayon sa silid at nakadepende sa pagkakalagay ng mga node. Ginagawa pa ang Locate Node: kukumpirmahin sa paglulunsad ang mga suportadong uri ng sensor.',
   static: 'Naka-off ang animation. Mabubuksan pa rin ng bawat marker ang mga detalye nito.',
 };
 
 export const FACILITY_STRINGS: Record<Locale, FacilityStrings> = { en, th, vi, id, fil };
+export type FacilityLayout = 'restaurant' | 'factory';
+/** The strings for one layout: the factory's words laid over the restaurant's. */
+export function layoutStrings(t: FacilityStrings, layout: FacilityLayout): FacilityStrings {
+  if (layout === 'restaurant') return t;
+  const devices = Object.fromEntries(Object.entries(t.devices).map(([id, d]) => [id, { ...d, ...t.factory.devices[id as DeviceId] }])) as Record<DeviceId, DeviceText>;
+  return { ...t, intro: t.factory.intro, rooms: t.factory.rooms, notifications: { ...t.notifications, ...t.factory.notifications }, devices };
+}
 export const facilityStrings = (locale: Locale): FacilityStrings => FACILITY_STRINGS[locale] ?? en;

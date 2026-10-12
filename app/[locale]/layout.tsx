@@ -11,6 +11,7 @@ import { siteSchemas } from '@/lib/structured-data';
 import { INDUSTRIES, PRODUCTS, RESTAURANT_OS_HREF, industryHref, productHref } from '@/lib/site';
 import { hasActiveProducts } from '@/lib/store/catalog';
 import { storeStrings } from '@/lib/store/strings';
+import { locateNodeLink } from '@/lib/locate-node/nav';
 
 // Inter covers Latin and Vietnamese. Thai gets its own face, loaded only when used.
 const inter = Inter({ subsets: ['latin', 'latin-ext', 'vietnamese'], display: 'swap', variable: '--font-inter' });
@@ -33,6 +34,8 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const c = getContent(locale);
   const { nav, status } = c.common;
   const L = (p: string) => localePath(locale, p);
+  // the Locate Node has its own page (/locate-node) while it is public in the store; its badge follows its status
+  const locateNode = await locateNodeLink(locale);
 
   const groups: NavGroup[] = [
     { label: nav.platform, href: L('/platform') },
@@ -44,7 +47,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         label: c.catalog.products[p.slug].short,
         description: c.catalog.products[p.slug].summary,
         badge: p.status === 'available' ? undefined : status[p.status],
-      })),
+      })).concat(locateNode ? [{ href: locateNode.href, label: locateNode.label, description: locateNode.description, badge: locateNode.badge }] : []),
     },
     {
       label: nav.solutions,
@@ -78,7 +81,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <main id="main" className="min-h-screen">
           {children}
         </main>
-        <SiteFooter locale={locale} c={c} />
+        <SiteFooter locale={locale} c={c} locateNode={locateNode} />
         <LocaleSuggest locale={locale} dismiss={c.common.language.dismiss} />
         <Analytics />
       </body>

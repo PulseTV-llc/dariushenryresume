@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { LOCALES } from '@/lib/i18n/config';
 import { CYCLE, DEVICES, DEVICE_IDS, NODES, NODE_IDS, NOTIFICATIONS, PROPS, ROOMS, ROOM_IDS, ROOM_LABEL, ROOM_NODE, SIZE, TOUR, VIEW, deviceAt, heardBy, heardByNode, iso, notificationAt, packetAt, pct, roomAt } from './facility';
-import { FACILITY_STRINGS, facilityStrings } from './facility-strings';
+import { FACILITY_STRINGS, facilityStrings, layoutStrings } from './facility-strings';
 
 const shape = (v: unknown): unknown => (Array.isArray(v) ? v.map(shape) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, shape(x)])) : typeof v);
 const texts = (v: unknown): string[] => (typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(texts) : []);
@@ -17,7 +17,7 @@ describe('the facility plan', () => {
   it('everything drawn lands inside the picture', () => {
     const inside = (gx: number, gy: number, z = 0) => { const p = pct(iso(gx, gy, z)); expect(p.left).toBeGreaterThan(0); expect(p.left).toBeLessThan(100); expect(p.top).toBeGreaterThan(0); expect(p.top).toBeLessThan(100); };
     inside(0, 0, 40); inside(SIZE[0], 0, 40); inside(0, SIZE[1]); inside(SIZE[0], SIZE[1]);
-    for (const [x0, y0, x1, y1, h] of PROPS) { inside(x0, y0, h); inside(x1, y1); }
+    for (const [x0, y0, x1, y1, h] of [...PROPS.restaurant, ...PROPS.factory]) { inside(x0, y0, h); inside(x1, y1); }
     expect(VIEW.w / VIEW.h).toBeGreaterThan(1);
   });
 
@@ -107,6 +107,33 @@ describe('the facility copy', () => {
       // no distances or battery claims anywhere
       expect(all).not.toMatch(/\d+\s?(m|meters?|metres?|ft|feet|km|เมตร|mét)\b/i);
       expect(all).not.toMatch(/\d+\s?(years?|months?|ปี|năm|tahun|taon)\b/i);
+    }
+  });
+
+  it('the factory layout changes the words, never the claims', () => {
+    for (const l of LOCALES) {
+      const t = facilityStrings(l), f = layoutStrings(t, 'factory');
+      expect(layoutStrings(t, 'restaurant')).toBe(t);
+      expect(shape({ ...f, factory: 0, layouts: 0 })).toEqual(shape({ ...t, factory: 0, layouts: 0 }));
+      expect(f.rooms.dining).not.toBe(t.rooms.dining);
+      expect(f.devices.cart.name).not.toBe(t.devices.cart.name);
+      expect(f.notifications.cart).not.toBe(t.notifications.cart);
+      // what must stay true in either building
+      expect(f.devices.cart.measures).toContain('GPS');
+      expect(f.devices.vibration.reading).toBe('—');
+      for (const d of DEVICE_IDS) expect(f.devices[d].reading).toBe(t.devices[d].reading);
+      expect(f.footnote).toBe(t.footnote);
+    }
+  });
+
+  it('furniture never sits on a sensor, a node or a tag\'s path', () => {
+    const spots = [...DEVICE_IDS.flatMap((d) => DEVICES[d].path ?? [DEVICES[d].at!]), ...NODE_IDS.map((n) => NODES[n].at)];
+    for (const layout of ['restaurant', 'factory'] as const) {
+      for (const [x0, y0, x1, y1] of PROPS[layout]) {
+        // the plug and the vibration sensor sit ON their appliance, by design
+        const on = spots.filter(([x, y]) => x > x0 && x < x1 && y > y0 && y < y1).filter((p) => p !== DEVICES.plug.at && p !== DEVICES.vibration.at);
+        expect(on).toEqual([]);
+      }
     }
   });
 });

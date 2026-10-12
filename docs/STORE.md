@@ -81,6 +81,13 @@ intent; there are no ranges, speeds, battery figures, certifications, awards or 
 show "—"; it never borrows the Edge Gateway's behaviour. To change what the page says, edit that file (five
 languages). Screenshot: `docs/design/screenshots/locate-node.png`.
 
+### In the navigation
+
+`lib/locate-node/nav.ts` gives the page its entry in the Products menu (desktop and mobile), the footer and
+the card on `/products`. It follows the store like the page does: "Coming soon" while the product is
+announced, "New" once it is on sale, absent when it is not public. The label is one constant,
+`LOCATE_NODE_NAV_LABEL` ("Locate Node"): renaming it is a one-string change.
+
 ### The facility (interactive plan)
 
 `components/locate-node/Facility.tsx` draws an isometric building (six rooms, four Locate Nodes, ten sensors
@@ -92,6 +99,12 @@ button over it (hover, focus or tap opens its card; on phones the card is a bott
 sideways). Layer chips hide and show kinds of sensor; "Play tour" walks through `TOUR`. One animation-frame
 loop runs only while the section is on screen; with reduced motion nothing moves and all three example
 notifications are shown at once.
+
+A Restaurant / Factory switch dresses the same building two ways: the factory's room names, device names,
+notifications and furniture are laid over the restaurant's (`layoutStrings`, `PROPS`); positions, timings and
+every honesty statement stay the same. The plan assembles itself once when it first scrolls into view
+(`.lf-enter` / `.lf-seen`, never with reduced motion). On phones, choosing a marker pans and scrolls it into
+the free space above the sheet.
 
 What it must keep saying: it is an illustration; readings are labelled "Example"; ripples are a zone, not a
 range; tags are located per room (not GPS); the smart plug reports over Wi-Fi, not through a Locate Node; the

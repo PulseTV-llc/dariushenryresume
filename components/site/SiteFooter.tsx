@@ -3,17 +3,19 @@ import { LOCALES, LOCALE_INFO, localePath, type Locale } from '@/lib/i18n/config
 import type { Content } from '@/lib/i18n/content';
 import { formatYear } from '@/lib/i18n/format';
 import { INDUSTRIES, PRODUCTS, RESTAURANT_OS_HREF, industryHref, productHref } from '@/lib/site';
+import type { LocateNodeLink } from '@/lib/locate-node/nav';
 import VexaLogo from './VexaLogo';
 import RegionContacts from './RegionContacts';
 import { ContactLines } from './PageView';
 
-export default function SiteFooter({ locale, c }: { locale: Locale; c: Content }) {
+export default function SiteFooter({ locale, c, locateNode = null }: { locale: Locale; c: Content; locateNode?: LocateNodeLink | null }) {
   const { nav, footer, language } = c.common;
   const L = (p: string) => localePath(locale, p);
-  const columns = [
+  const columns: { title: string; links: { href: string; label: string; badge?: string; localized?: boolean }[] }[] = [
     {
       title: nav.platform,
-      links: [{ href: '/platform', label: nav.howItWorks }, ...PRODUCTS.map((p) => ({ href: productHref(p.slug), label: c.catalog.products[p.slug].short }))],
+      links: [{ href: '/platform', label: nav.howItWorks }, ...PRODUCTS.map((p) => ({ href: productHref(p.slug), label: c.catalog.products[p.slug].short })),
+        ...(locateNode ? [{ href: locateNode.href, label: locateNode.label, badge: locateNode.badge, localized: true }] : [])],
     },
     {
       title: nav.solutions,
@@ -52,7 +54,10 @@ export default function SiteFooter({ locale, c }: { locale: Locale; c: Content }
                 <ul className="space-y-2.5">
                   {col.links.map((l) => (
                     <li key={l.href}>
-                      <Link href={L(l.href)} className="text-sm text-slate-600 hover:text-blue-700">{l.label}</Link>
+                      <Link href={l.localized ? l.href : L(l.href)} className="inline-flex flex-wrap items-center gap-2 text-sm text-slate-600 hover:text-blue-700">
+                        {l.label}
+                        {l.badge && <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-800 ring-1 ring-amber-200">{l.badge}</span>}
+                      </Link>
                     </li>
                   ))}
                 </ul>

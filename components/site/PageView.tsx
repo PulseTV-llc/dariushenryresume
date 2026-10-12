@@ -14,11 +14,13 @@ import type { Content } from '@/lib/i18n/content';
 import type { Card, LinkT, Note, Page, Section as SectionT } from '@/lib/i18n/types';
 import { ADDRESS, CONTACT_EMAIL, INDUSTRIES, PRODUCTS, RESTAURANT_OS_HREF, industryHref, productHref } from '@/lib/site';
 import { SHOTS } from '@/lib/shots';
+import type { LocateNodeLink } from '@/lib/locate-node/nav';
 
 interface Ctx {
   locale: Locale;
   c: Content;
   placement: string;
+  locateNode?: LocateNodeLink | null;
 }
 
 const gridCols = { 2: 'md:grid-cols-2', 3: 'md:grid-cols-2 lg:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' } as const;
@@ -210,7 +212,7 @@ function SectionView({ s, ctx, first }: { s: SectionT; ctx: Ctx; first: boolean 
             {PRODUCTS.map((p, i) => {
               const t = c.catalog.products[p.slug];
               return (
-                <TrackedLink key={p.slug} href={localePath(locale, productHref(p.slug))} event="product_explore_click" eventProps={{ product: p.slug, locale }} className={`group block rounded-3xl ${i === PRODUCTS.length - 1 && PRODUCTS.length % 2 ? 'md:col-span-2' : ''}`}>
+                <TrackedLink key={p.slug} href={localePath(locale, productHref(p.slug))} event="product_explore_click" eventProps={{ product: p.slug, locale }} className={`group block rounded-3xl ${i === PRODUCTS.length - 1 && (PRODUCTS.length + (ctx.locateNode ? 1 : 0)) % 2 ? 'md:col-span-2' : ''}`}>
                   <GlassCard className="flex h-full flex-col transition group-hover:-translate-y-0.5 group-hover:shadow-xl">
                     <div className="flex items-center gap-3">
                       <IconTile name={p.icon} />
@@ -229,6 +231,25 @@ function SectionView({ s, ctx, first }: { s: SectionT; ctx: Ctx; first: boolean 
                 </TrackedLink>
               );
             })}
+            {ctx.locateNode && (
+              <TrackedLink href={ctx.locateNode.href} event="product_explore_click" eventProps={{ product: 'locate-node', locale }} className={`group block rounded-3xl ${PRODUCTS.length % 2 ? '' : 'md:col-span-2'}`}>
+                <GlassCard className="flex h-full flex-col transition group-hover:-translate-y-0.5 group-hover:shadow-xl">
+                  <div className="flex items-center gap-3">
+                    <IconTile name="bluetooth" />
+                    <p className="mono-label text-blue-700">{ctx.locateNode.role}</p>
+                  </div>
+                  <div className="mt-5 flex flex-wrap items-center gap-2">
+                    <h2 className="text-xl font-semibold text-slate-900">{ctx.locateNode.label}</h2>
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ${ctx.locateNode.soon ? 'bg-amber-50 text-amber-800 ring-amber-200' : 'bg-blue-50 text-blue-700 ring-blue-200'}`}>{ctx.locateNode.badge}</span>
+                  </div>
+                  <p className="mt-2 flex-1 text-[15px] leading-relaxed text-slate-600">{ctx.locateNode.description}</p>
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700">
+                    {c.common.labels.learnMore}
+                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden="true" />
+                  </span>
+                </GlassCard>
+              </TrackedLink>
+            )}
           </div>
         </Section>
       );
@@ -376,8 +397,8 @@ function CTABand({ ctx, title, body }: { ctx: Ctx; title: string; body: string }
 }
 
 /** Renders a whole page from its content: hero, sections, closing call to action. */
-export default function PageView({ locale, c, page, placement, home = false }: { locale: Locale; c: Content; page: Page; placement: string; home?: boolean }) {
-  const ctx: Ctx = { locale, c, placement };
+export default function PageView({ locale, c, page, placement, home = false, locateNode = null }: { locale: Locale; c: Content; page: Page; placement: string; home?: boolean; locateNode?: LocateNodeLink | null }) {
+  const ctx: Ctx = { locale, c, placement, locateNode };
   const { hero } = page;
   return (
     <>

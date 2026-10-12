@@ -168,17 +168,28 @@ export function gridLines(): [Pt, Pt][] {
   for (let y = 1; y < SIZE[1]; y++) out.push([iso(0, y), iso(SIZE[0], y)]);
   return out;
 }
-/** Furniture, so the rooms read as rooms: [x0, y0, x1, y1, height]. Purely decorative. */
-export const PROPS: [number, number, number, number, number][] = [
-  [1, 1.2, 2.2, 2.4, 7], [3.5, 1.1, 4.7, 2.3, 7], [0.9, 3.3, 2.1, 4.5, 7], [4.1, 4.2, 5.2, 5.3, 7],            // dining tables
-  [9.3, 0.3, 10.7, 1, 10], [8.9, 2.7, 10.4, 3.5, 10], [9.2, 4.3, 10, 5.1, 11],                                // kitchen: counter, island, fryer
-  [13.3, 0.5, 13.8, 2.9, 17], [11.4, 0.4, 12.4, 0.9, 17],                                                     // walk-in shelves
-  [0.5, 7, 1.2, 8.6, 8],                                                                                      // office desk
-  [8.9, 6.7, 9.6, 9.2, 18], [5.7, 8.5, 6.5, 9.3, 6],                                                          // storage shelves, a pallet
-  [11.9, 8.1, 12.9, 8.9, 12], [13.1, 8.9, 13.7, 9.6, 20],                                                     // the motor, a cabinet
-];
+/** Furniture, so the rooms read as rooms: [x0, y0, x1, y1, height]. Purely decorative; one set per layout. */
+export type Box = [number, number, number, number, number];
+export const PROPS: Record<'restaurant' | 'factory', Box[]> = {
+  restaurant: [
+    [1, 1.2, 2.2, 2.4, 7], [3.5, 1.1, 4.7, 2.3, 7], [0.9, 3.3, 2.1, 4.5, 7], [4.1, 4.2, 5.2, 5.3, 7],            // dining tables
+    [9.3, 0.3, 10.7, 1, 10], [8.9, 2.7, 10.4, 3.5, 10], [9.2, 4.3, 10, 5.1, 11],                                // kitchen: counter, island, fryer
+    [13.3, 0.5, 13.8, 2.9, 17], [11.4, 0.4, 12.4, 0.9, 17],                                                     // walk-in shelves
+    [0.5, 7, 1.2, 8.6, 8],                                                                                      // office desk
+    [8.9, 6.7, 9.6, 9.2, 18], [5.7, 8.5, 6.5, 9.3, 6],                                                          // storage shelves, a pallet
+    [11.9, 8.1, 12.9, 8.9, 12], [13.1, 8.9, 13.7, 9.6, 20],                                                     // the motor, a cabinet
+  ],
+  factory: [
+    [0.8, 0.7, 2.7, 1.9, 16], [3.5, 0.7, 5.4, 1.9, 16], [0.7, 3.2, 1.6, 4.6, 12], [4.2, 4.4, 5.5, 5.2, 8],      // production: two presses, a machine, a bench
+    [6.6, 0.4, 7.8, 1.1, 13], [9.2, 0.4, 10.7, 1.1, 13], [8.8, 2.9, 10.7, 3.4, 6], [9.2, 4.3, 10, 5.1, 11],     // assembly: stations, a conveyor, its drive
+    [13.3, 0.5, 13.8, 2.9, 20], [11.4, 0.4, 12.4, 0.9, 20],                                                     // cold store racks
+    [0.5, 7, 1.2, 8.6, 8],                                                                                      // office desk
+    [8.9, 6.7, 9.6, 9.2, 24], [6.6, 6.5, 7.6, 7, 24], [5.7, 8.5, 6.5, 9.3, 6],                                  // warehouse racks, a pallet
+    [11.9, 8.1, 12.9, 8.9, 15], [13.1, 8.7, 13.7, 9.6, 24],                                                     // the compressor, its tank
+  ],
+};
 /** A box's three visible faces (top, the face towards the viewer's left, the one towards the right), back to front. */
-export function boxFaces([x0, y0, x1, y1, h]: [number, number, number, number, number]): { top: string; left: string; right: string } {
+export function boxFaces([x0, y0, x1, y1, h]: Box): { top: string; left: string; right: string } {
   return {
     top: poly([iso(x0, y0, h), iso(x1, y0, h), iso(x1, y1, h), iso(x0, y1, h)]),
     left: poly([iso(x0, y1, h), iso(x1, y1, h), iso(x1, y1), iso(x0, y1)]),
