@@ -81,6 +81,23 @@ intent; there are no ranges, speeds, battery figures, certifications, awards or 
 show "—"; it never borrows the Edge Gateway's behaviour. To change what the page says, edit that file (five
 languages). Screenshot: `docs/design/screenshots/locate-node.png`.
 
+### The facility (interactive plan)
+
+`components/locate-node/Facility.tsx` draws an isometric building (six rooms, four Locate Nodes, ten sensors
+and tags) after the "how it works" section. The model and all the maths are in `lib/locate-node/facility.ts`
+(rooms, walls, furniture, where each device sits, the 18-second clock everything loops on, who hears whom,
+where each packet is) and the words in `lib/locate-node/facility-strings.ts` (five languages); both are
+covered by `facility.test.ts`. The drawing is a decorative SVG; every node, sensor, tag and room is a real
+button over it (hover, focus or tap opens its card; on phones the card is a bottom sheet and the plan pans
+sideways). Layer chips hide and show kinds of sensor; "Play tour" walks through `TOUR`. One animation-frame
+loop runs only while the section is on screen; with reduced motion nothing moves and all three example
+notifications are shown at once.
+
+What it must keep saying: it is an illustration; readings are labelled "Example"; ripples are a zone, not a
+range; tags are located per room (not GPS); the smart plug reports over Wi-Fi, not through a Locate Node; the
+vibration sensor is "being integrated" and sends nothing. Screenshots and a short clip:
+`docs/design/screenshots/locate-node-facility.png`, `-mobile.png`, `.mp4`.
+
 ## Environment variables (Vercel → Project → Settings → Environment Variables)
 
 | Name | Secret? | Purpose |

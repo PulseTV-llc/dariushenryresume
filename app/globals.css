@@ -417,3 +417,150 @@ html[lang='th'] .ln-statement { line-height: 1.6; letter-spacing: 0; }
   .ln-flow-link i, .ln-waves { display: none; }
 }
 .ln[data-still='true'] .ln-statement span { opacity: 1; }
+
+/* ------------------------------------------------------------------ Locate Node: the facility
+   The interactive plan on /locate-node (components/locate-node/Facility.tsx). The drawing is an SVG; every node,
+   sensor, tag and room is a real button laid over it. --c is the colour of the thing's layer. .lf-has-active dims
+   whatever is not part of the current selection, .lf-paused holds every animation while the section is off screen,
+   .lf-still is the reduced-motion plan (nothing moves; ripples become three fixed rings). */
+.lf { position: relative; padding: 5rem 1.25rem; }
+@media (min-width: 640px) { .lf { padding: 7rem 2rem; } }
+.lf::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(55% 40% at 50% 58%, rgba(29, 78, 216, 0.2) 0%, transparent 72%); }
+.lf > * { position: relative; }
+
+.lf-chip, .lf-tour { display: inline-flex; min-height: 2.5rem; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.45rem 0.95rem; font-size: 0.875rem; font-weight: 600;
+  color: #94a3b8; background: rgba(255, 255, 255, 0.03); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease; }
+.lf-chip > span { width: 8px; height: 8px; border-radius: 9999px; background: #475569; transition: background-color 0.2s ease, box-shadow 0.2s ease; }
+.lf-chip[aria-pressed='true'] { color: #fff; background: color-mix(in srgb, var(--c) 12%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 55%, transparent); }
+.lf-chip[aria-pressed='true'] > span { background: var(--c); box-shadow: 0 0 10px 2px color-mix(in srgb, var(--c) 70%, transparent); }
+.lf-chip:hover, .lf-tour:hover { color: #fff; }
+.lf-tour { margin-left: auto; color: #04122e; background: linear-gradient(180deg, #ffffff 0%, #cfeaff 100%); box-shadow: 0 8px 30px -8px rgba(56, 189, 248, 0.8); }
+.lf-tour:hover { color: #04122e; box-shadow: 0 10px 36px -6px rgba(56, 189, 248, 1); }
+.lf-tour[aria-pressed='true'] { color: #e0f2fe; background: rgba(56, 189, 248, 0.14); box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.5); }
+@media (max-width: 767px) { .lf-tour { margin-left: 0; } }
+@media (max-width: 767px) { .lf-marker > button, .lf-ping { scale: 0.88; } }
+
+.lf-stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+@media (min-width: 1024px) { .lf-stage { grid-template-columns: minmax(0, 1fr) 15rem; gap: 0; align-items: start; } }
+.lf-pan { min-width: 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; margin: 0 -1.25rem; padding: 0 0.5rem; }
+.lf-pan::-webkit-scrollbar { display: none; }
+@media (min-width: 768px) { .lf-pan { margin: 0; padding: 0; overflow: visible; } }
+.lf-scene { position: relative; width: 100%; min-width: 46rem; }
+@media (min-width: 768px) { .lf-scene { min-width: 0; } }
+.lf-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* the plan */
+.lf-room { stroke: rgba(125, 211, 252, 0.22); stroke-width: 1; transition: fill-opacity 0.35s ease, stroke 0.35s ease, opacity 0.35s ease; fill-opacity: 0.75; }
+.lf-room.is-on { stroke: rgba(125, 211, 252, 0.95); fill-opacity: 1.9; filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.45)); }
+.lf-has-active .lf-room:not(.is-on) { opacity: 0.45; }
+.lf-grid line { stroke: rgba(125, 211, 252, 0.07); stroke-width: 1; }
+.lf-wall { stroke: rgba(125, 211, 252, 0.3); stroke-width: 1; stroke-linejoin: round; }
+.lf-wall-low { fill: rgba(125, 211, 252, 0.1); stroke: rgba(186, 230, 253, 0.42); }
+.lf-prop polygon { stroke: rgba(186, 230, 253, 0.34); stroke-width: 0.8; stroke-linejoin: round; }
+.lf-prop .is-top { fill: rgba(125, 211, 252, 0.16); } .lf-prop .is-left { fill: rgba(30, 64, 175, 0.34); } .lf-prop .is-right { fill: rgba(14, 30, 70, 0.6); }
+.lf-has-active .lf-prop, .lf-has-active .lf-wall { opacity: 0.55; }
+.lf-prop, .lf-wall { transition: opacity 0.35s ease; }
+.lf-edge { fill: none; stroke: rgba(125, 211, 252, 0.5); stroke-width: 1.5; stroke-linejoin: round; }
+.lf-dockdoor { stroke: #a78bfa; stroke-width: 4; stroke-linecap: round; opacity: 0.8; }
+
+.lf-ripples ellipse { fill: rgba(56, 189, 248, 0.05); stroke: #38bdf8; stroke-width: 1.2; opacity: 0; transform-box: fill-box; transform-origin: center; animation: lf-ripple 4.2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
+.lf-ripples.is-on ellipse { stroke: #7dd3fc; stroke-width: 1.8; fill: rgba(56, 189, 248, 0.1); }
+.lf-has-active .lf-ripples:not(.is-on) { opacity: 0.25; }
+@keyframes lf-ripple { 0% { transform: scale(0.08); opacity: 0; } 12% { opacity: 0.6; } 100% { transform: scale(1); opacity: 0; } }
+
+.lf-links line { stroke: var(--c, #38bdf8); stroke-width: 1; stroke-linecap: round; opacity: 0.16; transition: opacity 0.3s ease; }
+.lf-links line.is-dashed { stroke-dasharray: 2 5; }
+.lf-links line.is-on { opacity: 0.95; stroke-width: 1.6; stroke-dasharray: 5 6; animation: lf-dash 0.9s linear infinite; filter: drop-shadow(0 0 4px var(--c, #38bdf8)); }
+.lf-links line.is-off { display: none; }
+.lf-links .lf-uplink { stroke: #7dd3fc; stroke-dasharray: 1 7; opacity: 0.22; }
+.lf-links .lf-uplink.is-on { opacity: 0.6; stroke-dasharray: 5 6; }
+.lf-has-active .lf-links line:not(.is-on) { opacity: 0.05; }
+@keyframes lf-dash { to { stroke-dashoffset: -11; } }
+.lf-packet { transition: opacity 0.18s linear; }
+.lf-packet.is-off { display: none; }
+.lf-cloud path { fill: rgba(8, 18, 40, 0.9); stroke: #7dd3fc; stroke-width: 1.6; stroke-linejoin: round; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8)); }
+.lf-cloud-label { position: absolute; transform: translate(-50%, 1.4rem); white-space: nowrap; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; color: #bae6fd; pointer-events: none; }
+
+/* the buttons over the plan */
+.lf-roomname { position: absolute; transform-origin: 0 50%; transform: translateY(-50%) matrix(0.866, 0.5, -0.866, 0.5, 0, 0); white-space: nowrap; border-radius: 9999px; padding: 0.3rem 0.65rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(186, 230, 253, 0.5); transition: color 0.25s ease, background-color 0.25s ease, opacity 0.25s ease; }
+html[lang='th'] .lf-roomname { letter-spacing: 0; text-transform: none; font-size: 0.8125rem; }
+.lf-roomname:hover, .lf-roomname.is-on { color: #fff; background: rgba(56, 189, 248, 0.14); }
+.lf-has-active .lf-roomname:not(.is-on) { opacity: 0.35; }
+
+.lf-marker { position: absolute; width: 0; height: 0; z-index: 2; transition: opacity 0.3s ease; }
+.lf-marker.is-tag { z-index: 3; will-change: transform; }
+.lf-marker.is-node { z-index: 4; }
+.lf-marker.is-active { z-index: 20; }
+.lf-marker.is-off { opacity: 0; pointer-events: none; }
+.lf-has-active .lf-marker:not(.is-on):not(.is-off) { opacity: 0.22; }
+.lf-marker > button { position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; margin: -1.125rem 0 0 -1.125rem; border-radius: 9999px; color: var(--c);
+  background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c) 26%, #060b16) 0%, #060b16 75%);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 75%, transparent), 0 0 18px -2px color-mix(in srgb, var(--c) 65%, transparent), 0 8px 14px -6px #000;
+  transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4), box-shadow 0.25s ease; }
+/* a bigger target than the dot itself */
+.lf-marker > button::after { content: ''; position: absolute; inset: -0.4rem; border-radius: inherit; }
+.lf-marker > button:hover, .lf-marker.is-active > button { transform: scale(1.18); box-shadow: inset 0 0 0 2px var(--c), 0 0 30px 2px color-mix(in srgb, var(--c) 80%, transparent), 0 8px 14px -6px #000; }
+.lf .lf-marker > button:focus-visible { border-radius: 9999px; }
+.lf-marker.is-node > button { width: 3rem; height: 3rem; margin: -1.5rem 0 0 -1.5rem; border-radius: 0.95rem;
+  background: linear-gradient(160deg, #16233f 0%, #070c18 70%); box-shadow: inset 0 0 0 1.5px rgba(125, 211, 252, 0.85), 0 0 34px 0 rgba(56, 189, 248, 0.75), 0 12px 18px -8px #000; }
+.lf .lf-marker.is-node > button:focus-visible { border-radius: 0.95rem; }
+.lf-node-bar { animation: lf-bar 2.4s ease-in-out infinite; }
+@keyframes lf-bar { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+.lf-marker.is-integrating > button { box-shadow: 0 8px 14px -6px #000; outline: 1.5px dashed color-mix(in srgb, var(--c) 70%, transparent); outline-offset: -1.5px; color: color-mix(in srgb, var(--c) 70%, #64748b); }
+.lf-ping { position: absolute; left: -1.125rem; top: -1.125rem; width: 2.25rem; height: 2.25rem; border-radius: 9999px; box-shadow: 0 0 0 1.5px var(--c); opacity: 0; pointer-events: none; }
+.lf-wifi { position: absolute; right: -0.35rem; top: -0.45rem; width: 0.95rem; height: 0.95rem; padding: 0.12rem; border-radius: 9999px; color: #04060b; background: var(--c); }
+.lf-zone { position: absolute; left: 0; top: 1.3rem; transform: translateX(-50%); white-space: nowrap; border-radius: 9999px; padding: 0.1rem 0.5rem; font-size: 0.625rem; font-weight: 600; color: #a7f3d0;
+  background: rgba(4, 12, 20, 0.85); box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.4); pointer-events: none; }
+
+/* the card: what the thing is, an example reading, who hears it, what it could alert on */
+.lf-card { position: absolute; z-index: 30; width: 17.5rem; border-radius: 1.15rem; padding: 1rem 1.1rem 0.9rem; text-align: left; pointer-events: none;
+  background: linear-gradient(160deg, rgba(22, 34, 60, 0.82) 0%, rgba(6, 10, 20, 0.9) 100%); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14), inset 0 1px 0 0 rgba(255, 255, 255, 0.22), 0 30px 60px -20px #000, 0 0 50px -14px var(--c);
+  animation: lf-card-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.lf-card.lf-right { left: 2rem; } .lf-card.lf-left { right: 2rem; }
+.lf-card.lf-down { top: -1.4rem; } .lf-card.lf-up { bottom: -1.4rem; }
+@keyframes lf-card-in { from { opacity: 0; transform: translateY(6px) scale(0.97); } to { opacity: 1; transform: none; } }
+.lf-card-badge { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c); }
+.lf-card-badge::before { content: ''; width: 6px; height: 6px; border-radius: 9999px; background: var(--c); box-shadow: 0 0 8px 1px var(--c); }
+html[lang='th'] .lf-card-badge { letter-spacing: 0; text-transform: none; font-size: 0.8125rem; }
+.lf-card-title { margin-top: 0.3rem; font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; color: #fff; }
+.lf-card dl { margin-top: 0.65rem; display: grid; gap: 0.55rem; }
+.lf-card dl > div { border-top: 1px solid rgba(255, 255, 255, 0.09); padding-top: 0.5rem; }
+.lf-card dt { font-size: 0.6875rem; font-weight: 600; color: #7c8aa3; }
+.lf-card dd { margin-top: 0.1rem; font-size: 0.8438rem; line-height: 1.4; color: #e2e8f0; }
+
+/* the phone */
+.lf-phone { position: relative; z-index: 5; }
+@media (min-width: 1024px) { .lf-phone { margin: 15% 0 0 -1.5rem; } }
+.lf-phone-body { position: relative; overflow: hidden; border-radius: 2.1rem; padding: 2.6rem 0.7rem 1rem; min-height: 29rem;
+  background: radial-gradient(120% 60% at 50% 0%, rgba(47, 139, 255, 0.3) 0%, transparent 60%), linear-gradient(180deg, #0c1528 0%, #05080f 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16), inset 0 0 0 5px #05070c, inset 0 0 0 6px rgba(255, 255, 255, 0.08), 0 40px 70px -30px #000, 0 0 60px -20px rgba(56, 189, 248, 0.7); }
+.lf-phone-notch { position: absolute; left: 50%; top: 0.85rem; width: 4.2rem; height: 1.15rem; margin-left: -2.1rem; border-radius: 9999px; background: #000; }
+.lf-phone-tag { margin: 0 0 0.6rem; text-align: center; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #64748b; }
+html[lang='th'] .lf-phone-tag { letter-spacing: 0; text-transform: none; font-size: 0.75rem; }
+.lf-phone ul { display: grid; gap: 0.5rem; }
+.lf-note { display: grid; gap: 0.25rem; border-radius: 1.05rem; padding: 0.7rem 0.8rem; background: rgba(255, 255, 255, 0.09); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 30px -12px var(--c); animation: lf-note-in 0.55s cubic-bezier(0.2, 0.9, 0.25, 1.2) both; }
+@keyframes lf-note-in { from { opacity: 0; transform: translateY(-14px) scale(0.94); } to { opacity: 1; transform: none; } }
+.lf-note-app { display: flex; align-items: center; gap: 0.4rem; font-size: 0.6875rem; font-weight: 600; color: #94a3b8; }
+.lf-note-app i { width: 0.9rem; height: 0.9rem; border-radius: 0.3rem; background: linear-gradient(140deg, var(--c), #1d4ed8); }
+.lf-note-app em { margin-left: auto; font-style: normal; font-weight: 500; color: #64748b; }
+.lf-note-text { font-size: 0.875rem; font-weight: 600; line-height: 1.3; color: #fff; }
+.lf-note.is-idle { background: none; box-shadow: none; text-align: center; font-size: 0.75rem; color: #475569; animation: none; }
+@media (max-width: 1023px) { .lf-phone { max-width: 24rem; margin: 0 auto; width: 100%; } .lf-phone-body { min-height: 9.5rem; border-radius: 1.6rem; padding-top: 2.3rem; } }
+
+/* phones: details in a sheet above the buy bar */
+.lf-sheet { position: fixed; left: 0.75rem; right: 0.75rem; bottom: calc(env(safe-area-inset-bottom) + 5.25rem); z-index: 45; animation: lf-sheet-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes lf-sheet-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+.lf-sheet .lf-card { position: relative; width: auto; pointer-events: auto; animation: none; padding-right: 3rem; }
+.lf-sheet-close { position: absolute; right: 0.6rem; top: 0.6rem; z-index: 31; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 9999px; color: #e2e8f0; background: rgba(255, 255, 255, 0.1); }
+
+.lf-paused *, .lf-paused *::before, .lf-paused *::after { animation-play-state: paused !important; }
+.lf-still .lf-ripples ellipse { animation: none; opacity: 0.4; }
+.lf-still .lf-ripples ellipse:nth-child(1) { transform: scale(0.34); } .lf-still .lf-ripples ellipse:nth-child(2) { transform: scale(0.67); }
+.lf-still .lf-links line, .lf-still .lf-node-bar, .lf-still .lf-card, .lf-still .lf-note, .lf-still .lf-sheet { animation: none; }
+.lf-still .lf-links line { opacity: 0.4; }
+.lf-still .lf-marker > button { transition: none; }
+@media (prefers-reduced-motion: reduce) { .lf *, .lf *::before, .lf *::after { animation: none !important; transition: none !important; } }

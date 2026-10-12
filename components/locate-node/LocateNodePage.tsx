@@ -8,6 +8,8 @@ import type { StoreImage, StoreProduct } from '@/lib/store/types';
 import type { LocateNodeStrings } from '@/lib/locate-node/strings';
 import { buyView, words } from '@/lib/locate-node/view';
 import NotifyForm from '@/components/store/NotifyForm';
+import { facilityStrings } from '@/lib/locate-node/facility-strings';
+import Facility from './Facility';
 import LocateNodeFx from './LocateNodeFx';
 
 const BENTO_ICONS = [Radio, Radar, Activity, Workflow, Sparkles, Box];
@@ -141,6 +143,9 @@ export default function LocateNodePage({ locale, t, s, product }: { locale: Loca
           <p className="mx-auto mt-8 max-w-xl text-xs leading-relaxed text-slate-500">{t.flow.note}</p>
         </div>
       </section>
+
+      {/* -------------------------------------------------------------- facility */}
+      <Facility t={facilityStrings(locale)} />
 
       {/* ----------------------------------------------------------------- bento */}
       <section className="px-5 py-20 sm:px-8 sm:py-28" aria-labelledby="ln-bento">
