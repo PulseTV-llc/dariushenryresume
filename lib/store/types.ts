@@ -10,7 +10,8 @@ export interface StoreVariant {
 /** A bulk price: `unit_cents` each when min_qty..max_qty (null = and up) are bought. variant_id null = for the product's own price. */
 export interface PriceTier { variant_id: string | null; min_qty: number; max_qty: number | null; unit_cents: number }
 export interface StoreOption { name: string; values: string[] }
-export type ProductStatus = 'draft' | 'active' | 'archived';
+/** coming_soon: shown in the store, never sold */
+export type ProductStatus = 'draft' | 'active' | 'archived' | 'coming_soon';
 export type InventoryMode = 'tracked' | 'made_to_order';
 export interface ProductText { name?: string; summary?: string; description?: string }
 export interface StoreProduct {
@@ -22,8 +23,10 @@ export interface StoreProduct {
   updated_at: string; published_at: string | null; images: StoreImage[]; variants: StoreVariant[];
   /** bulk prices; the largest quantity of one item per order; whether to offer "contact us" beyond it */
   price_tiers?: PriceTier[]; order_limit?: number; bulk_contact?: boolean;
+  /** coming soon: optional free text ("Spring 2027"), and whether the "Notify me" form is offered */
+  expected_text?: string | null; notify_enabled?: boolean;
   // admin only
-  inventory?: number; position?: number; category_id?: string | null; created_at?: string; sold?: number;
+  inventory?: number; position?: number; category_id?: string | null; created_at?: string; sold?: number; waitlist?: number;
 }
 export interface StoreCategory { id: string; slug: string; name: string; position?: number }
 export interface Catalog { products: StoreProduct[]; categories: StoreCategory[] }

@@ -52,6 +52,20 @@ A product can cost less per unit in quantity ranges, set in the admin under **Bu
   browser. Each order line keeps the unit price, the normal price and the range that applied, so later price
   changes do not alter past orders. Stock on hand still limits what can be ordered.
 
+## Coming soon and the waitlist
+
+A product's status can be **Coming soon**: it appears in the store grid and has its own page, with a
+"Coming soon" badge and a slightly muted photo, but it can never be added to a cart or bought (the checkout
+refuses it on the server whatever the request says). A price is optional; without one shoppers see "Price TBA".
+An optional free-text **Expected** ("Spring 2027") is shown as "Expected …". The "Store" link in the navigation
+appears when anything is on sale or coming soon.
+
+With **Offer "Notify me when available"** switched on, the product page has an email form. Addresses go to
+`store.waitlist` (product, email, language, time), once per product and address. Sign-ups are validated and rate
+limited (5 an hour per visitor, 300 an hour per product, 3000 a day); the visitor is recognised by a one-way hash
+of the IP address, used only for that limit. **No email is sent yet**: the product's admin page lists who is
+waiting, with a CSV export, and the product list shows the count. Sending comes later with the email provider.
+
 ## Environment variables (Vercel → Project → Settings → Environment Variables)
 
 | Name | Secret? | Purpose |

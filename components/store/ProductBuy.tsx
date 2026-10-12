@@ -9,6 +9,7 @@ import { activeRow, lineSavings, rangeLabel, tierRows, unitPrice } from '@/lib/s
 import type { StoreStrings } from '@/lib/store/strings';
 import type { StoreProduct } from '@/lib/store/types';
 import { useCart } from './useCart';
+import NotifyForm from './NotifyForm';
 
 const primary = 'inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:from-blue-800 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto';
 
@@ -39,7 +40,8 @@ export default function ProductBuy({ product, locale, t, checkoutOpen, contactHr
   const cents = price.unit_cents;
   const saved = cents == null ? 0 : lineSavings(price.base_cents, cents, qty);
   const row = activeRow(rows, qty);
-  const canBuy = checkoutOpen && cents != null && available;
+  const soon = product.status === 'coming_soon';   // shown, never sold: no cart, whatever else is set
+  const canBuy = !soon && checkoutOpen && cents != null && available;
   const atLimit = (product.order_limit ?? 10) <= max && qty >= max;   // the limit is the store's, not the stock's
 
   const setQty = (n: number) => { const v = Math.max(1, Math.min(max, Math.floor(n) || 1)); setQuantity(v); setTyped(String(v)); setAdded(false); };
@@ -49,7 +51,7 @@ export default function ProductBuy({ product, locale, t, checkoutOpen, contactHr
     <div>
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1" aria-live="polite">
         <p className="text-2xl font-bold text-slate-900">
-          {cents == null ? t.noPrice : needsChoice && product.price_varies ? t.from.replace('{price}', m(cents)) : rows.length ? t.bulk.each.replace('{price}', m(cents)) : m(cents)}
+          {cents == null ? (soon ? t.soon.priceTba : t.noPrice) : needsChoice && product.price_varies ? t.from.replace('{price}', m(cents)) : rows.length ? t.bulk.each.replace('{price}', m(cents)) : m(cents)}
         </p>
         {cents != null && price.base_cents != null && cents < price.base_cents && <p className="text-sm text-slate-500 line-through">{m(price.base_cents)}</p>}
         {cents != null && qty > 1 && <p className="text-sm text-slate-600">{qty} × {m(cents)} = <span className="font-semibold text-slate-900">{m(cents * qty)}</span></p>}
@@ -124,6 +126,12 @@ export default function ProductBuy({ product, locale, t, checkoutOpen, contactHr
             </p>
           )}
         </>
+      ) : soon ? (
+        <div className="mt-5">
+          {product.expected_text && <p className="mb-3 text-sm font-medium text-slate-700">{t.soon.expected.replace('{when}', product.expected_text)}</p>}
+          <button type="button" disabled aria-disabled="true" className={primary}>{t.soon.badge}</button>
+          {product.notify_enabled && <NotifyForm productId={product.id} locale={locale} t={t} />}
+        </div>
       ) : (
         <div className="mt-5">
           <Link href={contactHref} className={primary}>{t.contactToOrder}<ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>

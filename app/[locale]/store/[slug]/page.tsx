@@ -63,7 +63,7 @@ export default async function ProductPage({ params }: { params: Params }) {
           {text.summary && <p className="mt-3 text-lg leading-relaxed text-slate-600">{text.summary}</p>}
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <Availability product={p} t={t} />
-            {p.inventory_mode === 'made_to_order' && p.lead_time_days != null && <span className="text-sm text-slate-600">{t.leadTime.replace('{days}', String(p.lead_time_days))}</span>}
+            {p.status === 'active' && p.inventory_mode === 'made_to_order' && p.lead_time_days != null && <span className="text-sm text-slate-600">{t.leadTime.replace('{days}', String(p.lead_time_days))}</span>}
           </div>
           <div className="mt-6">
             <ProductBuy product={p} locale={locale} t={t} checkoutOpen={checkoutEnabled()} contactHref={localePath(locale, '/contact')} cartHref={localePath(locale, '/store/cart')} />

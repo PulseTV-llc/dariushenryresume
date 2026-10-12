@@ -15,7 +15,8 @@ const amount = (cents: number, currency: string) => (cents / minorUnit(currency)
 export function productSchema(p: StoreProduct, locale: Locale) {
   const t = productText(p, locale);
   const url = abs(locale, `/store/${p.slug}`);
-  const availability = !p.available ? 'OutOfStock' : p.inventory_mode === 'made_to_order' ? 'MadeToOrder' : 'InStock';
+  // coming soon: announced, not yet for sale (PreOrder is the closest schema.org value); otherwise the honest stock state
+  const availability = p.status === 'coming_soon' ? 'PreOrder' : !p.available ? 'OutOfStock' : p.inventory_mode === 'made_to_order' ? 'MadeToOrder' : 'InStock';
   const priced = p.variants.filter((v) => v.price_cents != null);
   const offer = (cents: number, extra: Record<string, unknown> = {}) => ({
     '@type': 'Offer', url, priceCurrency: p.currency.toUpperCase(), price: amount(cents, p.currency), itemCondition: 'https://schema.org/NewCondition',

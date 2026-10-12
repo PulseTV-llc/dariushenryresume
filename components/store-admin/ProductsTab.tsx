@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { ArrowDown, ArrowLeft, ArrowUp, ImagePlus, Loader2, Plus, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowUp, Download, ImagePlus, Loader2, Plus, Trash2 } from 'lucide-react';
 import { LOCALES, LOCALE_INFO } from '@/lib/i18n/config';
 import { call, refreshSite, removeFiles, removeImage, uploadImage } from '@/lib/store/admin-client';
 import {
@@ -14,15 +14,49 @@ import { imageUrl } from '@/lib/store/config';
 import { money, priceLabel } from '@/lib/store/format';
 import { rangeLabel } from '@/lib/store/pricing';
 import { storeStrings } from '@/lib/store/strings';
+import { waitlistCsv, waitlistCsvName, type WaitlistEntry } from '@/lib/store/waitlist';
 import type { ProductStatus, StoreCategory, StoreProduct } from '@/lib/store/types';
 import { Availability, ProductImage } from '@/components/store/StoreParts';
 import { BTN, BTN_QUIET, CARD, INPUT } from './StoreAdmin';
 
-const STATUS_TONE: Record<ProductStatus, string> = { draft: 'bg-slate-100 text-slate-700', active: 'bg-emerald-50 text-emerald-800', archived: 'bg-amber-50 text-amber-800' };
+const STATUS_TONE: Record<ProductStatus, string> = { draft: 'bg-slate-100 text-slate-700', active: 'bg-emerald-50 text-emerald-800', archived: 'bg-amber-50 text-amber-800', coming_soon: 'bg-blue-50 text-blue-800' };
+const STATUS_NAME: Record<ProductStatus, string> = { draft: 'draft', active: 'active', archived: 'archived', coming_soon: 'coming soon' };
 const T = storeStrings('en');
 const Label = ({ text, hint, children }: { text: string; hint?: string; children: React.ReactNode }) => (
   <label className="block text-sm font-medium text-slate-800">{text}{children}{hint && <span className="mt-1 block text-xs font-normal text-slate-500">{hint}</span>}</label>
 );
+
+/** The people waiting for a coming-soon product: how many, who, and a CSV. Shown only when someone has signed up. */
+function Waitlist({ productId, name, slug }: { productId: string; name: string; slug: string }) {
+  const [entries, setEntries] = useState<WaitlistEntry[] | null>(null);
+  useEffect(() => {
+    call<{ entries: WaitlistEntry[] }>('store_admin_waitlist', { p_product: productId }).then((w) => setEntries(w.entries)).catch(() => setEntries([]));
+  }, [productId]);
+  if (!entries || entries.length === 0) return null;
+  const download = () => {
+    const url = URL.createObjectURL(new Blob(['\uFEFF', waitlistCsv(name, entries)], { type: 'text/csv;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = waitlistCsvName(slug); a.click();
+    URL.revokeObjectURL(url);
+  };
+  return (
+    <section className={`${CARD} space-y-2`}>
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-base font-semibold">Waitlist · {entries.length}</h3>
+        <button type="button" onClick={download} className={`${BTN_QUIET} !h-10`}><Download className="h-4 w-4" aria-hidden="true" />CSV</button>
+      </div>
+      <p className="text-xs text-slate-500">People who asked to be told when this is available. Nothing has been sent to them: emailing them comes later.</p>
+      <ul className="max-h-56 divide-y divide-slate-100 overflow-y-auto text-sm">
+        {entries.map((e) => (
+          <li key={e.email} className="flex items-center justify-between gap-3 py-1.5">
+            <a href={`mailto:${e.email}`} className="min-w-0 truncate text-blue-700">{e.email}</a>
+            <span className="shrink-0 text-xs text-slate-500">{e.locale ?? ''} · {new Date(e.created_at).toLocaleDateString()}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 /**
  * Bulk pricing: quantity ranges with a price per unit. One list for the product's own price, and one for any
@@ -194,7 +228,7 @@ function Editor({ initial, categories, onClose, onCategories }: {
         <button type="button" onClick={() => onClose(changed)} className="inline-flex h-10 items-center gap-1 text-sm font-semibold text-blue-700"><ArrowLeft className="h-4 w-4" aria-hidden="true" />Products</button>
         <div className="flex items-center gap-2">
           <select aria-label="Status" value={form.status} onChange={(e) => set({ status: e.target.value as ProductStatus })} className={`${INPUT} !h-10 !w-auto`}>
-            <option value="draft">Draft</option><option value="active">Active (on the store)</option><option value="archived">Archived</option>
+            <option value="draft">Draft</option><option value="coming_soon">Coming soon (shown, not sold)</option><option value="active">Active (on the store)</option><option value="archived">Archived</option>
           </select>
           <button type="button" onClick={() => save()} disabled={busy !== ''} className={`${BTN} !h-10`}>{busy === 'save' && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}Save</button>
         </div>
@@ -279,6 +313,21 @@ function Editor({ initial, categories, onClose, onCategories }: {
             </div>
           </section>
 
+          {form.status === 'coming_soon' && (
+            <section className={`${CARD} space-y-3 !border-blue-200`}>
+              <h3 className="text-base font-semibold">Coming soon</h3>
+              <p className="text-xs text-slate-500">Shown in the store with a “Coming soon” badge. It cannot be added to a cart or bought. A price is optional: without one shoppers see “Price TBA”.</p>
+              <Label text="Expected (optional)" hint="Free text, shown as “Expected …”. For example: Spring 2027, or March.">
+                <input value={form.expected} maxLength={80} placeholder="Spring 2027" onChange={(e) => set({ expected: e.target.value })} className={`${INPUT} mt-1`} />
+              </Label>
+              <label className="flex items-start gap-3 rounded-xl border border-slate-300 p-3 text-sm">
+                <input type="checkbox" checked={form.notify} onChange={(e) => set({ notify: e.target.checked })} className="mt-1" />
+                <span><span className="block font-semibold">Offer “Notify me when available”</span><span className="block text-xs text-slate-500">Shoppers can leave an email. Addresses are collected below; no email is sent automatically yet.</span></span>
+              </label>
+            </section>
+          )}
+          {form.id && <Waitlist productId={form.id} name={form.name} slug={form.slug} />}
+
           <BulkPricing form={form} set={set} />
 
           <section className={`${CARD} space-y-3`}>
@@ -360,7 +409,7 @@ function Editor({ initial, categories, onClose, onCategories }: {
               <h3 className="text-xl font-bold tracking-tight">{preview.name}</h3>
               {preview.summary && <p className="mt-1 text-sm text-slate-600">{preview.summary}</p>}
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="text-lg font-bold">{priceLabel(preview, 'en', T.from) ?? T.noPrice}</span>
+                <span className="text-lg font-bold">{priceLabel(preview, 'en', T.from) ?? (preview.status === 'coming_soon' ? T.soon.priceTba : T.noPrice)}</span>
                 {preview.compare_at_cents != null && preview.from_cents != null && preview.compare_at_cents > preview.from_cents && <span className="text-sm text-slate-500 line-through">{money(preview.compare_at_cents, preview.currency)}</span>}
                 <Availability product={preview} t={T} />
               </div>
@@ -370,11 +419,13 @@ function Editor({ initial, categories, onClose, onCategories }: {
                 <p className="mt-2 rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs text-slate-700"><span className="font-semibold">{T.bulk.title}:</span>{' '}
                   {(preview.price_tiers ?? []).filter((x) => x.variant_id === null).map((x) => `${rangeLabel(x.min_qty, x.max_qty)} ${money(x.unit_cents, preview.currency)}`).join(' · ')}</p>
               )}
-              <span className="mt-3 inline-flex h-10 items-center rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white opacity-90">{preview.from_cents != null && preview.available ? T.addToCart : T.contactToOrder}</span>
+              {preview.status === 'coming_soon' && preview.expected_text && <p className="mt-2 text-xs font-medium text-slate-700">{T.soon.expected.replace('{when}', preview.expected_text)}</p>}
+              <span className={`mt-3 inline-flex h-10 items-center rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white ${preview.status === 'coming_soon' ? 'opacity-50' : 'opacity-90'}`}>{preview.status === 'coming_soon' ? T.soon.badge : preview.from_cents != null && preview.available ? T.addToCart : T.contactToOrder}</span>
+              {preview.notify_enabled && <p className="mt-2 text-xs text-slate-500">+ {T.soon.notifyTitle}</p>}
               {preview.description && <p className="mt-3 line-clamp-6 whitespace-pre-line text-sm text-slate-700">{preview.description}</p>}
             </div>
           </div>
-          <p className="mt-2 text-xs text-slate-500">{form.status === 'active' ? 'Active: visible on the store.' : form.status === 'draft' ? 'Draft: not visible on the store.' : 'Archived: hidden from the store.'} “Add to cart” appears once checkout is open; until then shoppers see “Contact to order”.</p>
+          <p className="mt-2 text-xs text-slate-500">{form.status === 'active' ? 'Active: visible on the store.' : form.status === 'coming_soon' ? 'Coming soon: visible on the store, cannot be bought.' : form.status === 'draft' ? 'Draft: not visible on the store.' : 'Archived: hidden from the store.'} “Add to cart” appears once checkout is open; until then shoppers see “Contact to order”.</p>
         </aside>
       </div>
     </div>
@@ -397,7 +448,7 @@ export default function ProductsTab() {
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-slate-600">{data.products.length} product{data.products.length === 1 ? '' : 's'} · {data.products.filter((p) => p.status === 'active').length} on the store</p>
+        <p className="text-sm text-slate-600">{data.products.length} product{data.products.length === 1 ? '' : 's'} · {data.products.filter((p) => p.status === 'active').length} on sale · {data.products.filter((p) => p.status === 'coming_soon').length} coming soon</p>
         <button type="button" onClick={() => setEditing('new')} className={BTN}><Plus className="h-4 w-4" aria-hidden="true" />New product</button>
       </div>
       <ul className="mt-3 space-y-2">
@@ -410,10 +461,10 @@ export default function ProductsTab() {
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{p.name}</span>
                 <span className="block truncate text-sm text-slate-500">
-                  {priceLabel(p, 'en', T.from) ?? 'No price'} · {p.inventory_mode === 'made_to_order' ? 'made to order' : `${p.variants.length ? p.variants.reduce((n, v) => n + (v.inventory ?? 0), 0) : p.inventory ?? 0} in stock`} · {p.sold ?? 0} sold
+                  {priceLabel(p, 'en', T.from) ?? 'No price'} · {p.inventory_mode === 'made_to_order' ? 'made to order' : `${p.variants.length ? p.variants.reduce((n, v) => n + (v.inventory ?? 0), 0) : p.inventory ?? 0} in stock`} · {p.sold ?? 0} sold{p.waitlist ? ` · ${p.waitlist} waiting` : ''}
                 </span>
               </span>
-              <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_TONE[p.status]}`}>{p.status}</span>
+              <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_TONE[p.status]}`}>{STATUS_NAME[p.status]}</span>
             </button>
           </li>
         ))}

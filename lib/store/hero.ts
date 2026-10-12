@@ -22,7 +22,7 @@ const THE = new Set(['US', 'GB', 'PH', 'NL', 'AE', 'BS', 'DO', 'CZ', 'MV', 'SC']
  */
 export function heroChips(o: { products: StoreProduct[]; checkoutOpen: boolean; shipFrom: string | null; shipTo: string[]; locale: Locale; t: StoreStrings }): string[] {
   const { products, checkoutOpen, shipFrom, shipTo, locale, t } = o;
-  const sellable = products.filter((p) => p.from_cents != null);
+  const sellable = products.filter((p) => p.status === 'active' && p.from_cents != null);   // coming-soon items are not for sale
   const second = sellable.length > 0 && sellable.every((p) => p.inventory_mode === 'made_to_order') ? t.madeToOrder
     : sellable.length > 0 && sellable.every((p) => p.inventory_mode === 'tracked' && p.available) ? t.inStock
     : checkoutOpen ? t.hero.chipStripe : t.hero.chipMessage;

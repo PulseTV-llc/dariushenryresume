@@ -12,6 +12,8 @@ export interface ProductForm {
   translations: Record<string, ProductText>; images: { id: string; path: string; alt: string }[];
   /** bulk prices; scope '' = the product's own price, else a variant's key */
   tiers: TierForm[]; maxQuantity: string; bulkContact: boolean;
+  /** coming soon: optional "Spring 2027"; whether shoppers can leave an email */
+  expected: string; notify: boolean;
 }
 export interface TierForm { scope: string; min: string; max: string; price: string }
 
@@ -70,13 +72,13 @@ export function formFromProduct(p: StoreProduct): ProductForm {
     variants: p.variants.map((v) => ({ key: v.id, id: v.id, title: v.title, sku: v.sku ?? '', price: moneyInput(v.own_price_cents, p.currency), inventory: String(v.inventory ?? 0), active: v.active ?? true, option_values: v.option_values })),
     seo_title: p.seo_title ?? '', seo_description: p.seo_description ?? '', translations: p.translations ?? {}, images: p.images.map((i) => ({ id: i.id, path: i.path, alt: i.alt })),
     tiers: (p.price_tiers ?? []).map((x) => ({ scope: x.variant_id ?? '', min: String(x.min_qty), max: x.max_qty == null ? '' : String(x.max_qty), price: moneyInput(x.unit_cents, p.currency) })),
-    maxQuantity: String(p.order_limit ?? 10), bulkContact: p.bulk_contact ?? false,
+    maxQuantity: String(p.order_limit ?? 10), bulkContact: p.bulk_contact ?? false, expected: p.expected_text ?? '', notify: p.notify_enabled ?? false,
   };
 }
 export const emptyForm = (): ProductForm => ({
   name: '', slug: '', slugTouched: false, summary: '', description: '', status: 'draft', category_id: '', price: '', compareAt: '', currency: 'usd',
   inventory_mode: 'tracked', inventory: '0', leadTime: '', options: [], variants: [], seo_title: '', seo_description: '', translations: {}, images: [],
-  tiers: [], maxQuantity: '10', bulkContact: false,
+  tiers: [], maxQuantity: '10', bulkContact: false, expected: '', notify: false,
 });
 
 /** The form as public.store_admin_product_save expects it, or the first problem in plain words. */
@@ -128,12 +130,14 @@ export function productPayload(f: ProductForm): { payload: Record<string, unknow
     price_cents: price.cents, compare_at_cents: compare.cents, currency: f.currency, inventory_mode: f.inventory_mode, inventory: inventory ?? 0, lead_time_days: lead,
     options: parseOptions(f.options), variants, seo_title: f.seo_title.trim(), seo_description: f.seo_description.trim(), translations,
     images: f.images.map((i) => ({ id: i.id, alt: i.alt })), price_tiers, max_quantity: maxQuantity, bulk_contact: f.bulkContact,
+    expected_text: f.expected.trim().slice(0, 80), notify_enabled: f.status === 'coming_soon' && f.notify,
   } };
 }
 
 /** What is still missing before a product can go on sale: shown next to the status control. */
 export function readiness(f: ProductForm): string[] {
   const missing: string[] = [];
+  if (f.status === 'coming_soon') return f.images.length === 0 ? ['a photo (recommended)'] : [];   // a price is optional while it is coming soon
   const priced = f.variants.filter((v) => v.active).length ? f.variants.filter((v) => v.active).every((v) => v.price.trim() || f.price.trim()) : !!f.price.trim();
   if (!priced) missing.push('a price');
   if (f.images.length === 0) missing.push('at least one photo');
@@ -158,8 +162,8 @@ export function previewProduct(f: ProductForm, categories: { id: string; slug: s
     category: categories.find((c) => c.id === f.category_id) ?? null, currency: f.currency, price_cents: base, compare_at_cents: cents(f.compareAt),
     from_cents: prices.length ? Math.min(...prices) : null, price_varies: new Set(prices).size > 1, inventory_mode: f.inventory_mode,
     lead_time_days: /^\d+$/.test(f.leadTime.trim()) ? Number(f.leadTime) : null,
-    available: variants.length ? variants.some((v) => v.available) : base != null && (made || stock(f.inventory) > 0),
-    max_quantity: made ? limit : Math.min(stock(f.inventory), limit), order_limit: limit, bulk_contact: f.bulkContact,
+    available: f.status !== 'coming_soon' && (variants.length ? variants.some((v) => v.available) : base != null && (made || stock(f.inventory) > 0)),
+    max_quantity: made ? limit : Math.min(stock(f.inventory), limit), order_limit: limit, bulk_contact: f.bulkContact, expected_text: f.expected.trim() || null, notify_enabled: f.status === 'coming_soon' && f.notify,
     price_tiers: tierScopes(f).flatMap((scope) => { const r = parseTiers(f.tiers.filter((x) => x.scope === scope), f.currency); return 'tiers' in r ? r.tiers.map((x) => ({ ...x, variant_id: scope || null })) : []; }),
     options: parseOptions(f.options), seo_title: f.seo_title || null, seo_description: f.seo_description || null,
     translations: f.translations, updated_at: '', published_at: null, images: f.images.map((i) => ({ ...i, width: null, height: null })), variants,
