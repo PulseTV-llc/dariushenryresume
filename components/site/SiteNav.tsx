@@ -46,17 +46,19 @@ export default function SiteNav({ locale, groups, ctaHref, homeHref, t }: { loca
   // Close the mobile menu on navigation.
   useEffect(() => setOpen(false), [pathname]);
 
+  // dark product pages (the Locate Node story) get a dark bar; the open mobile menu is always light
+  const dark = /\/locate-node\/?$/.test(pathname ?? '') && !open;
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
   const badgeCls = 'rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-800 ring-1 ring-amber-200';
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-colors ${scrolled || open ? 'border-b border-slate-200/70 bg-white/85 backdrop-blur-xl' : 'bg-transparent'}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-colors ${dark ? (scrolled ? 'border-b border-white/10 bg-[#04060b]/75 backdrop-blur-xl' : 'bg-transparent') : scrolled || open ? 'border-b border-slate-200/70 bg-white/85 backdrop-blur-xl' : 'bg-transparent'}`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:rounded-lg focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-blue-700">
         {t.skip}
       </a>
       <nav aria-label={t.main} className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href={homeHref} aria-label={t.home} className="rounded-lg">
-          <VexaLogo />
+          <VexaLogo tone={dark ? 'light' : 'dark'} />
         </Link>
 
         {/* Desktop */}
@@ -64,7 +66,7 @@ export default function SiteNav({ locale, groups, ctaHref, homeHref, t }: { loca
           {groups.map((group) => (
             <li key={group.href} className="group relative">
               <Link href={group.href} aria-current={isActive(group.href) ? 'page' : undefined}
-                className={`inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${isActive(group.href) ? 'text-blue-700' : 'text-slate-700 hover:text-slate-900'}`}>
+                className={`inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${dark ? 'text-slate-200 hover:text-white' : isActive(group.href) ? 'text-blue-700' : 'text-slate-700 hover:text-slate-900'}`}>
                 {group.label}
                 {group.items && <ChevronDown className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />}
               </Link>
@@ -90,12 +92,12 @@ export default function SiteNav({ locale, groups, ctaHref, homeHref, t }: { loca
         </ul>
 
         <div className="flex items-center gap-1.5">
-          <LocaleSwitcher locale={locale} label={t.language} />
+          <LocaleSwitcher locale={locale} label={t.language} tone={dark ? 'light' : 'dark'} />
           <Link href={ctaHref} onClick={() => trackEvent('nav_demo_click', { locale })}
             className="hidden rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-700 sm:inline-flex">
             {t.bookDemo}
           </Link>
-          <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-800 hover:bg-slate-100 lg:hidden"
+          <button type="button" className={`inline-flex h-10 w-10 items-center justify-center rounded-xl lg:hidden ${dark ? 'text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'}`}
             aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? t.closeMenu : t.openMenu} onClick={() => setOpen((o) => !o)}>
             {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>

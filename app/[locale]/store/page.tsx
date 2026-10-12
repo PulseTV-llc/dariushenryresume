@@ -11,6 +11,9 @@ import { checkoutEnabled, shipCountries, shipsFrom } from '@/lib/store/config';
 import { heroChips } from '@/lib/store/hero';
 import { storeListSchema } from '@/lib/store/jsonld';
 import { storeStrings } from '@/lib/store/strings';
+import { LOCATE_NODE_PATH, LOCATE_NODE_SLUG, locateNodeStrings } from '@/lib/locate-node/strings';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export const revalidate = 300;
 
@@ -28,9 +31,22 @@ export default async function StorePage({ params }: { params: { locale: string }
   const t = storeStrings(locale);
   const c = getContent(locale);
   const { products, categories } = await getCatalog();
+  const locateNode = products.find((p) => p.slug === LOCATE_NODE_SLUG) ?? null;
   return (
     <>
       <StoreHero locale={locale} t={t} chips={heroChips({ products, checkoutOpen: checkoutEnabled(), shipFrom: shipsFrom(), shipTo: shipCountries(), locale, t })} hasProducts={products.length > 0} />
+      {locateNode && (
+        <div className="px-3 pt-4 sm:px-6 lg:px-8">
+          <Link href={localePath(locale, LOCATE_NODE_PATH)} className="group relative mx-auto flex max-w-[88rem] items-center gap-4 overflow-hidden rounded-[1.75rem] bg-[#04060b] px-5 py-4 text-white sm:gap-6 sm:px-8 sm:py-5">
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-sky-300">{locateNodeStrings(locale).name}</span>
+              <span className="mt-1 block text-balance text-lg font-semibold leading-snug sm:text-2xl">{locateNodeStrings(locale).hero.title.join(' ')}</span>
+            </span>
+            <span className="hidden shrink-0 items-center gap-2 text-sm font-semibold text-sky-200 sm:inline-flex">{locateNodeStrings(locale).store.explore}</span>
+            <ArrowRight className="h-5 w-5 shrink-0 text-sky-300 transition group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden="true" />
+          </Link>
+        </div>
+      )}
       <Section id="products" className="scroll-mt-20 !pt-10 sm:!pt-14">
         {products.length === 0 ? (
           <div className="glass mx-auto max-w-xl rounded-3xl p-8 text-center">

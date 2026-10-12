@@ -13,13 +13,13 @@ export function rememberLocale(locale: Locale) {
  * in each language; choosing one is remembered in a cookie so automatic
  * detection never overrides it.
  */
-export default function LocaleSwitcher({ locale, label, align = 'right' }: { locale: Locale; label: string; align?: 'left' | 'right' }) {
+export default function LocaleSwitcher({ locale, label, align = 'right', tone = 'dark' }: { locale: Locale; label: string; align?: 'left' | 'right'; tone?: 'dark' | 'light' }) {
   const { path } = stripLocale(usePathname() || '/');
   return (
     <details className="group relative">
       <summary
         aria-label={label}
-        className="flex h-10 cursor-pointer list-none items-center gap-1.5 rounded-xl px-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 [&::-webkit-details-marker]:hidden"
+        className={`flex h-10 cursor-pointer list-none items-center gap-1.5 rounded-xl px-2.5 text-sm font-medium [&::-webkit-details-marker]:hidden ${tone === 'light' ? 'text-white hover:bg-white/10' : 'text-slate-700 hover:bg-slate-100'}`}
       >
         <Globe className="h-4 w-4" aria-hidden="true" />
         <span className="uppercase">{locale}</span>

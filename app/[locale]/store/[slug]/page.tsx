@@ -13,6 +13,8 @@ import { checkoutEnabled, imageUrl } from '@/lib/store/config';
 import { productText } from '@/lib/store/format';
 import { productSchema } from '@/lib/store/jsonld';
 import { storeStrings } from '@/lib/store/strings';
+import { LOCATE_NODE_PATH, LOCATE_NODE_SLUG, locateNodeStrings } from '@/lib/locate-node/strings';
+import { ArrowRight } from 'lucide-react';
 
 type Params = { locale: string; slug: string };
 
@@ -65,6 +67,12 @@ export default async function ProductPage({ params }: { params: Params }) {
             <Availability product={p} t={t} />
             {p.status === 'active' && p.inventory_mode === 'made_to_order' && p.lead_time_days != null && <span className="text-sm text-slate-600">{t.leadTime.replace('{days}', String(p.lead_time_days))}</span>}
           </div>
+          {p.slug === LOCATE_NODE_SLUG && (
+            <Link href={localePath(locale, LOCATE_NODE_PATH)} className="group mt-5 flex items-center justify-between gap-3 rounded-2xl bg-[#04060b] px-5 py-4 text-white shadow-lg shadow-blue-900/20">
+              <span className="min-w-0"><span className="block text-base font-semibold">{locateNodeStrings(locale).store.explore}</span><span className="block truncate text-sm text-slate-400">{locateNodeStrings(locale).hero.title.join(' ')}</span></span>
+              <ArrowRight className="h-5 w-5 shrink-0 text-sky-300 transition group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden="true" />
+            </Link>
+          )}
           <div className="mt-6">
             <ProductBuy product={p} locale={locale} t={t} checkoutOpen={checkoutEnabled()} contactHref={localePath(locale, '/contact')} cartHref={localePath(locale, '/store/cart')} />
           </div>

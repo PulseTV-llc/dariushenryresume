@@ -66,6 +66,21 @@ limited (5 an hour per visitor, 300 an hour per product, 3000 a day); the visito
 of the IP address, used only for that limit. **No email is sent yet**: the product's admin page lists who is
 waiting, with a CSV export, and the product list shows the count. Sending comes later with the email provider.
 
+## The Locate Node page (`/locate-node`)
+
+A long, dark, scroll-told product page for the VexaOs Locate Node (store product `vexaos-locator-node`;
+`LOCATE_NODE_SLUG` overrides the slug). It exists only while that product is public in the store (on sale or
+coming soon) and follows it: the price, "Coming soon · Expected …", and whether the button is **Notify me**
+(the waitlist form at the end of the page), **Buy** or **View in store** all come from the product's live
+state. Its photos are the product's own photos from the store, in the order uploaded: the first is the hero.
+It is linked from the product's store page and from a banner on `/store`.
+
+Copy rules (also at the top of `lib/locate-node/strings.ts`, and enforced by `locate-node.test.ts`): the
+Locate Node is in development, so every capability comes from the product's description and is worded as
+intent; there are no ranges, speeds, battery figures, certifications, awards or reviews; unknown specifications
+show "—"; it never borrows the Edge Gateway's behaviour. To change what the page says, edit that file (five
+languages). Screenshot: `docs/design/screenshots/locate-node.png`.
+
 ## Environment variables (Vercel → Project → Settings → Environment Variables)
 
 | Name | Secret? | Purpose |
