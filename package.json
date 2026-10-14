@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/guard-production-branch.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "i18n:check": "node --experimental-strip-types --no-warnings scripts/check-i18n.mjs",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy": "scripts/deploy.sh",
+    "deploy:prod": "scripts/deploy.sh --prod"
   },
   "dependencies": {
     "@sparticuz/chromium": "^131.0.1",
