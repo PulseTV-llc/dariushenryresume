@@ -28,7 +28,7 @@ While a language is `machine-draft`:
   sitemaps) until review.
 
 To sign a language off: have a native speaker read the files in `content/<code>/` and
-`lib/store/strings.ts`, correct them, then change that language's `reviewStatus` to `'reviewed'`. The
+`lib/store/strings.ts` (and the product pages: `lib/locate-node/strings.ts`, `lib/mobile-gateway/i18n/<code>.ts`), correct them, then change that language's `reviewStatus` to `'reviewed'`. The
 notice disappears for that language only.
 
 ## What is never translated, and what must be translated faithfully

@@ -9,7 +9,8 @@ type Params = { locale: string; slug: string };
 const isProduct = (s: string): s is ProductSlug => PRODUCTS.some((p) => p.slug === s);
 
 export const dynamicParams = false;
-export const generateStaticParams = () => PRODUCTS.map((p) => ({ slug: p.slug }));
+// the Mobile Gateway has its own page (app/[locale]/products/mobile-gateway), so it is not generated here
+export const generateStaticParams = () => PRODUCTS.filter((p) => p.slug !== 'mobile-gateway').map((p) => ({ slug: p.slug }));
 
 export function generateMetadata({ params }: { params: Params }) {
   if (!isLocale(params.locale) || !isProduct(params.slug)) return {};

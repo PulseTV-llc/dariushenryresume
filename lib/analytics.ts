@@ -15,7 +15,8 @@ export type MarketingEvent =
   | 'industry_explore_click'
   | 'final_cta_click'
   | 'contact_started'
-  | 'contact_completed';
+  | 'contact_completed'
+  | 'launch_list_completed';
 
 export type EventProps = Record<string, string | number | boolean | null>;
 

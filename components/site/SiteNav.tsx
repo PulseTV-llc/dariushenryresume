@@ -46,8 +46,8 @@ export default function SiteNav({ locale, groups, ctaHref, homeHref, t }: { loca
   // Close the mobile menu on navigation.
   useEffect(() => setOpen(false), [pathname]);
 
-  // dark product pages (the Locate Node story) get a dark bar; the open mobile menu is always light
-  const dark = /\/locate-node\/?$/.test(pathname ?? '') && !open;
+  // dark product pages (the Locate Node and Mobile Gateway stories) get a dark bar; the open mobile menu is always light
+  const dark = /\/(locate-node|products\/mobile-gateway(\/unsubscribe)?)\/?$/.test(pathname ?? '') && !open;
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
   const badgeCls = 'rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-800 ring-1 ring-amber-200';
 

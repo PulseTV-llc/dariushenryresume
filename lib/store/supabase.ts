@@ -14,9 +14,9 @@ export interface RpcOptions {
   fetch?: typeof fetch;
 }
 
-/** Call a public.store_* function over Supabase's REST API. Works on the server and in the browser. */
+/** Call a public.store_* (or public.marketing_*) function over Supabase's REST API. Works on the server and in the browser. */
 export async function rpc<T>(fn: string, args: Record<string, unknown> = {}, opts: RpcOptions = {}): Promise<T> {
-  if (!/^store_[a-z_]+$/.test(fn)) throw new Error(`not a store function: ${fn}`);
+  if (!/^(store|marketing)_[a-z_]+$/.test(fn)) throw new Error(`not a store or marketing function: ${fn}`);
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new StoreError('The store is not configured.', 503);
   const serviceKey = opts.token && !opts.token.includes('.') ? opts.token : null;   // new-style secret keys are not JWTs
   const init: RequestInit & { next?: RpcOptions['next'] } = {

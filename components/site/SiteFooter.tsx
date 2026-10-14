@@ -14,7 +14,7 @@ export default function SiteFooter({ locale, c, locateNode = null }: { locale: L
   const columns: { title: string; links: { href: string; label: string; badge?: string; localized?: boolean }[] }[] = [
     {
       title: nav.platform,
-      links: [{ href: '/platform', label: nav.howItWorks }, ...PRODUCTS.map((p) => ({ href: productHref(p.slug), label: c.catalog.products[p.slug].short })),
+      links: [{ href: '/platform', label: nav.howItWorks }, ...PRODUCTS.map((p) => ({ href: productHref(p.slug), label: c.catalog.products[p.slug].short, badge: p.status === 'available' ? undefined : c.common.status[p.status] })),
         ...(locateNode ? [{ href: locateNode.href, label: locateNode.label, badge: locateNode.badge, localized: true }] : [])],
     },
     {
