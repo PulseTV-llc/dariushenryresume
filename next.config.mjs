@@ -23,17 +23,17 @@ const nextConfig = {
   // NO 'output: standalone' - This breaks Vercel routing!
 
   // Platform company site (2026-10). The site now leads with the monitoring
-  // platform. Personal resume/portfolio URLs are gone for good (permanent).
-  // Other retired marketing URLs use temporary redirects so they stay
-  // reversible if a page is ever brought back.
+  // platform. Since the site went live (2026-10-14) every retired URL, the
+  // personal resume/portfolio ones and the old marketing ones, redirects
+  // permanently with 301 (statusCode instead of Next's default 308).
   // The admin host is never for search engines, whatever path is asked for (pages, /admin, /api, files).
   async headers() {
     return [{ source: '/:path*', has: [{ type: 'host', value: process.env.ADMIN_HOST ?? 'admin.vexaos.io' }], headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] }];
   },
 
   async redirects() {
-    const gone = (source, destination) => ({ source, destination, permanent: true });
-    const moved = (source, destination) => ({ source, destination, permanent: false });
+    const gone = (source, destination) => ({ source, destination, statusCode: 301 });
+    const moved = (source, destination) => ({ source, destination, statusCode: 301 });
     return [
       // Resume / portfolio
       gone('/about/founder', '/about'),
