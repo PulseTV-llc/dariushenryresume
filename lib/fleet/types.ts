@@ -40,7 +40,7 @@ export interface FilterOptions {
 }
 export interface Customer { id: string; name: string; status: string; sites: { id: string; name: string; timezone: string | null }[] }
 
-export type CommandType = 'restart_app' | 'restart_agent' | 'reboot' | 'check_update' | 'collect_diagnostics';
+export type CommandType = 'restart_app' | 'restart_agent' | 'reboot' | 'check_update' | 'collect_diagnostics' | 'rollback_app';
 export type CommandStatus = 'QUEUED' | 'DELIVERED' | 'ACKNOWLEDGED' | 'SUCCEEDED' | 'FAILED' | 'EXPIRED' | 'CANCELLED' | 'REJECTED';
 export interface CommandRow {
   id: string; type: CommandType; status: CommandStatus; issued_by_email: string | null; created_at: string; expires_at: string;
@@ -72,18 +72,18 @@ export interface SigningKey { key_id: string; name: string; public_key: string; 
 
 export interface DeploymentRow {
   id: string; name: string; release_id: string; version: string; category: ReleaseCategory; status: DeploymentStatus;
-  strategy: Strategy; start_at: string | null; created_at: string; created_by_email: string | null; halted_reason: string | null;
+  strategy: Strategy; start_at: string | null; created_at: string; created_by_email: string | null; halted_reason: string | null; max_failure_rate: number;
   counts: Partial<Record<TargetStatus, number>>; total: number; window: MaintenanceWindow | null;
 }
 export interface Strategy { type: 'all' | 'canary' | 'percentage'; canary_count?: number; wave_percent?: number; wave_interval_min?: number; max_failure_rate?: number }
 export interface MaintenanceWindow { start_hour: number; end_hour: number }
 export interface TargetRow {
   id: string; unit_id: string; serial: string; status: TargetStatus; wave: number; from_version: string | null; progress: number | null;
-  error: string | null; updated_at: string; organization_name: string | null; attempts: number;
+  error: string | null; updated_at: string; organization_name: string | null; attempt: number;
 }
 export interface DeploymentSpec {
   release_id: string; unit_ids?: string[]; group_ids?: string[]; channel?: Channel | null; organization_id?: string | null;
-  strategy: Strategy; start_at?: string | null; window?: MaintenanceWindow | null; allow_downgrade?: boolean; name?: string;
+  strategy: Strategy; start_at?: string | null; window?: MaintenanceWindow | null; allow_downgrade?: boolean; name?: string; simulated?: boolean;
 }
 export interface DeploymentPreview {
   release: { id: string; version: string; category: ReleaseCategory; status: ReleaseStatus; channel: Channel };

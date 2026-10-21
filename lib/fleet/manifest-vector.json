@@ -1,0 +1,23 @@
+{
+  "manifest": {
+    "format": "vexa-release/1",
+    "version": "0.7.0",
+    "category": "app",
+    "hardwareFamily": "vexaos-edge-gateway",
+    "artifact": {
+      "size": 1234,
+      "sha256": "abababababababababababababababababababababababababababababababab",
+      "name": "vexa-edge-0.7.0.tar.gz"
+    },
+    "supportedOs": [
+      "debian-13",
+      "debian-12"
+    ],
+    "minAgentVersion": "0.6.0",
+    "allowDowngrade": false,
+    "minHardwareRevision": null,
+    "createdAt": "2026-10-21T00:00:00Z",
+    "notes": "x/y \"q\""
+  },
+  "canonical": "vexa-release/1\n{\"allowDowngrade\":false,\"artifact\":{\"name\":\"vexa-edge-0.7.0.tar.gz\",\"sha256\":\"abababababababababababababababababababababababababababababababab\",\"size\":1234},\"category\":\"app\",\"createdAt\":\"2026-10-21T00:00:00Z\",\"format\":\"vexa-release/1\",\"hardwareFamily\":\"vexaos-edge-gateway\",\"minAgentVersion\":\"0.6.0\",\"minHardwareRevision\":null,\"notes\":\"x/y \\\"q\\\"\",\"supportedOs\":[\"debian-13\",\"debian-12\"],\"version\":\"0.7.0\"}"
+}

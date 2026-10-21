@@ -81,13 +81,14 @@ export function unitActions(u: Pick<UnitRow, 'lifecycle' | 'gateway_id' | 'site_
 
 export const COMMAND_LABEL: Record<CommandType, string> = {
   restart_app: 'Restart VexaOs services', restart_agent: 'Restart the fleet agent', reboot: 'Reboot',
-  check_update: 'Check for updates', collect_diagnostics: 'Collect diagnostics',
+  check_update: 'Check for updates', collect_diagnostics: 'Collect diagnostics', rollback_app: 'Roll back to the previous release',
 };
 /** What each remote action costs the customer, shown in the confirm dialog. */
 export const COMMAND_WARNING: Partial<Record<CommandType, string>> = {
   restart_app: 'Sensor readings pause for about 10–30 seconds. Readings taken meanwhile are queued on the gateway and sent afterwards.',
   restart_agent: 'Fleet monitoring of this gateway pauses for about a minute. Customer data is not affected.',
   reboot: 'The gateway is offline for about 1–2 minutes. Customer readings stop meanwhile; sensors that store readings send them later, others leave a gap.',
+  rollback_app: 'The app switches back to the release it ran before the last update (kept on the gateway) and restarts: readings pause for about 30 seconds.',
 };
 /** Commands a gateway's installed agent says it supports, intersected with what the person may do. */
 export function availableCommands(capabilities: readonly string[], perms: readonly Permission[], lifecycle: Lifecycle): CommandType[] {
@@ -99,7 +100,7 @@ export function availableCommands(capabilities: readonly string[], perms: readon
     if (cap.has('collect_diagnostics')) out.push('collect_diagnostics');
   }
   if (can(perms, 'remote_action')) {
-    for (const c of ['restart_app', 'restart_agent', 'reboot'] as const) if (cap.has(c)) out.push(c);
+    for (const c of ['restart_app', 'restart_agent', 'reboot', 'rollback_app'] as const) if (cap.has(c)) out.push(c);
   }
   return out;
 }

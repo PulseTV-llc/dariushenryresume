@@ -41,7 +41,7 @@ describe('unitActions', () => {
 
 describe('availableCommands', () => {
   it('only what the agent supports and the person may do', () => {
-    expect(availableCommands(['reboot', 'collect_diagnostics'], ALL, 'ACTIVATED')).toEqual(['collect_diagnostics', 'reboot']);
+    expect(availableCommands(['reboot', 'collect_diagnostics', 'rollback_app'], ALL, 'ACTIVATED')).toEqual(['collect_diagnostics', 'reboot', 'rollback_app']);
     expect(availableCommands(['reboot'], ['view', 'diagnostics'], 'ACTIVATED')).toEqual([]);
     expect(availableCommands([], ALL, 'ACTIVATED')).toEqual([]);
     expect(availableCommands(['reboot'], ALL, 'SUSPENDED')).toEqual([]);

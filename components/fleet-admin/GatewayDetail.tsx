@@ -72,7 +72,7 @@ export default function GatewayDetail({ id }: { id: string }) {
           <h2 className="text-sm font-semibold">Actions</h2>
           <div className="mt-2 flex flex-wrap gap-2">
             {commands.map((c) => (
-              <button key={c} type="button" className={c === 'reboot' ? BTN_DANGER : BTN_QUIET} onClick={() => setDialog({ kind: 'command', type: c })}>{COMMAND_LABEL[c]}</button>
+              <button key={c} type="button" className={c === 'reboot' || c === 'rollback_app' ? BTN_DANGER : BTN_QUIET} onClick={() => setDialog({ kind: 'command', type: c })}>{COMMAND_LABEL[c]}</button>
             ))}
             {can('deploy') && u.gateway_id && <Link href={`/admin/fleet/deployments/new?units=${u.id}`} className={BTN_QUIET}>Schedule an update</Link>}
             {actions.map((a) => (
@@ -142,7 +142,7 @@ export default function GatewayDetail({ id }: { id: string }) {
             ['LoRaWAN', loraText(radios.lorawan)],
             ['RS-485', radios.rs485 ? (radios.rs485.present ? `${(radios.rs485.ports ?? []).length} port(s): ${(radios.rs485.ports ?? []).join(', ')}` : 'No adapter detected') : '—'],
           ]} />
-          {radios.lorawan?.detected && <p className="mt-2 text-xs text-slate-500">LoRaWAN is reported as found. Updates never change the region or the network server's data.</p>}
+          {radios.lorawan?.detected && <p className="mt-2 text-xs text-slate-500">LoRaWAN is reported as found. Updates never change the region or the network server&apos;s data.</p>}
         </Section>
 
         <Section title={`Connected devices (${d.sensors.length})`}>
@@ -190,10 +190,10 @@ export default function GatewayDetail({ id }: { id: string }) {
       </Section>
 
       {dialog?.kind === 'command' && (
-        <ConfirmDialog title={`${COMMAND_LABEL[dialog.type]}: ${u.serial}`} danger={dialog.type === 'reboot'}
+        <ConfirmDialog title={`${COMMAND_LABEL[dialog.type]}: ${u.serial}`} danger={dialog.type === 'reboot' || dialog.type === 'rollback_app'}
           body={<><p>{COMMAND_WARNING[dialog.type] ?? 'The gateway picks this up at its next check-in (within about a minute) and reports the result.'}</p>
                  <p className="text-xs text-slate-500">The request expires if the gateway does not pick it up within 15 minutes. It runs at most once.</p></>}
-          confirmLabel={COMMAND_LABEL[dialog.type]} typeToConfirm={dialog.type === 'reboot' ? u.serial : undefined} reason={dialog.type === 'reboot' || dialog.type === 'restart_app'}
+          confirmLabel={COMMAND_LABEL[dialog.type]} typeToConfirm={dialog.type === 'reboot' || dialog.type === 'rollback_app' ? u.serial : undefined} reason={dialog.type === 'reboot' || dialog.type === 'restart_app' || dialog.type === 'rollback_app'}
           onClose={() => setDialog(null)}
           onConfirm={(reason) => run('fleet_command_create', { p_unit: u.id, p_type: dialog.type, p_reason: reason || null, p_idempotency_key: crypto.randomUUID() }, `${COMMAND_LABEL[dialog.type]}: sent`)} />
       )}
