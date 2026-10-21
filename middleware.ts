@@ -26,6 +26,7 @@ const BOT = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quor
 /**
  * The store admin has its own host (admin.vexaos.io, or ADMIN_HOST). On that host:
  *   /            shows the store admin (served from /admin/store)
+ *   /fleet/...   goes to the fleet admin at /admin/fleet/...
  *   /admin/...   and /api/... are served as they are (they never reach this middleware: see the matcher)
  *   anything else goes back to the admin's front page
  * Nothing there is for search engines, and no language detection runs. /admin on the main site keeps working.
@@ -38,6 +39,10 @@ function adminHost(req: NextRequest): NextResponse {
   if (url.pathname === '/') {
     url.pathname = '/admin/store';
     res = NextResponse.rewrite(url);
+  } else if (url.pathname === '/fleet' || url.pathname.startsWith('/fleet/')) {
+    // admin.vexaos.io/fleet/... is the fleet admin (served from /admin/fleet/...)
+    url.pathname = `/admin${url.pathname}`;
+    res = NextResponse.redirect(url, 307);
   } else {
     url.pathname = '/';
     url.search = '';

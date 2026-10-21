@@ -101,6 +101,7 @@ export default function StoreAdmin() {
           <p className="truncate text-xs text-slate-500">{me.email} · {me.role}</p>
         </div>
         <div className="flex items-center gap-2">
+          <a href="/admin/fleet" className="text-sm font-semibold text-blue-700 hover:text-blue-900">Fleet</a>
           <a href={storeHref} target="_blank" rel="noopener" className="hidden text-sm font-semibold text-blue-700 hover:text-blue-900 sm:inline">View store</a>
           <button type="button" onClick={async () => { await adminClient().auth.signOut(); setMe(null); setState('signed-out'); }} className={`${BTN_QUIET} !h-10 !px-3`} aria-label="Sign out">
             <LogOut className="h-4 w-4" aria-hidden="true" /><span className="hidden sm:inline">Sign out</span>
