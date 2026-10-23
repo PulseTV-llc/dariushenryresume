@@ -16,13 +16,14 @@ export function Alerts() {
   const { can, act, toast } = useFleet();
   const [status, setStatus] = useState('live');
   const [severity, setSeverity] = useState('');
+  const [sim, setSim] = useState(false);
   const [offset, setOffset] = useState(0);
   const [data, setData] = useState<{ total: number; rows: AlertRow[] } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const load = useCallback(async () => {
-    try { setData(await fleetCall('fleet_alerts', { p_filter: { status, ...(severity ? { severity } : {}) }, p_limit: 50, p_offset: offset })); setError(null); }
+    try { setData(await fleetCall('fleet_alerts', { p_filter: { status, ...(severity ? { severity } : {}), ...(sim ? { simulated: 'include' } : {}) }, p_limit: 50, p_offset: offset })); setError(null); }
     catch (e) { setError(e instanceof Error ? e.message : String(e)); }
-  }, [status, severity, offset]);
+  }, [status, severity, sim, offset]);
   usePoll(load, 20000, [load]);
   const set = async (id: string, s: 'acknowledged' | 'resolved') => {
     const note = s === 'resolved' ? window.prompt('What fixed it? (kept with the alert)') ?? undefined : undefined;
@@ -34,6 +35,7 @@ export function Alerts() {
       <div className="mb-3 flex flex-wrap gap-2 text-sm">
         <label className="flex items-center gap-1">Show<select className={SELECT} value={status} onChange={(e) => { setStatus(e.target.value); setOffset(0); }}><option value="live">Open and acknowledged</option><option value="open">Open</option><option value="acknowledged">Acknowledged</option><option value="resolved">Resolved</option><option value="all">All (history)</option></select></label>
         <label className="flex items-center gap-1">Severity<select className={SELECT} value={severity} onChange={(e) => { setSeverity(e.target.value); setOffset(0); }}><option value="">Any</option><option value="critical">Critical</option><option value="warning">Warning</option><option value="info">Info</option></select></label>
+        <label className="flex items-center gap-2"><input type="checkbox" className="h-4 w-4" checked={sim} onChange={(e) => { setSim(e.target.checked); setOffset(0); }} />Include simulated units</label>
       </div>
       {error && <ErrorBox error={error} onRetry={() => void load()} />}
       {!data ? <Spinner /> : data.rows.length === 0 ? <Empty>No alerts here.</Empty> : (

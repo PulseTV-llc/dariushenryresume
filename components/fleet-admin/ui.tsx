@@ -153,7 +153,8 @@ export function BarList({ title, items, empty = 'No data yet.' }: { title: strin
 }
 
 /** Online share over time: an SVG area line with a text summary for screen readers. */
-export function TrendChart({ points }: { points: { at: string; total: number; online: number }[] }) {
+export function TrendChart({ points: all }: { points: { at: string; total: number; online: number }[] }) {
+  const points = all.filter((p) => p.total > 0);   // hours with no units say nothing about availability
   if (points.length < 2) return <p className="mt-2 text-sm text-slate-500">The trend appears after the first hours of heartbeats.</p>;
   const W = 600, H = 120;
   const xs = (i: number) => (i / (points.length - 1)) * W;
